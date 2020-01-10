@@ -10,3 +10,5 @@ kill -9 <pid>
 
 //get absolute path of a file
 readlink -f file.txt
+
+git pull --allow-unrelated-histories
