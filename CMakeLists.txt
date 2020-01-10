@@ -7,5 +7,5 @@ set(CMAKE_C_STANDARD 99)
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 
-add_executable(minespr src/main.c src/lib/sayBismillah.c src/lib/sayBismillah.h src/lib/winfuncs.c src/lib/winfuncs.h)
+add_executable(minespr src/main.c src/lib/winfuncs.c src/lib/winfuncs.h src/lib/maintask/board.c src/lib/maintask/board.h)
 target_link_libraries(minespr ${CURSES_LIBRARY})

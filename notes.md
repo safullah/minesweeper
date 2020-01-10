@@ -5,7 +5,10 @@ all:
 	gcc -g -std=c99 -Wall -Wextra -pedantic -Wno-unused-parameter main.c -o minespr -lncurses -I.
 
 
-gdbserver 192.168.134.143:8181 ./minespr
+#### gdbserver
+
+/home/saif/dev/minespr/cmake-build-debug/minespr
+gdbserver localhost:9090 ./minespr
 ps -ef |grep gdbserver
 kill -9 <pid>
 
