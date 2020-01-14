@@ -19,3 +19,7 @@ readlink -f file.txt
 type in terminal "doxywizard"
 renaming in clion and doxy shift+F6
 doxy doc view ctrl+Q
+
+##### tasksks
+- error handling
+- valgrand
