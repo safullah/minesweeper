@@ -12,7 +12,8 @@
 int main(int argc, char *argv[]) {
     // ./minespr 10x10 20
     argc_is_valid(argc);
-//retrieve raws and cols
+// TODO make a function of retrieving raws and cols
+// TODO think about how to secure wrong input
     char *cli_input[50] = {NULL};
     int index = 0;
     int board_rows_cols[2] = {0};
