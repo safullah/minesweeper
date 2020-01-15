@@ -4,7 +4,8 @@
 ///
 
 #include "validators.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 // A Utility Function to check whether given cell (row, col)
 // is a valid cell or not
@@ -24,5 +25,13 @@ bool isMine (int row, int col, char board[][MAXSIDE])
         return (true);
     } else {
         return (false);
+    }
+}
+
+void argc_is_valid(int argc) {
+    if (argc != 3) {
+        fprintf(stderr, "Error, type the size of board and number of mines in the following format\n");
+        printf("rowsxcols mines: 10x10 20");
+        exit(1);
     }
 }

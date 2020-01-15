@@ -2,56 +2,71 @@
 
 #include "lib/utilities/playing_util.h"
 #include "lib/playing_board/board.h"
+#include "lib/validators/validators.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <ctype.h>
 
-// Driver Program to test above functions
 int main(int argc, char *argv[]) {
     // ./minespr 10x10 20
-    char input_from_command_line[50] = "\0";
-    int counter_4input_array = 0;
+    argc_is_valid(argc);
+//retrieve raws and cols
+    char *cli_input[50] = {NULL};
+    int index = 0;
+    int board_rows_cols[2] = {0};
 
-    double rows = 0;
-    double cols = 0;
-
-    if (argc != 3) {
-        exit(1);
+    for (int i = 0; argv[1][i] != '\0'; i++) {
+        argv[1][i] = (char) tolower(argv[1][i]);
     }
 
-    //get rows and cols from argv[1]
-    //get number of mines [2]
+    char *board_size = strtok(argv[1], "x");
+    cli_input[index] = board_size;
+    index++;
+    while (board_size != NULL) {
 
-    //split string
-    char *charpointer = NULL;
-    char *input_token = strtok(argv[1], "x");
-    input_from_command_line[counter_4input_array] = input_token;
-    counter_4input_array++;
-    //strtod(token,)
-    while (input_token != NULL) {
-        input_token = strtok(NULL, "x");
-        counter_4input_array++;
+        if (index > 2) {
+            break;
+        }
+        board_size = strtok(NULL, "x");
+        if (board_size) {
+            cli_input[index] = board_size;
+        }
     }
-/*
-    for (int i = 0; i < 7; i++) {
-        printf("\nString \"%s\"\n", str[i]);
+    char *rest_of_char;
+    for (int i = 0; i < 2; i++) {
         errno = 0; // Always reset errno
-        double tmp = strtod(token, &charpointer);
+        double size_of_board = strtod(cli_input[i], &rest_of_char);
         // Check if conversion was successful
-        if (ptr == str[i]) {
-            fprintf(stderr, "strtol failed converting!\n");
-        } else if (*ptr != ’\0’) {
-            fprintf(stderr, "strtol: %ld (with rest)\n", tmp);
+        if (rest_of_char == cli_input[i]) {
+            fprintf(stderr, "Error, type the size of board in the following fomat!\n"
+                            "rowxcols: 10x10\n");
+        } else if (*rest_of_char != '\0') {
+            fprintf(stderr, "Error, type the size of board in the following fomat!\n"
+                            "rowxcols: 10x10\n");
         } else {
             if (errno) {
-                fprintf(stderr, "strtol had an overflow!\n");
+                fprintf(stderr, "Error, type the size of board in the following fomat!\n"
+                                "rowxcols: 10x10\n");
             } else {
-                printf("strtol: %ld\n", tmp);
+                board_rows_cols[i] = (int) size_of_board;
             }
         }
     }
-*/
+    int num_of_mines = 0;
+    int check_of_sscanf = sscanf(argv[2], "%d", &num_of_mines);
+    if (check_of_sscanf != 1) {
+        fprintf(stderr, "Error, please enter a valid number for the amount of mines");
+        exit(1);
+    }
+
+    int board_rows = board_rows_cols[0];
+    int board_cols = board_rows_cols[1];
+
+    if (num_of_mines > (board_rows * board_cols)) {
+        fprintf(stderr, "Error, please enter less mines than the numbe of fields");
+    }
     playMinesweeper();
 
     return EXIT_SUCCESS;
