@@ -10,6 +10,7 @@
 #include "../playing_board/board.h"
 bool isValid(int row, int col);
 bool isMine (int row, int col, char board[][MAXSIDE]);
-void argc_is_valid(int argc);
-
+void is_argc_valid(int argc);
+void is_rows_cols_valid(int rows, int cols);
+void is_mines_valid(int mines, int rows, int cols);
 #endif //MINESPR_VALIDATORS_H

@@ -9,8 +9,7 @@
 
 // A Utility Function to check whether given cell (row, col)
 // is a valid cell or not
-bool isValid(int row, int col)
-{
+bool isValid(int row, int col) {
     // Returns true if row number and column number
     // is in range
     return (row >= 0) && (row < SIDE) &&
@@ -19,19 +18,50 @@ bool isValid(int row, int col)
 
 // A Utility Function to check whether given cell (row, col)
 // has a mine or not.
-bool isMine (int row, int col, char board[][MAXSIDE])
-{
-    if (board[row][col] == '*'){
+bool isMine(int row, int col, char board[][MAXSIDE]) {
+    if (board[row][col] == '*') {
         return (true);
     } else {
         return (false);
     }
 }
 
-void argc_is_valid(int argc) {
+void is_argc_valid(int argc) {
     if (argc != 3) {
-        fprintf(stderr, "Error, type the size of board and number of mines in the following format\n");
-        printf("rowsxcols mines: 10x10 20");
+        fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
+                        "  rowsxcols mines: 10x10 20");
+        exit(1);
+    }
+}
+
+void is_rows_cols_valid(int rows, int cols) {
+
+    //min row and cols 5
+    if (rows < 6 || cols < 6) {
+        fprintf(stderr, "Error, please enter more than 5 rows and columns!");
+        exit(1);
+    }
+    //highest row and col is 20
+    if (rows > 21 || cols > 21) {
+        fprintf(stderr, "Error, please enter less than 20 rows and columns!");
+        exit(1);
+    }
+}
+
+void is_mines_valid(int mines, int rows, int cols) {
+
+    if (mines > (rows * cols)) {
+        fprintf(stderr, "Error, please enter less mines than the number of fields!");
+        exit(1);
+    }
+    //min mines 10
+    if (mines < 11) {
+        fprintf(stderr, "Error, please enter more than 10 mines!");
+        exit(1);
+    }
+    // highest num of mines is 300
+    if (mines > 301) {
+        fprintf(stderr, "Error, please enter  less than 300 mines!");
         exit(1);
     }
 }

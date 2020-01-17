@@ -13,26 +13,32 @@
 #include <errno.h>
 
 int *convert_str_to_int(char *str[], int count) {
-    static int integers[2] = {0};
+    static  int integers[2] = {0};
     char *rest_of_char;
     for (int i = 0; i < count; i++) {
         errno = 0; // always reset errno
         double integer = strtod(str[i], &rest_of_char);
         if (rest_of_char == str[i]) {
             fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
-                            "    rowsxcols mines: 10x10 20");
+                            "  rowsxcols mines: 10x10 20");
             exit(1);
         } else if (*rest_of_char != '\0') {
             fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
-                            "    rowsxcols mines: 10x10 20");
+                            "  rowsxcols mines: 10x10 20");
             exit(1);
         } else {
             if (errno) {
                 fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
-                                "    rowsxcols mines: 10x10 20");
+                                "  rowsxcols mines: 10x10 20");
                 exit(1);
             } else {
-                integers[i] = (int) integer;
+                if (integer >= 0) {
+                    integers[i] = (int) integer;
+                } else {
+                    fprintf(stderr, "Error, enter positve values in the following format:\n"
+                                    "  rowsxcols mines: 10x10 20");
+                    exit(1);
+                }
             }
         }
     }
@@ -41,7 +47,7 @@ int *convert_str_to_int(char *str[], int count) {
 
 int *get_cli_args(int argc, char *argv[]) {
 
-    argc_is_valid(argc);
+    is_argc_valid(argc);
 
     for (int i = 0; argv[1][i] != '\0'; i++) {
         argv[1][i] = (char) tolower(argv[1][i]);
@@ -73,20 +79,8 @@ int *get_cli_args(int argc, char *argv[]) {
             int *mines = convert_str_to_int(mine_arr, 1);;
             int num_of_mines = mines[0];
 
-            if (num_of_mines > (rows_cols[0] * rows_cols[1])) {
-                fprintf(stderr, "Error, please enter less mines than the number of fields!");
-                exit(1);
-            }
-            //highes num of row and cols is 20
-            if (board_rows > 20 || board_cols > 20) {
-                fprintf(stderr, "Error, please enter rows and cols less than 20!");
-                exit(1);
-            }
-            // highest num of mines is 300
-            if (num_of_mines > 300) {
-                fprintf(stderr, "Error, please enter mines less than 300!");
-                exit(1);
-            }
+            is_rows_cols_valid(board_rows,  board_cols);
+            is_mines_valid(num_of_mines, board_rows, board_cols);
 
             static int cli_args[3] = {0};
             cli_args[0] = board_rows;
@@ -96,13 +90,13 @@ int *get_cli_args(int argc, char *argv[]) {
             return cli_args;
         } else {
             fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
-                            "    rowsxcols mines: 10x10 20");
+                            "  rowsxcols mines: 10x10 20");
             exit(1);
         }
 
     } else {
         fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
-                        "    rowsxcols mines: 10x10 20");
+                        "  rowsxcols mines: 10x10 20");
         exit(1);
     }
 }
