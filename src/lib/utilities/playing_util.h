@@ -17,6 +17,6 @@ bool playMinesweeperUtil(
         int row, int col,
         int *movesLeft);
 
-void playMinesweeper ();
+void  playMinesweeper(int board_rows, int board_cols, int num_of_mines);
 
 #endif //MINESPR_PLAYING_UTIL_H

@@ -160,15 +160,15 @@ bool playMinesweeperUtil(char myBoard[][MAXSIDE], char realBoard[][MAXSIDE],
 }
 
 // A Function to play Minesweeper game
-void playMinesweeper ()
+void  playMinesweeper(int board_rows, int board_cols, int num_of_mines)
 {
     // Initially the game is not over
     bool gameOver = false;
 
     // Actual Board and My Board
-    char realBoard[MAXSIDE][MAXSIDE], myBoard[MAXSIDE][MAXSIDE];
-    int movesLeft = SIDE * SIDE - MINES, x, y;
-    int mines[MAXMINES][2]; // stores (x,y) coordinates of all mines.
+    char realBoard[board_rows][board_cols], myBoard[board_rows][board_cols];
+    int movesLeft = board_rows * board_cols - num_of_mines, x, y;
+    int mines[num_of_mines][2]; // stores (x,y) coordinates of all mines.
     init_boards(realBoard, myBoard);
     placeMines (mines, realBoard);
 
@@ -199,6 +199,7 @@ void playMinesweeper ()
 
         if ((gameOver == false) && (movesLeft == 0))
         {
+            //TODO it prints you won when aborting the game
             printf ("\nYou won !\n");
             gameOver = true;
         }

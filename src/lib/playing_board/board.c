@@ -7,60 +7,115 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>
+#include "../validators/validators.h"
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
 
+int *convert_str_to_int(char *str[], int count) {
+    static int integers[2] = {0};
+    char *rest_of_char;
+    for (int i = 0; i < count; i++) {
+        errno = 0; // always reset errno
+        double integer = strtod(str[i], &rest_of_char);
+        if (rest_of_char == str[i]) {
+            fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
+                            "    rowsxcols mines: 10x10 20");
+            exit(1);
+        } else if (*rest_of_char != '\0') {
+            fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
+                            "    rowsxcols mines: 10x10 20");
+            exit(1);
+        } else {
+            if (errno) {
+                fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
+                                "    rowsxcols mines: 10x10 20");
+                exit(1);
+            } else {
+                integers[i] = (int) integer;
+            }
+        }
+    }
+    return integers;
+}
 
-// A Function to choose the difficulty level
-// of the game
-void chooseDifficultyLevel ()
-{
-    /*
-    --> BEGINNER = 9 * 9 Cells and 10 Mines
-    --> INTERMEDIATE = 16 * 16 Cells and 40 Mines
-    --> ADVANCED = 24 * 24 Cells and 99 Mines
-    */
+int *get_cli_args(int argc, char *argv[]) {
 
-    int level = 0;
-/*
-    printf ("Enter the Difficulty Level\n");
-    printf ("Press 0 for BEGINNER (9 * 9 Cells and 10 Mines)\n");
-    printf ("Press 1 for INTERMEDIATE (16 * 16 Cells and 40 Mines)\n");
-    printf ("Press 2 for ADVANCED (24 * 24 Cells and 99 Mines)\n");
-*/
-    //scanf ("%d", &level);
+    argc_is_valid(argc);
 
-    if (level == BEGINNER)
-    {
-        SIDE = 10;
-        MINES = 10;
+    for (int i = 0; argv[1][i] != '\0'; i++) {
+        argv[1][i] = (char) tolower(argv[1][i]);
     }
 
-    if (level == INTERMEDIATE)
-    {
-        SIDE = 16;
-        MINES = 40;
-    }
+    char *cli_input[2] = {NULL};
+    int index = 0;
+    char *board_size = strtok(argv[1], "x");
+    if (board_size) {
+        cli_input[index] = board_size;
+        index++;
+        while (board_size != NULL) {
+            if (index > 2) {
+                break;
+            }
+            board_size = strtok(NULL, "x");
+            if (board_size) {
+                cli_input[index] = board_size;
+            }
+        }
 
-    if (level == ADVANCED)
-    {
-        SIDE = 24;
-        MINES = 99;
-    }
+        if (cli_input[1]) {
+            int *rows_cols = convert_str_to_int(cli_input, 2);
+            int board_rows = rows_cols[0];
+            int board_cols = rows_cols[1];
 
-    return;
+            char *mine_arr[1] = {NULL};
+            mine_arr[0] = argv[2];
+            int *mines = convert_str_to_int(mine_arr, 1);;
+            int num_of_mines = mines[0];
+
+            if (num_of_mines > (rows_cols[0] * rows_cols[1])) {
+                fprintf(stderr, "Error, please enter less mines than the number of fields!");
+                exit(1);
+            }
+            //highes num of row and cols is 20
+            if (board_rows > 20 || board_cols > 20) {
+                fprintf(stderr, "Error, please enter rows and cols less than 20!");
+                exit(1);
+            }
+            // highest num of mines is 300
+            if (num_of_mines > 300) {
+                fprintf(stderr, "Error, please enter mines less than 300!");
+                exit(1);
+            }
+
+            static int cli_args[3] = {0};
+            cli_args[0] = board_rows;
+            cli_args[1] = board_cols;
+            cli_args[2] = num_of_mines;
+
+            return cli_args;
+        } else {
+            fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
+                            "    rowsxcols mines: 10x10 20");
+            exit(1);
+        }
+
+    } else {
+        fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
+                        "    rowsxcols mines: 10x10 20");
+        exit(1);
+    }
 }
 
 // A Function to init_boards the game
-void init_boards(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE])
-{
+void init_boards(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]) {
     // Initiate the random number generator so that
     // the same configuration doesn't arises
-    srand(time (NULL));
+    srand(time(NULL));
 
     // Assign all the cells as mine-free
-    for (int i=0; i<SIDE; i++)
-    {
-        for (int j=0; j<SIDE; j++)
-        {
+    for (int i = 0; i < SIDE; i++) {
+        for (int j = 0; j < SIDE; j++) {
             gaming_board[i][j] = hidden_board[i][j] = '-';
         }
     }
@@ -69,26 +124,24 @@ void init_boards(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE])
 }
 
 // A Function to print the current gameplay board
-void printBoard(char myBoard[][MAXSIDE])
-{
+void printBoard(char myBoard[][MAXSIDE]) {
     int i, j;
 
-    printf ("   ");
+    printf("   ");
 
-    for (i=0; i<SIDE; i++) {
-        printf ("%d  ", i);
+    for (i = 0; i < SIDE; i++) {
+        printf("%d  ", i);
     }
 
-    printf ("\n");
+    printf("\n");
 
-    for (i=0; i<SIDE; i++)
-    {
-        printf ("%d ", i);
+    for (i = 0; i < SIDE; i++) {
+        printf("%d ", i);
 
-        for (j=0; j<SIDE; j++){
-            printf (" %c ", myBoard[i][j]);
+        for (j = 0; j < SIDE; j++) {
+            printf(" %c ", myBoard[i][j]);
         }
-        printf ("\n");
+        printf("\n");
     }
     return;
 }
