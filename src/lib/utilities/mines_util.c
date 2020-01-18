@@ -11,7 +11,7 @@
 
 // A Function to place the mines randomly
 // on the board
-void placeMines(int mines[][2], char realBoard[][MAXSIDE])
+void place_mines(int **mines, char **realBoard)
 {
     bool mark[MAXSIDE*MAXSIDE];
 

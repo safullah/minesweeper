@@ -18,7 +18,7 @@ int *get_cli_args(int argc, char *argv[]);
 void generate_playing_board();
 void chooseDifficultyLevel ();
 void init_boards(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]);
-void printBoard(char myBoard[][MAXSIDE]);
+void print_board(char **myBoard);
 
 
 #endif //MINESPR_BOARD_H

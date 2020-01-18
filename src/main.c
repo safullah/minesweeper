@@ -13,11 +13,11 @@ int main(int argc, char *argv[]) {
     // ./minespr 10x10 20
 
     int *cli_args = get_cli_args(argc, argv);
-    int board_rows = *(cli_args + 0);
-    int board_cols = *(cli_args + 1);
-    int num_of_mines = *(cli_args + 2);
+    const int board_rows = *(cli_args + 0);
+    const int board_cols = *(cli_args + 1);
+    const int num_of_mines = *(cli_args + 2);
 
-    playMinesweeper(board_rows, board_cols, num_of_mines);
+    play_game(board_rows, board_cols, num_of_mines);
 
     return EXIT_SUCCESS;
 }

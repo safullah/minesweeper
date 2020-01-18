@@ -13,4 +13,5 @@ bool isMine (int row, int col, char board[][MAXSIDE]);
 void is_argc_valid(int argc);
 void is_rows_cols_valid(int rows, int cols);
 void is_mines_valid(int mines, int rows, int cols);
+bool is_coordinate_valid(int x_crd, int y_crd, int rows, int cols);
 #endif //MINESPR_VALIDATORS_H

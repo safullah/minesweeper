@@ -28,7 +28,7 @@ bool isMine(int row, int col, char board[][MAXSIDE]) {
 
 void is_argc_valid(int argc) {
     if (argc != 3) {
-        fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
+        printf("Error, type the size of board and number of mines in the following format:\n"
                         "  rowsxcols mines: 10x10 20");
         exit(1);
     }
@@ -38,12 +38,12 @@ void is_rows_cols_valid(int rows, int cols) {
 
     //min row and cols 5
     if (rows < 6 || cols < 6) {
-        fprintf(stderr, "Error, please enter more than 5 rows and columns!");
+        printf("Error, please enter more than 5 rows and columns!");
         exit(1);
     }
     //highest row and col is 20
     if (rows > 21 || cols > 21) {
-        fprintf(stderr, "Error, please enter less than 20 rows and columns!");
+        printf("Error, please enter less than 20 rows and columns!");
         exit(1);
     }
 }
@@ -51,17 +51,32 @@ void is_rows_cols_valid(int rows, int cols) {
 void is_mines_valid(int mines, int rows, int cols) {
 
     if (mines > (rows * cols)) {
-        fprintf(stderr, "Error, please enter less mines than the number of fields!");
+        printf("Error, please enter less mines than the number of fields!");
         exit(1);
     }
     //min mines 10
     if (mines < 11) {
-        fprintf(stderr, "Error, please enter more than 10 mines!");
+        printf( "Error, please enter more than 10 mines!");
         exit(1);
     }
     // highest num of mines is 300
     if (mines > 301) {
-        fprintf(stderr, "Error, please enter  less than 300 mines!");
+        printf("Error, please enter  less than 300 mines!");
         exit(1);
     }
+}
+
+bool is_coordinate_valid(int x_crd, int y_crd, int rows, int cols) {
+    bool valid = true;
+    if (x_crd > rows) {
+
+        printf("Please, enter a valid x coordinate.\n");
+        valid = false;
+    }
+
+    if (y_crd > cols) {
+        printf("Please, enter a valid y coordinate.\n");
+        valid = false;
+    }
+    return valid;
 }
