@@ -89,14 +89,14 @@ int *get_cli_args(int argc, char *argv[]) {
 
             return cli_args;
         } else {
-            fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
-                            "  rowsxcols mines: 10x10 20");
+            printf("Error, type the size of board and number of mines in the following format:\n"
+                   "  rowsxcols mines: 10x10 20");
             exit(1);
         }
 
     } else {
-        fprintf(stderr, "Error, type the size of board and number of mines in the following format:\n"
-                        "  rowsxcols mines: 10x10 20");
+        printf("Error, type the size of board and number of mines in the following format:\n"
+               "  rowsxcols mines: 10x10 20");
         exit(1);
     }
 }

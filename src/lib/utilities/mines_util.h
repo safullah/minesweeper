@@ -7,6 +7,6 @@
 #define MINESPR_MINES_UTIL_H
 #include "../playing_board/board.h"
 void place_mines(int **mines, char **realBoard);
-void replaceMine (int row, int col, char board[][MAXSIDE]);
+void replace_mine (int row, int col, char **board);
 
 #endif //MINESPR_MINES_UTIL_H

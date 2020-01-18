@@ -8,16 +8,13 @@
 
 #include <stdbool.h>
 #include "../playing_board/board.h"
-int *retrieve_move(char *str[], int count);
-void make_move(int *x_crd, int *y_crd, int row, int col);
+int *retrieve_move(char *str, int count);
+int *make_move(int row, int col);
 
-bool playMinesweeperUtil(
-        char myBoard[][MAXSIDE],
-        char realBoard[][MAXSIDE],
-        int mines[][2],
+bool play_recursiv(
+        char **game_board,
+        char **hidden_board,
+        int **mines,
         int row, int col,
-        int *movesLeft);
-
-void  play_game(int board_rows, int board_cols, int num_of_mines);
-
+        int *remaining_moves);
 #endif //MINESPR_PLAYING_UTIL_H

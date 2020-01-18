@@ -45,7 +45,7 @@ void place_mines(int **mines, char **realBoard)
 
 // A function to replace the mine from (row, col) and put
 // it to a vacant space
-void replaceMine (int row, int col, char board[][MAXSIDE])
+void replace_mine (int row, int col, char **board)
 {
     for (int i=0; i<SIDE; i++)
     {
