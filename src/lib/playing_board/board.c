@@ -101,8 +101,8 @@ int *get_cli_args(int argc, char *argv[]) {
     }
 }
 
-// A Function to init_boards the game
-void init_boards(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]) {
+// A Function to init_brds the game
+void init_brds(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]) {
     // Initiate the random number generator so that
     // the same configuration doesn't arises
     srand(time(NULL));
@@ -118,7 +118,7 @@ void init_boards(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]) {
 }
 
 // A Function to print the current gameplay board
-void print_board(char **myBoard) {
+void print_brd(char game_board[][MAXSIDE]) {
     int i, j;
 
     printf("   ");
@@ -133,7 +133,7 @@ void print_board(char **myBoard) {
         printf("%d ", i);
 
         for (j = 0; j < SIDE; j++) {
-            printf(" %c ", myBoard[i][j]);
+            printf(" %c ", game_board[i][j]);
         }
         printf("\n");
     }

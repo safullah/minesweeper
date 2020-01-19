@@ -16,9 +16,8 @@ int SIDE ; // side length of the board
 int MINES ; // number of mines on the board
 int *get_cli_args(int argc, char *argv[]);
 void generate_playing_board();
-void chooseDifficultyLevel ();
-void init_boards(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]);
-void print_board(char **myBoard);
+void init_brds(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]);
+void print_brd(char game_brd[][MAXSIDE]);
 
 
 #endif //MINESPR_BOARD_H

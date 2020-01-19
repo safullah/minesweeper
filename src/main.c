@@ -1,6 +1,7 @@
 // A C++ Program to Implement and Play Minesweeper 
 
 #include "lib/utilities/playing_util.h"
+#include "lib/utilities/play_game.h"
 #include "lib/playing_board/board.h"
 #include "lib/validators/validators.h"
 #include <stdlib.h>

@@ -18,7 +18,7 @@ bool is_cell_valid(int row, int col) {
 
 // A Utility Function to check whether given cell (row, col)
 // has a mine or not.
-bool is_mine(int row, int col, char **board) {
+bool is_mine(int row, int col, char board[][MAXSIDE]) {
     if (board[row][col] == '*') {
         return (true);
     } else {

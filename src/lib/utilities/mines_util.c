@@ -11,7 +11,7 @@
 
 // A Function to place the mines randomly
 // on the board
-void place_mines(int **mines, char **realBoard)
+void place_mines(int mines[][2], char hidden_board[][MAXSIDE])
 {
     bool mark[MAXSIDE*MAXSIDE];
 
@@ -34,7 +34,7 @@ void place_mines(int **mines, char **realBoard)
             mines[i][1] = y;
 
             // Place the mine
-            realBoard[mines[i][0]][mines[i][1]] = '*';
+            hidden_board[mines[i][0]][mines[i][1]] = '*';
             mark[random] = true;
             i++;
         }
@@ -45,7 +45,7 @@ void place_mines(int **mines, char **realBoard)
 
 // A function to replace the mine from (row, col) and put
 // it to a vacant space
-void replace_mine (int row, int col, char **board)
+void replace_mine (int row, int col, char board[][MAXSIDE])
 {
     for (int i=0; i<SIDE; i++)
     {

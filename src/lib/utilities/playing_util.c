@@ -45,19 +45,23 @@ int *retrieve_move(char *str, int count) {
                 if (rest_of_char == string[i]) {
                     printf("Error, please enter coordinates in the following format:\n"
                            "  enter row column: 1 5");
+                    return coordinates;
                 } else if (*rest_of_char != '\0') {
                     printf("Error, please enter coordinates in the following format:\n"
                            "  enter row column: 1 5");
+                    return coordinates;
                 } else {
                     if (errno) {
                         printf("Error, please enter coordinates in the following format:\n"
                                "  enter row column: 1 5");
+                        return coordinates;
                     } else {
                         if (integer >= 0) {
                             coordinates[i] = integer;
                         } else {
                             printf("Error, enter positive coordinates in the following format:\n"
                                    "  enter row column: 1 5");
+                            return coordinates;
                         }
                     }
                 }
@@ -66,6 +70,7 @@ int *retrieve_move(char *str, int count) {
         } else {
             printf("Error, please enter coordinates in the following format:\n"
                    "  enter row col: 1 5");
+            return coordinates;
         }
     } else {
         if (split == exit_game) {
@@ -74,21 +79,22 @@ int *retrieve_move(char *str, int count) {
         }
         if (split == restart_game) {
             //TODO restart game
+            exit(1);
         } else {
             printf("Error, please enter coordinates in the following format:\n"
                    "  enter row col: 1 5");
+            return coordinates;
         }
     }
 }
 
 int *make_move(int rows, int cols) {
-    bool input_correct;
+    bool input_correct = false;
     char *input = "\0";
     int *coordinates = 0;
     int size_of_input = sizeof(input) / sizeof(char);
 
-    do {
-        input_correct = true;
+    while (input_correct != true) {
         printf("Enter row column: ");
         while (fgets(input, sizeof(input), stdin) == NULL) {
             printf("Enter row column in the following format: \n"
@@ -99,97 +105,87 @@ int *make_move(int rows, int cols) {
         coordinates = retrieve_move(input, size_of_input);
         if (coordinates[0] != -1) {
             if (is_coordinate_valid(coordinates[0], coordinates[1], rows, cols)) {
-                return coordinates;
+                input_correct = true;
             } else {
                 input_correct = false;
             }
         } else {
             input_correct = false;
         }
-    } while (input_correct != true);
+    }
+    return coordinates;
 }
 
+    bool play_recursive(char game_brd[][MAXSIDE], char hidden_brd[][MAXSIDE],
+                        int mines[][2], int row, int col, int *remaining_moves) {
 
-bool play_recursiv(char game_board[rows][cols], char hidden_board[rows][cols],
-                   int mines[][2], int row, int col, int *remaining_moves) {
-
-    if (game_board[row][col] != '-') {
-        return (false);
-    }
-
-    int i, j;
-
-    // You opened a mine
-    // You are going to lose
-    if (hidden_board[row][col] == '*') {
-        game_board[row][col] = '*';
-
-        for (i = 0; i < MINES; i++) {
-            game_board[mines[i][0]][mines[i][1]] = '*';
+        if (game_brd[row][col] != '-') {
+            return (false);
         }
-
-        print_board(game_board);
-        printf("\nYou lost!\n");
-        return (true);
-    } else {
-        // Calculate the number of adjacent mines and put it
-        // on the board
-        int count = count_mines(row, col, mines, hidden_board);
-        (*remaining_moves)--;
-
-        game_board[row][col] = count + '0';
-
-        if (!count) {
-            /*
-            {-1,-1}, {-1, 0}, {-1, 1},
-              { 0,-1}, home { 0, 1},
-            { 1,-1}, { 1, 0}, { 1, 1}
-            */
-            //{-1, 0}
-            if (is_cell_valid(row - 1, col) == true) {
-                if (is_mine(row - 1, col, hidden_board) == false)
-                    play_recursiv(game_board, hidden_board, mines, row - 1, col, remaining_moves);
+        //stepped on mine
+        if (hidden_brd[row][col] == '*') {
+            game_brd[row][col] = '*';
+            for (int i = 0; i < MINES; i++) {
+                game_brd[mines[i][0]][mines[i][1]] = '*';
             }
-            //{ 1, 0}
-            if (is_cell_valid(row + 1, col) == true) {
-                if (is_mine(row + 1, col, hidden_board) == false)
-                    play_recursiv(game_board, hidden_board, mines, row + 1, col, remaining_moves);
-            }
-            //{ 0,-1}
-            if (is_cell_valid(row, col + 1) == true) {
-                if (is_mine(row, col + 1, hidden_board) == false)
-                    play_recursiv(game_board, hidden_board, mines, row, col + 1, remaining_moves);
-            }
-            //{-1, 1}
-            if (is_cell_valid(row, col - 1) == true) {
-                if (is_mine(row, col - 1, hidden_board) == false) {
+            print_brd(game_brd);
+            printf("\nYou lost!\n");
+            return (true);
+        } else {
+            int cnt_of_mines = count_mines(row, col, hidden_brd);
+            (*remaining_moves)--;
+            game_brd[row][col] = cnt_of_mines + '0';
+            if (!cnt_of_mines) {
+                /*
+                {-1,-1}, {-1, 0}, {-1, 1},
+                  { 0,-1}, home { 0, 1},
+                { 1,-1}, { 1, 0}, { 1, 1}
+                */
+                //{-1, 0}
+                if (is_cell_valid(row - 1, col) == true) {
+                    if (is_mine(row - 1, col, hidden_brd) == false)
+                        play_recursive(game_brd, hidden_brd, mines, row - 1, col, remaining_moves);
+                }
+                //{ 1, 0}
+                if (is_cell_valid(row + 1, col) == true) {
+                    if (is_mine(row + 1, col, hidden_brd) == false)
+                        play_recursive(game_brd, hidden_brd, mines, row + 1, col, remaining_moves);
+                }
+                //{ 0,-1}
+                if (is_cell_valid(row, col + 1) == true) {
+                    if (is_mine(row, col + 1, hidden_brd) == false)
+                        play_recursive(game_brd, hidden_brd, mines, row, col + 1, remaining_moves);
+                }
+                //{-1, 1}
+                if (is_cell_valid(row, col - 1) == true) {
+                    if (is_mine(row, col - 1, hidden_brd) == false) {
 
-                    play_recursiv(game_board, hidden_board, mines, row, col - 1, remaining_moves);
+                        play_recursive(game_brd, hidden_brd, mines, row, col - 1, remaining_moves);
+                    }
+                }
+                //{-1,-1}
+                if (is_cell_valid(row - 1, col + 1) == true) {
+                    if (is_mine(row - 1, col + 1, hidden_brd) == false)
+                        play_recursive(game_brd, hidden_brd, mines, row - 1, col + 1, remaining_moves);
+                }
+                //{ 1, 1}
+                if (is_cell_valid(row - 1, col - 1) == true) {
+                    if (is_mine(row - 1, col - 1, hidden_brd) == false)
+                        play_recursive(game_brd, hidden_brd, mines, row - 1, col - 1, remaining_moves);
+                }
+                //{ 1,-1}
+                if (is_cell_valid(row + 1, col + 1) == true) {
+                    if (is_mine(row + 1, col + 1, hidden_brd) == false)
+                        play_recursive(game_brd, hidden_brd, mines, row + 1, col + 1, remaining_moves);
+                }
+
+                if (is_cell_valid(row + 1, col - 1) == true) {
+                    if (is_mine(row + 1, col - 1, hidden_brd) == false)
+                        play_recursive(game_brd, hidden_brd, mines, row + 1, col - 1, remaining_moves);
                 }
             }
-            //{-1,-1}
-            if (is_cell_valid(row - 1, col + 1) == true) {
-                if (is_mine(row - 1, col + 1, hidden_board) == false)
-                    play_recursiv(game_board, hidden_board, mines, row - 1, col + 1, remaining_moves);
-            }
-            //{ 1, 1}
-            if (is_cell_valid(row - 1, col - 1) == true) {
-                if (is_mine(row - 1, col - 1, hidden_board) == false)
-                    play_recursiv(game_board, hidden_board, mines, row - 1, col - 1, remaining_moves);
-            }
-            //{ 1,-1}
-            if (is_cell_valid(row + 1, col + 1) == true) {
-                if (is_mine(row + 1, col + 1, hidden_board) == false)
-                    play_recursiv(game_board, hidden_board, mines, row + 1, col + 1, remaining_moves);
-            }
 
-            if (is_cell_valid(row + 1, col - 1) == true) {
-                if (is_mine(row + 1, col - 1, hidden_board) == false)
-                    play_recursiv(game_board, hidden_board, mines, row + 1, col - 1, remaining_moves);
-            }
+            return (false);
         }
-
-        return (false);
     }
-}
 
