@@ -7,11 +7,11 @@
 #define MINESPR_VALIDATORS_H
 
 #include <stdbool.h>
-#include "../playing_board/board.h"
+#include "../boards/board.h"
 bool is_cell_valid(int row, int col);
-bool is_mine (int row, int col, char board[][MAXSIDE]);
+bool is_mine (int row, int col, char board[ROWS][COLS]);
 void is_argc_valid(int argc);
-void is_rows_cols_valid(int rows, int cols);
-void is_mines_valid(int mines, int rows, int cols);
-bool is_coordinate_valid(int x_crd, int y_crd, int rows, int cols);
+void is_rows_cols_valid();
+void is_mines_valid();
+bool is_crd_valid(int x_crd, int y_crd);
 #endif //MINESPR_VALIDATORS_H

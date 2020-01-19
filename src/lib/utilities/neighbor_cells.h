@@ -5,7 +5,7 @@
 
 #ifndef MINESPR_NEIGHBOR_CELLS_H
 #define MINESPR_NEIGHBOR_CELLS_H
-#include "../playing_board/board.h"
-int count_mines(int row, int col, char hidden_brd[][MAXSIDE]);
+#include "../boards/board.h"
+int count_mines(int x_crd, int y_crd, char hidden_brd[ROWS][COLS]);
 
 #endif //MINESPR_NEIGHBOR_CELLS_H

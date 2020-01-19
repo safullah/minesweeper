@@ -6,10 +6,9 @@
 #include "neighbor_cells.h"
 #include "../validators/validators.h"
 #include <stdbool.h>
-#include "../playing_board/board.h"
+#include "../boards/board.h"
 
-int count_mines(int row, int col, char hidden_brd[][MAXSIDE]) {
-
+int count_mines(int x_crd, int y_crd, char hidden_brd[ROWS][COLS]) {
     int cnt_ngh_mines = 0;
     /*
      * neighbors
@@ -18,53 +17,53 @@ int count_mines(int row, int col, char hidden_brd[][MAXSIDE]) {
      { 1,-1}, { 1, 0}, { 1, 1}
     */
     //{-1, 0}
-    if (is_cell_valid(row - 1, col) == true) {
-        if (is_mine(row - 1, col, hidden_brd) == true) {
+    if (is_cell_valid(x_crd - 1, y_crd) == true) {
+        if (is_mine(x_crd - 1, y_crd, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
     //{ 1, 0}
-    if (is_cell_valid(row + 1, col) == true) {
-        if (is_mine(row + 1, col, hidden_brd) == true) {
+    if (is_cell_valid(x_crd + 1, y_crd) == true) {
+        if (is_mine(x_crd + 1, y_crd, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
     //{ 0, 1}
-    if (is_cell_valid(row, col + 1) == true) {
-        if (is_mine(row, col + 1, hidden_brd) == true) {
+    if (is_cell_valid(x_crd, y_crd + 1) == true) {
+        if (is_mine(x_crd, y_crd + 1, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
     //{ 0,-1}
-    if (is_cell_valid(row, col - 1) == true) {
-        if (is_mine(row, col - 1, hidden_brd) == true) {
+    if (is_cell_valid(x_crd, y_crd - 1) == true) {
+        if (is_mine(x_crd, y_crd - 1, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
     //{-1, 1}
-    if (is_cell_valid(row - 1, col + 1) == true) {
-        if (is_mine(row - 1, col + 1, hidden_brd) == true) {
+    if (is_cell_valid(x_crd - 1, y_crd + 1) == true) {
+        if (is_mine(x_crd - 1, y_crd + 1, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
     //{-1,-1}
-    if (is_cell_valid(row - 1, col - 1) == true) {
-        if (is_mine(row - 1, col - 1, hidden_brd) == true) {
+    if (is_cell_valid(x_crd - 1, y_crd - 1) == true) {
+        if (is_mine(x_crd - 1, y_crd - 1, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
     //{ 1, 1}
-    if (is_cell_valid(row + 1, col + 1) == true) {
-        if (is_mine(row + 1, col + 1, hidden_brd) == true) {
+    if (is_cell_valid(x_crd + 1, y_crd + 1) == true) {
+        if (is_mine(x_crd + 1, y_crd + 1, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
     //{ 1,-1}
-    if (is_cell_valid(row + 1, col - 1) == true) {
-        if (is_mine(row + 1, col - 1, hidden_brd) == true) {
+    if (is_cell_valid(x_crd + 1, y_crd - 1) == true) {
+        if (is_mine(x_crd + 1, y_crd - 1, hidden_brd) == true) {
             cnt_ngh_mines++;
         }
     }
 
-    return (cnt_ngh_mines);
+    return cnt_ngh_mines;
 }

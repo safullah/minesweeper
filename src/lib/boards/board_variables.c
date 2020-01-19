@@ -1,16 +1,15 @@
 /**
-* Created by saif on 1/10/20.
+* Created by saif on 1/19/20.
 */
 ///
 
-#include "board.h"
-#include <ncurses.h>
+#include "board_variables.h"
 #include <stdlib.h>
-#include <time.h>
 #include "../validators/validators.h"
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <stdio.h>
 
 int *convert_str_to_int(char *str[], int count) {
     static int integers[2] = {0};
@@ -46,9 +45,7 @@ int *convert_str_to_int(char *str[], int count) {
 }
 
 int *get_cli_args(int argc, char *argv[]) {
-
     is_argc_valid(argc);
-
     for (int i = 0; argv[1][i] != '\0'; i++) {
         argv[1][i] = (char) tolower(argv[1][i]);
     }
@@ -70,21 +67,15 @@ int *get_cli_args(int argc, char *argv[]) {
         }
 
         if (cli_input[1]) {
+            static int cli_args[3] = {0};
             int *rows_cols = convert_str_to_int(cli_input, 2);
-            int board_rows = rows_cols[0];
-            int board_cols = rows_cols[1];
+            cli_args[0] = *(rows_cols + 0);
+            cli_args[1] = *(rows_cols + 1);
 
             char *mine_arr[1] = {NULL};
             mine_arr[0] = argv[2];
             int *mines = convert_str_to_int(mine_arr, 1);;
             int num_of_mines = mines[0];
-
-            is_rows_cols_valid(board_rows, board_cols);
-            is_mines_valid(num_of_mines, board_rows, board_cols);
-
-            static int cli_args[3] = {0};
-            cli_args[0] = board_rows;
-            cli_args[1] = board_cols;
             cli_args[2] = num_of_mines;
 
             return cli_args;
@@ -100,87 +91,3 @@ int *get_cli_args(int argc, char *argv[]) {
         exit(1);
     }
 }
-
-// A Function to init_brds the game
-void init_brds(char hidden_board[][MAXSIDE], char gaming_board[][MAXSIDE]) {
-    // Initiate the random number generator so that
-    // the same configuration doesn't arises
-    srand(time(NULL));
-
-    // Assign all the cells as mine-free
-    for (int i = 0; i < SIDE; i++) {
-        for (int j = 0; j < SIDE; j++) {
-            gaming_board[i][j] = hidden_board[i][j] = '-';
-        }
-    }
-
-    return;
-}
-
-// A Function to print the current gameplay board
-void print_brd(char game_board[][MAXSIDE]) {
-    int i, j;
-
-    printf("   ");
-
-    for (i = 0; i < SIDE; i++) {
-        printf("%d  ", i);
-    }
-
-    printf("\n");
-
-    for (i = 0; i < SIDE; i++) {
-        printf("%d ", i);
-
-        for (j = 0; j < SIDE; j++) {
-            printf(" %c ", game_board[i][j]);
-        }
-        printf("\n");
-    }
-    return;
-}
-
-
-/*
-void generate_playing_boatd(char myBoard[][MAXSIDE])
-{
-    int i, j;
-
-    printf ("    ");
-
-    for (i=0; i<SIDE; i++)
-        printf ("%d ", i);
-
-    printf ("\n\n");
-
-    for (i=0; i<SIDE; i++)
-    {
-        printf ("%d   ", i);
-
-        for (j=0; j<SIDE; j++)
-            printf ("%c ", myBoard[i][j]);
-        printf ("\n");
-    }
-    return;
-
-    typedef struct cell {
-    char cell_char[3];
-    bool state;
-    bool mine;
-    int neigbor_mines;
-
-} Cell;
-
-Cell cell00 = {"|x|", false, false, 0};
-Cell cell01 = {"|x|", false, false, 0};
-
-Cell board [10][10] = {
-        {cell00, cell01}
-};
-for (int i = 0; i < 1; i++) {
-for (int j = 0; j < 2; j++) {
-printf(board[i][j].cell_char);
-}
-}
-}
- */

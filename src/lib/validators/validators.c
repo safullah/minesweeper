@@ -6,19 +6,20 @@
 #include "validators.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "../boards/board_variables.h"
 
 // A Utility Function to check whether given cell (row, col)
 // is a valid cell or not
 bool is_cell_valid(int row, int col) {
     // Returns true if row number and column number
     // is in range
-    return (row >= 0) && (row < SIDE) &&
-           (col >= 0) && (col < SIDE);
+    return (row >= 0) && (row < ROWS) &&
+           (col >= 0) && (col < COLS);
 }
 
 // A Utility Function to check whether given cell (row, col)
 // has a mine or not.
-bool is_mine(int row, int col, char board[][MAXSIDE]) {
+bool is_mine(int row, int col, char board[ROWS][COLS]) {
     if (board[row][col] == '*') {
         return (true);
     } else {
@@ -34,47 +35,45 @@ void is_argc_valid(int argc) {
     }
 }
 
-void is_rows_cols_valid(int rows, int cols) {
-
+void is_rows_cols_valid() {
     //min row and cols 5
-    if (rows < 6 || cols < 6) {
+    if (ROWS < 5 || COLS < 5) {
         printf("Error, please enter more than 5 rows and columns!");
         exit(1);
     }
     //highest row and col is 20
-    if (rows > 21 || cols > 21) {
+    if (ROWS > 20 || COLS > 20) {
         printf("Error, please enter less than 20 rows and columns!");
         exit(1);
     }
 }
 
-void is_mines_valid(int mines, int rows, int cols) {
-
-    if (mines > (rows * cols)) {
+void is_mines_valid() {
+    if (MINES > (ROWS * COLS)) {
         printf("Error, please enter less mines than the number of fields!");
         exit(1);
     }
     //min mines 10
-    if (mines < 11) {
+    if (MINES < 10) {
         printf( "Error, please enter more than 10 mines!");
         exit(1);
     }
     // highest num of mines is 300
-    if (mines > 301) {
+    if (MINES > 300) {
         printf("Error, please enter  less than 300 mines!");
         exit(1);
     }
 }
 
-bool is_coordinate_valid(int x_crd, int y_crd, int rows, int cols) {
+bool is_crd_valid(int x_crd, int y_crd) {
     bool valid = true;
-    if (x_crd > rows) {
+    if (x_crd > ROWS) {
 
         printf("Please, enter a valid x coordinate.\n");
         valid = false;
     }
 
-    if (y_crd > cols) {
+    if (y_crd > COLS) {
         printf("Please, enter a valid y coordinate.\n");
         valid = false;
     }

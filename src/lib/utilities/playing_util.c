@@ -5,22 +5,19 @@
 
 #include "playing_util.h"
 #include "../validators/validators.h"
+
 #include <stdbool.h>
 #include "neighbor_cells.h"
-#include "../playing_board/board.h"
+#include "../boards/board.h"
+#include "../boards/board_variables.h"
 #include <stdio.h>
 #include "mines_util.h"
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
 
-int *retrieve_move(char *str, int count) {
-    //usr can also exit game by typing exit
+int *get_move(char str[], int count) {
     static int coordinates[2] = {-1};
-    char *exit_game = "exit";
-    char *restart_game = "restart";
-
-    //first split than convert if necessary
     char *string[2] = {NULL};
     int index = 0;
     char *split = strtok(str, " ");
@@ -44,23 +41,23 @@ int *retrieve_move(char *str, int count) {
                 int integer = strtod(string[i], &rest_of_char);
                 if (rest_of_char == string[i]) {
                     printf("Error, please enter coordinates in the following format:\n"
-                           "  enter row column: 1 5");
+                           "  enter row column: 1 5\n");
                     return coordinates;
                 } else if (*rest_of_char != '\0') {
                     printf("Error, please enter coordinates in the following format:\n"
-                           "  enter row column: 1 5");
+                           "  enter row column: 1 5\n");
                     return coordinates;
                 } else {
                     if (errno) {
                         printf("Error, please enter coordinates in the following format:\n"
-                               "  enter row column: 1 5");
+                               "  enter row column: 1 5\n");
                         return coordinates;
                     } else {
                         if (integer >= 0) {
                             coordinates[i] = integer;
                         } else {
                             printf("Error, enter positive coordinates in the following format:\n"
-                                   "  enter row column: 1 5");
+                                   "  enter row column: 1 5\n");
                             return coordinates;
                         }
                     }
@@ -73,38 +70,44 @@ int *retrieve_move(char *str, int count) {
             return coordinates;
         }
     } else {
-        if (split == exit_game) {
-            printf("Exit Game!");
+        if (strcmp(split, "exit") == 0) {
+            printf("Exit Game!\n");
             exit(1);
         }
-        if (split == restart_game) {
+        if (strcmp(split, "restart") == 0) {
             //TODO restart game
             exit(1);
         } else {
             printf("Error, please enter coordinates in the following format:\n"
-                   "  enter row col: 1 5");
+                   "  enter row col: 1 5\n");
             return coordinates;
         }
     }
 }
 
-int *make_move(int rows, int cols) {
+int *make_move() {
     bool input_correct = false;
-    char *input = "\0";
-    int *coordinates = 0;
-    int size_of_input = sizeof(input) / sizeof(char);
+    char input[10] = "\0";
+    int *crds = 0;
 
     while (input_correct != true) {
-        printf("Enter row column: ");
-        while (fgets(input, sizeof(input), stdin) == NULL) {
-            printf("Enter row column in the following format: \n"
-                   "  enter row column: 1 5 ");
-            fgets(input, sizeof(input), stdin);
+        printf("Enter <row> <column>: ");
+        char *fgets_result = fgets(input, sizeof(input) / sizeof(char), stdin);
+        while (fgets_result == NULL) {
+            printf(" you land here Enter row column in the following format: \n"
+                   "  enter row column: 1 5\n");
+            fgets_result = fgets(input, sizeof(input) / sizeof(char), stdin);
         }
-
-        coordinates = retrieve_move(input, size_of_input);
-        if (coordinates[0] != -1) {
-            if (is_coordinate_valid(coordinates[0], coordinates[1], rows, cols)) {
+        //cut out "\n"
+        int size = strcspn(input, "\n");
+        char copy_of_input[size];
+        memset(copy_of_input, '\0', size);
+        for (int j = 0; j < size; j++) {
+            copy_of_input[j] = input[j];
+        }
+        crds = get_move(copy_of_input, 2);
+        if (*(crds + 0) != -1 && *(crds + 1) != -1) {
+            if (is_crd_valid(*(crds + 0), *(crds + 1))) {
                 input_correct = true;
             } else {
                 input_correct = false;
@@ -113,79 +116,103 @@ int *make_move(int rows, int cols) {
             input_correct = false;
         }
     }
+
+    static int coordinates[2] = {0};
+    coordinates[0] = *(crds + 0);
+    coordinates[1] = *(crds + 1);
     return coordinates;
 }
 
-    bool play_recursive(char game_brd[][MAXSIDE], char hidden_brd[][MAXSIDE],
-                        int mines[][2], int row, int col, int *remaining_moves) {
+bool play_recursive(char game_brd[ROWS][COLS], char hidden_brd[ROWS][COLS],
+                    int mines[][2], int x_crd, int y_crd, int *remaining_moves) {
 
-        if (game_brd[row][col] != '-') {
-            return (false);
+    if (game_brd[x_crd][y_crd] != '-') {
+        return (false);
+    }
+    //stepped on mine
+    if (hidden_brd[x_crd][y_crd] == '*') {
+        game_brd[x_crd][y_crd] = '*';
+        for (int i = 0; i < MINES; i++) {
+            game_brd[mines[i][0]][mines[i][1]] = '*';
         }
-        //stepped on mine
-        if (hidden_brd[row][col] == '*') {
-            game_brd[row][col] = '*';
-            for (int i = 0; i < MINES; i++) {
-                game_brd[mines[i][0]][mines[i][1]] = '*';
-            }
-            print_brd(game_brd);
-            printf("\nYou lost!\n");
-            return (true);
-        } else {
-            int cnt_of_mines = count_mines(row, col, hidden_brd);
-            (*remaining_moves)--;
-            game_brd[row][col] = cnt_of_mines + '0';
-            if (!cnt_of_mines) {
-                /*
-                {-1,-1}, {-1, 0}, {-1, 1},
-                  { 0,-1}, home { 0, 1},
-                { 1,-1}, { 1, 0}, { 1, 1}
-                */
-                //{-1, 0}
-                if (is_cell_valid(row - 1, col) == true) {
-                    if (is_mine(row - 1, col, hidden_brd) == false)
-                        play_recursive(game_brd, hidden_brd, mines, row - 1, col, remaining_moves);
-                }
-                //{ 1, 0}
-                if (is_cell_valid(row + 1, col) == true) {
-                    if (is_mine(row + 1, col, hidden_brd) == false)
-                        play_recursive(game_brd, hidden_brd, mines, row + 1, col, remaining_moves);
-                }
-                //{ 0,-1}
-                if (is_cell_valid(row, col + 1) == true) {
-                    if (is_mine(row, col + 1, hidden_brd) == false)
-                        play_recursive(game_brd, hidden_brd, mines, row, col + 1, remaining_moves);
-                }
-                //{-1, 1}
-                if (is_cell_valid(row, col - 1) == true) {
-                    if (is_mine(row, col - 1, hidden_brd) == false) {
+        print_brd(game_brd);
+        printf("\nYou lost!\n");
+        return (true);
+    } else {
+        int cnt_of_mines = count_mines(x_crd, y_crd, hidden_brd);
+        (*remaining_moves)--;
+        game_brd[x_crd][y_crd] = cnt_of_mines + '0';
+        if (!cnt_of_mines) {
+            struct neighbors {
+                int x_crd;
+                int y_crd;
+            };
+            int neighbors[8][2] = {
+                    {-1, -1}, {-1, 0},
+                    {-1, 1}, {0, -1},
+                    {0, 1}, {1, 1},
+                    {1, -1}, {1, 0}
+            };
 
-                        play_recursive(game_brd, hidden_brd, mines, row, col - 1, remaining_moves);
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 2; ++j) {
+
+                    if (is_cell_valid(x_crd - neighbors[i][j], y_crd) == true) {
+                        if (is_mine(x_crd - 1, y_crd, hidden_brd) == false)
+                            play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd, remaining_moves);
                     }
                 }
-                //{-1,-1}
-                if (is_cell_valid(row - 1, col + 1) == true) {
-                    if (is_mine(row - 1, col + 1, hidden_brd) == false)
-                        play_recursive(game_brd, hidden_brd, mines, row - 1, col + 1, remaining_moves);
-                }
-                //{ 1, 1}
-                if (is_cell_valid(row - 1, col - 1) == true) {
-                    if (is_mine(row - 1, col - 1, hidden_brd) == false)
-                        play_recursive(game_brd, hidden_brd, mines, row - 1, col - 1, remaining_moves);
-                }
-                //{ 1,-1}
-                if (is_cell_valid(row + 1, col + 1) == true) {
-                    if (is_mine(row + 1, col + 1, hidden_brd) == false)
-                        play_recursive(game_brd, hidden_brd, mines, row + 1, col + 1, remaining_moves);
-                }
+            }
+            /*
+            {-1,-1}, {-1, 0}, {-1, 1},
+              { 0,-1}, home { 0, 1},
+            { 1,-1}, { 1, 0}, { 1, 1}
+            */
+            //{-1, 0}
+            if (is_cell_valid(x_crd - 1, y_crd) == true) {
+                if (is_mine(x_crd - 1, y_crd, hidden_brd) == false)
+                    play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd, remaining_moves);
+            }
+            //{ 1, 0}
+            if (is_cell_valid(x_crd + 1, y_crd) == true) {
+                if (is_mine(x_crd + 1, y_crd, hidden_brd) == false)
+                    play_recursive(game_brd, hidden_brd, mines, x_crd + 1, y_crd, remaining_moves);
+            }
+            //{ 0,-1}
+            if (is_cell_valid(x_crd, y_crd + 1) == true) {
+                if (is_mine(x_crd, y_crd + 1, hidden_brd) == false)
+                    play_recursive(game_brd, hidden_brd, mines, x_crd, y_crd + 1, remaining_moves);
+            }
+            //{-1, 1}
+            if (is_cell_valid(x_crd, y_crd - 1) == true) {
+                if (is_mine(x_crd, y_crd - 1, hidden_brd) == false) {
 
-                if (is_cell_valid(row + 1, col - 1) == true) {
-                    if (is_mine(row + 1, col - 1, hidden_brd) == false)
-                        play_recursive(game_brd, hidden_brd, mines, row + 1, col - 1, remaining_moves);
+                    play_recursive(game_brd, hidden_brd, mines, x_crd, y_crd - 1, remaining_moves);
                 }
             }
+            //{-1,-1}
+            if (is_cell_valid(x_crd - 1, y_crd + 1) == true) {
+                if (is_mine(x_crd - 1, y_crd + 1, hidden_brd) == false)
+                    play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd + 1, remaining_moves);
+            }
+            //{ 1, 1}
+            if (is_cell_valid(x_crd - 1, y_crd - 1) == true) {
+                if (is_mine(x_crd - 1, y_crd - 1, hidden_brd) == false)
+                    play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd - 1, remaining_moves);
+            }
+            //{ 1,-1}
+            if (is_cell_valid(x_crd + 1, y_crd + 1) == true) {
+                if (is_mine(x_crd + 1, y_crd + 1, hidden_brd) == false)
+                    play_recursive(game_brd, hidden_brd, mines, x_crd + 1, y_crd + 1, remaining_moves);
+            }
 
-            return (false);
+            if (is_cell_valid(x_crd + 1, y_crd - 1) == true) {
+                if (is_mine(x_crd + 1, y_crd - 1, hidden_brd) == false)
+                    play_recursive(game_brd, hidden_brd, mines, x_crd + 1, y_crd - 1, remaining_moves);
+            }
         }
+
+        return false;
     }
+}
 

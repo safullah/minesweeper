@@ -7,14 +7,14 @@
 #define MINESPR_PLAYING_UTIL_H
 
 #include <stdbool.h>
-#include "../playing_board/board.h"
-int *retrieve_move(char *str, int count);
-int *make_move(int row, int col);
+#include "../boards/board.h"
+int *get_move(char str[], int count);
+int *make_move();
 
 bool play_recursive(
-        char game_brd[][MAXSIDE],
-        char hidden_brd[][MAXSIDE],
+        char game_brd[ROWS][COLS],
+        char hidden_brd[ROWS][COLS],
         int mines[][2],
-        int row, int col,
+        int x_crd, int y_crd,
         int *remaining_moves);
 #endif //MINESPR_PLAYING_UTIL_H

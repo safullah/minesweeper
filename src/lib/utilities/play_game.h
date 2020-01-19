@@ -5,5 +5,5 @@
 
 #ifndef MINESPR_PLAY_GAME_H
 #define MINESPR_PLAY_GAME_H
-void play_game(int brd_rows, int brd_cols, int num_of_mines);
+void play_game();
 #endif //MINESPR_PLAY_GAME_H

@@ -4,27 +4,28 @@
 ///
 
 #include "play_game.h"
-#include <stdbool.h>
-#include "../playing_board/board.h"
-#include "mines_util.h"
-#include <stdio.h>
 #include "playing_util.h"
+#include "mines_util.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include "../boards/board.h"
 #include "../validators/validators.h"
-void play_game(int brd_rows, int brd_cols, int num_of_mines) {
+#include "../boards/board_variables.h"
+
+void play_game() {
     bool game_over = false;
     // Actual Board and My Board
-    char hidden_brd[brd_rows][brd_cols], game_brd[brd_rows][brd_cols];
-    int remaining_moves = brd_rows * brd_cols - num_of_mines;
+    char hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
+    int remaining_moves =  ROWS * COLS - MINES;
     //[x_crd,y_crd] coordinates of mines
-    int mines[num_of_mines][2];
+    int mines[MINES][2];
     init_brds(hidden_brd, game_brd);
     place_mines(mines, hidden_brd);
 
     int executed_moves = 0;
     while (game_over == false) {
-        printf("Current Status of Board:\n");
         print_brd(game_brd);
-        int *coordinates = make_move(brd_rows, brd_cols);
+        int *coordinates = make_move();
         int x_crd = *(coordinates + 0);
         int y_crd = *(coordinates + 1);
         //when first move
@@ -41,5 +42,4 @@ void play_game(int brd_rows, int brd_cols, int num_of_mines) {
             game_over = true;
         }
     }
-    return;
 }
