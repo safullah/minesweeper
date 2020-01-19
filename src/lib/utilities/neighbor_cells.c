@@ -4,66 +4,27 @@
 ///
 
 #include "neighbor_cells.h"
-#include "../validators/validators.h"
 #include <stdbool.h>
-#include "../boards/board.h"
+#include "../validators/validators.h"
 
 int count_mines(int x_crd, int y_crd, char hidden_brd[ROWS][COLS]) {
     int cnt_ngh_mines = 0;
-    /*
-     * neighbors
-     {-1,-1}, {-1, 0}, {-1, 1},
-        { 0,-1}, home { 0, 1},
-     { 1,-1}, { 1, 0}, { 1, 1}
-    */
-    //{-1, 0}
-    if (is_cell_valid(x_crd - 1, y_crd) == true) {
-        if (is_mine(x_crd - 1, y_crd, hidden_brd) == true) {
-            cnt_ngh_mines++;
+    int neighbors[8][2] = {{-1, -1},
+                           {-1, 0},
+                           {-1, 1},
+                           {0,  -1},
+                           {0,  1},
+                           {1,  1},
+                           {1,  -1},
+                           {1,  0}};
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 1; ++j) {
+            if (is_cell_valid(x_crd + neighbors[i][j], y_crd + neighbors[i][j + 1]) == true) {
+                if (is_mine(x_crd + neighbors[i][j], y_crd + neighbors[i][j + 1], hidden_brd) == true) {
+                    cnt_ngh_mines++;
+                }
+            }
         }
     }
-    //{ 1, 0}
-    if (is_cell_valid(x_crd + 1, y_crd) == true) {
-        if (is_mine(x_crd + 1, y_crd, hidden_brd) == true) {
-            cnt_ngh_mines++;
-        }
-    }
-    //{ 0, 1}
-    if (is_cell_valid(x_crd, y_crd + 1) == true) {
-        if (is_mine(x_crd, y_crd + 1, hidden_brd) == true) {
-            cnt_ngh_mines++;
-        }
-    }
-    //{ 0,-1}
-    if (is_cell_valid(x_crd, y_crd - 1) == true) {
-        if (is_mine(x_crd, y_crd - 1, hidden_brd) == true) {
-            cnt_ngh_mines++;
-        }
-    }
-    //{-1, 1}
-    if (is_cell_valid(x_crd - 1, y_crd + 1) == true) {
-        if (is_mine(x_crd - 1, y_crd + 1, hidden_brd) == true) {
-            cnt_ngh_mines++;
-        }
-    }
-    //{-1,-1}
-    if (is_cell_valid(x_crd - 1, y_crd - 1) == true) {
-        if (is_mine(x_crd - 1, y_crd - 1, hidden_brd) == true) {
-            cnt_ngh_mines++;
-        }
-    }
-    //{ 1, 1}
-    if (is_cell_valid(x_crd + 1, y_crd + 1) == true) {
-        if (is_mine(x_crd + 1, y_crd + 1, hidden_brd) == true) {
-            cnt_ngh_mines++;
-        }
-    }
-    //{ 1,-1}
-    if (is_cell_valid(x_crd + 1, y_crd - 1) == true) {
-        if (is_mine(x_crd + 1, y_crd - 1, hidden_brd) == true) {
-            cnt_ngh_mines++;
-        }
-    }
-
     return cnt_ngh_mines;
 }

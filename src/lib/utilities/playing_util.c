@@ -143,75 +143,24 @@ bool play_recursive(char game_brd[ROWS][COLS], char hidden_brd[ROWS][COLS],
         (*remaining_moves)--;
         game_brd[x_crd][y_crd] = cnt_of_mines + '0';
         if (!cnt_of_mines) {
-            struct neighbors {
-                int x_crd;
-                int y_crd;
-            };
-            int neighbors[8][2] = {
-                    {-1, -1}, {-1, 0},
-                    {-1, 1}, {0, -1},
-                    {0, 1}, {1, 1},
-                    {1, -1}, {1, 0}
-            };
-
+            int neighbors[8][2] = {{-1, -1},
+                                   {-1, 0},
+                                   {-1, 1},
+                                   {0,  -1},
+                                   {0,  1},
+                                   {1,  1},
+                                   {1,  -1},
+                                   {1,  0}};
             for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 2; ++j) {
-
-                    if (is_cell_valid(x_crd - neighbors[i][j], y_crd) == true) {
-                        if (is_mine(x_crd - 1, y_crd, hidden_brd) == false)
-                            play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd, remaining_moves);
+                for (int j = 0; j < 1; ++j) {
+                    if (is_cell_valid(x_crd + neighbors[i][j], y_crd + neighbors[i][j + 1]) == true) {
+                        if (is_mine(x_crd + neighbors[i][j], y_crd + neighbors[i][j + 1], hidden_brd) == false)
+                            play_recursive(game_brd, hidden_brd, mines, x_crd + neighbors[i][j],
+                                           y_crd + neighbors[i][j + 1], remaining_moves);
                     }
                 }
             }
-            /*
-            {-1,-1}, {-1, 0}, {-1, 1},
-              { 0,-1}, home { 0, 1},
-            { 1,-1}, { 1, 0}, { 1, 1}
-            */
-            //{-1, 0}
-            if (is_cell_valid(x_crd - 1, y_crd) == true) {
-                if (is_mine(x_crd - 1, y_crd, hidden_brd) == false)
-                    play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd, remaining_moves);
-            }
-            //{ 1, 0}
-            if (is_cell_valid(x_crd + 1, y_crd) == true) {
-                if (is_mine(x_crd + 1, y_crd, hidden_brd) == false)
-                    play_recursive(game_brd, hidden_brd, mines, x_crd + 1, y_crd, remaining_moves);
-            }
-            //{ 0,-1}
-            if (is_cell_valid(x_crd, y_crd + 1) == true) {
-                if (is_mine(x_crd, y_crd + 1, hidden_brd) == false)
-                    play_recursive(game_brd, hidden_brd, mines, x_crd, y_crd + 1, remaining_moves);
-            }
-            //{-1, 1}
-            if (is_cell_valid(x_crd, y_crd - 1) == true) {
-                if (is_mine(x_crd, y_crd - 1, hidden_brd) == false) {
-
-                    play_recursive(game_brd, hidden_brd, mines, x_crd, y_crd - 1, remaining_moves);
-                }
-            }
-            //{-1,-1}
-            if (is_cell_valid(x_crd - 1, y_crd + 1) == true) {
-                if (is_mine(x_crd - 1, y_crd + 1, hidden_brd) == false)
-                    play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd + 1, remaining_moves);
-            }
-            //{ 1, 1}
-            if (is_cell_valid(x_crd - 1, y_crd - 1) == true) {
-                if (is_mine(x_crd - 1, y_crd - 1, hidden_brd) == false)
-                    play_recursive(game_brd, hidden_brd, mines, x_crd - 1, y_crd - 1, remaining_moves);
-            }
-            //{ 1,-1}
-            if (is_cell_valid(x_crd + 1, y_crd + 1) == true) {
-                if (is_mine(x_crd + 1, y_crd + 1, hidden_brd) == false)
-                    play_recursive(game_brd, hidden_brd, mines, x_crd + 1, y_crd + 1, remaining_moves);
-            }
-
-            if (is_cell_valid(x_crd + 1, y_crd - 1) == true) {
-                if (is_mine(x_crd + 1, y_crd - 1, hidden_brd) == false)
-                    play_recursive(game_brd, hidden_brd, mines, x_crd + 1, y_crd - 1, remaining_moves);
-            }
         }
-
         return false;
     }
 }
