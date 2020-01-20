@@ -21,13 +21,12 @@
 //flag or not
 //seperate alp from num
 
-input_of_move separate_str(char str[]) {
+input_of_move *separate_str(char *str[]) {
 
-    input_of_move mov = {'\0', {'\0'}};
-    char digit[2] = {'\0'};
+    input_of_move *mov = NULL;
     //do uppercase first
     if (isalpha(str[0])) {
-        mov.alpha = toupper(str[0]);
+        mov->alpha = toupper(str[0]);
     } else {
         printf("Error, please enter coordinates in the following format:\n"
                "  enter column row : A5\n");
@@ -35,17 +34,11 @@ input_of_move separate_str(char str[]) {
     }
 
     if (isdigit(str[1])) {
-        digit[0] = str[1];
-        //start concat
-        strcat(mov.num, &digit[0]);
-
+        mov->num[0] = str[1];
         if (isdigit(str[2])) {
-            digit[1] = str[2];
-            //last concat
-            strcat(mov.num, &digit[1]);
-
+            mov->num[1] = str[2];
         } else {
-            if ('\0' != str[2]) {
+            if (str[2] != '\0' ) {
                 printf("Error, please enter coordinates in the following format:\n"
                        "  enter column row : A5\n");
                 return mov;
@@ -64,22 +57,24 @@ move get_move(char str[]) {
 
     //check if I lang here when typing exit or rest
     if (strcmp(&str[0], "exit") == 0) {
-        printf("Exit Game!\n");
         exit(1);
     } else if (strcmp(&str[0], "restart") == 0) {
-        play_game();
-        exit(1);
+        bool restart = true;
+        play_game(restart);
+        //and open one
     } else {
         if (str[0] == '?') {
             mov.flag = true;
         }
         char copy[4] = {'\0'};
-        if (mov.flag) {
-            memcpy(copy, str + 2, strlen(str) + 1);
-        } else {
-            memcpy(copy, str, strlen(str) + 1);
-        }
 
+        for (int i = 0; i < (int) strlen(str); ++i) {
+            if (mov.flag) {
+                copy[i] = str[i + 2];
+            } else {
+                copy[i] = str[i];
+            }
+        }
         //return a struct with alpha and num
         input_of_move result;
         result = separate_str(copy);
@@ -87,8 +82,9 @@ move get_move(char str[]) {
         if (result.alpha != '\0' && result.num[0] != '\0') {
             char *rest_of_char = "\0";
             errno = 0; // always reset errno
-            double integer = strtod(result.num, &rest_of_char);
-            if (rest_of_char == result.num) {
+            char *p_to_num = result.num;
+            double integer = strtod(p_to_num, &rest_of_char);
+            if (rest_of_char == copy) {
                 printf("Error, please enter coordinates in the following format:\n"
                        "  enter column row : A5\n");
                 return mov;
