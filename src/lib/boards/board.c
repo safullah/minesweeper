@@ -12,7 +12,7 @@ char alp_arr[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
 void init_brds(cell hidden_brd[ROWS][COLS], cell gaming_brd[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            cell c = {'-', hidden, 0};
+            cell c = {'-', hidden, -1};
             gaming_brd[i][j] = hidden_brd[i][j] = c;
         }
     }
@@ -32,7 +32,12 @@ void print_brd(cell game_brd[ROWS][COLS]) {
         }
 
         for (int j = 0; j < COLS; j++) {
-            printf(" %c ", game_brd[i][j].ch);
+            if (game_brd[i][j].ngh_mines != -1) {
+                printf(" %d ", game_brd[i][j].ngh_mines);
+            } else {
+                printf(" %c ", game_brd[i][j].ch);
+            }
+
         }
         printf("\n");
     }

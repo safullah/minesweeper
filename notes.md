@@ -22,4 +22,4 @@ doxy doc view ctrl+Q
 
 ##### tasksks
 - error handling
-- valgrand
+- valgrind

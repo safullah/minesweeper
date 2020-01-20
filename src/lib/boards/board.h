@@ -8,7 +8,6 @@
 
 #include <stdbool.h>
 #include "board_variables.h"
-typedef enum {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z} alphabet;
 typedef enum {hidden, opened, flagged} state;
 
 typedef struct{
@@ -24,9 +23,10 @@ typedef struct {
 
 typedef struct {
     bool flag;
-    char col;
+    int col;
     int row;
 } move;
+
 void  init_brds(cell hidden_brd[ROWS][COLS], cell gaming_brd[ROWS][COLS]);
 void print_brd(cell game_brd[ROWS][COLS]);
 

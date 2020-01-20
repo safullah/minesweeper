@@ -30,13 +30,8 @@ void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
     }
 }
 
-void replace_mine(int row, int col, cell board[ROWS][COLS]) {
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            if (board[i][j].ch != '*') {
-                board[i][j].ch = '*';
-                board[row][col].ch = '-';
-            }
-        }
-    }
+void flag_cell(move mov, cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS]) {
+
+    game_brd[mov.row][mov.col].s = flagged;
+    hidden_brd[mov.row][mov.col].s = flagged;
 }

@@ -10,7 +10,7 @@
 
 // A Utility Function to check whether given cell (row, col)
 // is a valid cell or not
-bool is_cell_valid(int row, int col) {
+bool is_cell_valid(int col, int row) {
     // Returns true if row number and column number
     // is in range
     return (row >= 0) && (row < ROWS) &&
