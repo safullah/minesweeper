@@ -9,13 +9,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "../boards/board.h"
-#include "../validators/validators.h"
 #include "../boards/board_variables.h"
+#include "../validators/validators.h"
 
 void play_game() {
     bool game_over = false;
     // Actual Board and My Board
-    char hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
+    cell hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
     int remaining_moves =  ROWS * COLS - MINES;
     //[x_crd,y_crd] coordinates of mines
     int mines[MINES][2];

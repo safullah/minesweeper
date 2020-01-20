@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #include "../boards/board.h"
 bool is_cell_valid(int row, int col);
-bool is_mine (int row, int col, char board[ROWS][COLS]);
+bool is_mine (int row, int col, cell board[ROWS][COLS]);
 void is_argc_valid(int argc);
 void is_rows_cols_valid();
 void is_mines_valid();

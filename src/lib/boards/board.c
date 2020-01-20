@@ -7,79 +7,33 @@
 #include "board_variables.h"
 #include <stdio.h>
 
-void init_brds(char hidden_brd[ROWS][COLS], char gaming_brd[ROWS][COLS]) {
+char alp_arr[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+void init_brds(cell hidden_brd[ROWS][COLS], cell gaming_brd[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            gaming_brd[i][j] = hidden_brd[i][j] = '-';
+            cell c = {'-', hidden, 0};
+            gaming_brd[i][j] = hidden_brd[i][j] = c;
         }
     }
 }
 
-void print_brd(char game_brd[ROWS][COLS]) {
+void print_brd(cell game_brd[ROWS][COLS]) {
     printf("    ");
     for (int i = 0; i < ROWS; i++) {
-        printf("%d  ", i);
+        printf("%c  ", alp_arr[i]);
     }
     printf("\n");
     for (int i = 0; i < ROWS; i++) {
         if (i < 10) {
-            printf("%d  ", i);
+            printf(" %d ", i);
         } else {
             printf("%d ", i);
         }
 
         for (int j = 0; j < COLS; j++) {
-            if (j < 10) {
-                printf(" %c ", game_brd[i][j]);
-            } else {
-                printf("  %c ", game_brd[i][j]);
-            }
+            printf(" %c ", game_brd[i][j].ch);
         }
         printf("\n");
     }
 }
-
-
-/*
-void generate_playing_boatd(char myBoard[ROWS][COLS])
-{
-    int i, j;
-
-    printf ("    ");
-
-    for (i=0; i<SIDE; i++)
-        printf ("%d ", i);
-
-    printf ("\n\n");
-
-    for (i=0; i<SIDE; i++)
-    {
-        printf ("%d   ", i);
-
-        for (j=0; j<SIDE; j++)
-            printf ("%c ", myBoard[i][j]);
-        printf ("\n");
-    }
-    return;
-
-    typedef struct cell {
-    char cell_char[3];
-    bool state;
-    bool mine;
-    int neigbor_mines;
-
-} Cell;
-
-Cell cell00 = {"|x|", false, false, 0};
-Cell cell01 = {"|x|", false, false, 0};
-
-Cell board [10][10] = {
-        {cell00, cell01}
-};
-for (int i = 0; i < 1; i++) {
-for (int j = 0; j < 2; j++) {
-printf(board[i][j].cell_char);
-}
-}
-}
- */

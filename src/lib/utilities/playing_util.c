@@ -15,14 +15,45 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
+
+//flag or not
+//seperate alp from num
+char *separate_str(char str[]) {
+    if (strlen(str) < 4 && ) {
+
+    }
+    char qst_mark[1] = {'\0'};
+    char ch[1] = {'\0'};
+    char digit[2] = {'\0'};
+
+    int s = 0;
+    int d = 0;
+    while (str[s]) {
+        if (isdigit(str[s])) {
+            digit[d++] = str[s];
+        } else if (isalpha(str[s])) {
+            ch[0] = str[s];
+        } else {
+            qst_mark[0] = str[s];
+        }
+        s++;
+    }
+    char *spr_str[3][2] = {qst_mark, ch, digit};
+    return spr_str;
+}
 
 int *get_move(char str[], int count) {
     static int coordinates[2] = {-1};
+    //first separate flag, alp, num
+    //split str and store it
+    struct move {
     char *string[2] = {NULL};
     int index = 0;
     char *split = strtok(str, " ");
     if (split) {
         string[index] = split;
+        /*
         index++;
         while (split != NULL) {
             if (index > 2) {
@@ -31,7 +62,7 @@ int *get_move(char str[], int count) {
             split = strtok(NULL, " ");
             if (split) {
                 string[index] = split;
-            }
+            }*/
         }
         if (string[1]) {
             //converting string to int
@@ -40,6 +71,8 @@ int *get_move(char str[], int count) {
                 errno = 0; // always reset errno
                 int integer = strtod(string[i], &rest_of_char);
                 if (rest_of_char == string[i]) {
+                    //I land here with ?
+                    //if ? call flag function
                     printf("Error, please enter coordinates in the following format:\n"
                            "  enter row column: 1 5\n");
                     return coordinates;
@@ -123,17 +156,17 @@ int *make_move() {
     return coordinates;
 }
 
-bool play_recursive(char game_brd[ROWS][COLS], char hidden_brd[ROWS][COLS],
+bool play_recursive(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS],
                     int mines[][2], int x_crd, int y_crd, int *remaining_moves) {
 
-    if (game_brd[x_crd][y_crd] != '-') {
+    if (game_brd[x_crd][y_crd].ch != '-') {
         return (false);
     }
     //stepped on mine
-    if (hidden_brd[x_crd][y_crd] == '*') {
-        game_brd[x_crd][y_crd] = '*';
+    if (hidden_brd[x_crd][y_crd].ch == '*') {
+        game_brd[x_crd][y_crd].ch = '*';
         for (int i = 0; i < MINES; i++) {
-            game_brd[mines[i][0]][mines[i][1]] = '*';
+            game_brd[mines[i][0]][mines[i][1]].ch = '*';
         }
         print_brd(game_brd);
         printf("\nYou lost!\n");
@@ -141,7 +174,7 @@ bool play_recursive(char game_brd[ROWS][COLS], char hidden_brd[ROWS][COLS],
     } else {
         int cnt_of_mines = count_mines(x_crd, y_crd, hidden_brd);
         (*remaining_moves)--;
-        game_brd[x_crd][y_crd] = cnt_of_mines + '0';
+        game_brd[x_crd][y_crd].ngh_mines = cnt_of_mines;
         if (!cnt_of_mines) {
             int neighbors[8][2] = {{-1, -1},
                                    {-1, 0},

@@ -19,8 +19,8 @@ bool is_cell_valid(int row, int col) {
 
 // A Utility Function to check whether given cell (row, col)
 // has a mine or not.
-bool is_mine(int row, int col, char board[ROWS][COLS]) {
-    if (board[row][col] == '*') {
+bool is_mine(int row, int col, cell board[ROWS][COLS]) {
+    if (board[row][col].ch == '*') {
         return (true);
     } else {
         return (false);

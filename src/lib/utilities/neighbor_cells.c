@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include "../validators/validators.h"
 
-int count_mines(int x_crd, int y_crd, char hidden_brd[ROWS][COLS]) {
+int count_mines(int x_crd, int y_crd, cell hidden_brd[ROWS][COLS]) {
     int cnt_ngh_mines = 0;
     int neighbors[8][2] = {{-1, -1},
                            {-1, 0},

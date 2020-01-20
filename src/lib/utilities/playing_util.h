@@ -12,8 +12,8 @@ int *get_move(char str[], int count);
 int *make_move();
 
 bool play_recursive(
-        char game_brd[ROWS][COLS],
-        char hidden_brd[ROWS][COLS],
+        cell game_brd[ROWS][COLS],
+        cell hidden_brd[ROWS][COLS],
         int mines[][2],
         int x_crd, int y_crd,
         int *remaining_moves);
