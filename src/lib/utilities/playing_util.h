@@ -8,7 +8,8 @@
 
 #include <stdbool.h>
 #include "../boards/board.h"
-int *get_move(char str[], int count);
+input_of_move separate_str(char str[]);
+move get_move(char str[]);
 int *make_move();
 
 bool play_recursive(

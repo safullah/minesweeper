@@ -68,7 +68,6 @@ void is_mines_valid() {
 bool is_crd_valid(int x_crd, int y_crd) {
     bool valid = true;
     if (x_crd > ROWS) {
-
         printf("Please, enter a valid x coordinate.\n");
         valid = false;
     }
