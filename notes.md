@@ -22,4 +22,6 @@ doxy doc view ctrl+Q
 
 ##### tasksks
 - error handling
+- write doc
 - valgrind
+- next: finish flagging!
