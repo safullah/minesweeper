@@ -6,6 +6,7 @@
 #include "validators.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "../boards/board_variables.h"
 
 // A Utility Function to check whether given cell (row, col)
@@ -30,7 +31,7 @@ bool is_mine(int row, int col, cell board[ROWS][COLS]) {
 void is_argc_valid(int argc) {
     if (argc != 3) {
         printf("Error, type the size of board and number of mines in the following format:\n"
-                        "  rowsxcols mines: 10x10 20");
+               "  rowsxcols mines: 10x10 20");
         exit(1);
     }
 }
@@ -55,7 +56,7 @@ void is_mines_valid() {
     }
     //min mines 10
     if (MINES < 10) {
-        printf( "Error, please enter more than 10 mines!");
+        printf("Error, please enter more than 10 mines!");
         exit(1);
     }
     // highest num of mines is 300
@@ -77,4 +78,12 @@ bool is_crd_valid(int x_crd, int y_crd) {
         valid = false;
     }
     return valid;
+}
+
+bool is_flag(char *str) {
+    if (*str == '?') {
+        return true;
+    } else {
+        return false;
+    }
 }

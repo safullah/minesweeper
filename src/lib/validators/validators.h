@@ -14,4 +14,5 @@ void is_argc_valid(int argc);
 void is_rows_cols_valid();
 void is_mines_valid();
 bool is_crd_valid(int x_crd, int y_crd);
+bool is_flag(char str[]);
 #endif //MINESPR_VALIDATORS_H
