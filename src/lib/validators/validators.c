@@ -11,11 +11,13 @@
 
 // A Utility Function to check whether given cell (row, col)
 // is a valid cell or not
-bool is_cell_valid(int col, int row) {
-    // Returns true if row number and column number
-    // is in range
-    return (row >= 0) && (row < ROWS) &&
-           (col >= 0) && (col < COLS);
+bool is_cell_valid(int row, int col) {
+    bool valid = false;
+    if ((row >= 0) && (row < ROWS) &&
+        (col >= 0) && (col < COLS)) {
+        valid = true;
+    }
+    return valid;
 }
 
 // A Utility Function to check whether given cell (row, col)
@@ -55,8 +57,8 @@ void is_mines_valid() {
         exit(1);
     }
     //min mines 10
-    if (MINES < 10) {
-        printf("Error, please enter more than 10 mines!");
+    if (MINES < 1) {
+        printf("Error, please enter more than 9 mines!");
         exit(1);
     }
     // highest num of mines is 300

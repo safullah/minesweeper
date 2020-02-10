@@ -5,21 +5,15 @@
 
 #include "playing_util.h"
 #include "../validators/validators.h"
-
 #include <stdbool.h>
-#include "neighbor_cells.h"
-#include "../boards/board.h"
-#include "../boards/board_variables.h"
 #include <stdio.h>
-#include "mines_util.h"
 #include "play_game.h"
 #include "../converter/strtoint.h"
-#include <errno.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-move get_move(char str[]) {
+move extract_move(char *str) {
     move mov = {false, -1, -1};
     if (is_flag(&str[0])) {
         mov.flag = true;
@@ -41,7 +35,7 @@ move get_move(char str[]) {
 }
 
 char *get_input() {
-    printf("Enter <row> <column>: ");
+    printf("Enter <column> <row> : ");
     char input[10] = "\0";
     char *result = fgets(input, sizeof(input) / sizeof(char), stdin);
     while (result == NULL) {
@@ -50,14 +44,14 @@ char *get_input() {
         result = fgets(input, sizeof(input) / sizeof(char), stdin);
     }
     //cut out "\n"
-   static char copy[10];
+    static char copy[10];
     for (int j = 0; input[j] != '\n'; j++) {
         copy[j] = input[j];
     }
-    return  copy;
+    return copy;
 }
 
-move make_move() {
+move get_move() {
     bool valid = false;
     move mov = {NULL, -1, -1};
     while (valid != true) {
@@ -70,8 +64,7 @@ move make_move() {
             play_game(restart);
             //TODO open one cell
         }
-
-        mov = get_move(input);
+        mov = extract_move(input);
         if (mov.col != -1 && mov.row != -1) {
             if (is_crd_valid(mov.col, mov.row) == true) {
                 valid = true;

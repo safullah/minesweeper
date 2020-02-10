@@ -10,6 +10,7 @@
 #include <time.h>
 #include "../boards/board.h"
 #include "../boards/board_variables.h"
+#include "neighbor_cells.h"
 
 void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
     bool mark[ROWS * COLS];
@@ -30,8 +31,15 @@ void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
     }
 }
 
+void count_mines(cell hidden_brd[ROWS][COLS]){
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+           hidden_brd[i][j].ngh_mines = do_counting(i, j, hidden_brd);
+        }
+    }
+}
 void flag_cell(move mov, cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS]) {
 
-    game_brd[mov.row][mov.col].s = flagged;
-    hidden_brd[mov.row][mov.col].s = flagged;
+    game_brd[mov.row][mov.col].state = flagged;
+    hidden_brd[mov.row][mov.col].state = flagged;
 }

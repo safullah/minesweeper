@@ -8,9 +8,7 @@
 
 #include <stdbool.h>
 #include "../boards/board.h"
-move get_move(char str[]);
+move extract_move(char *str);
 char *get_input();
-move make_move();
-
-
+move get_move();
 #endif //MINESPR_PLAYING_UTIL_H

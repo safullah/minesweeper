@@ -6,7 +6,6 @@ all:
 
 
 #### gdbserver
-
 /home/saif/dev/minespr/cmake-build-debug/minespr
 gdbserver localhost:9090 ./minespr
 ps -ef |grep gdbserver
@@ -23,5 +22,9 @@ doxy doc view ctrl+Q
 ##### tasksks
 - error handling
 - write doc
+- just one place that throws the error!
+- implement restart
 - valgrind
-- next: finish flagging!
+
+
+#### thinking process
