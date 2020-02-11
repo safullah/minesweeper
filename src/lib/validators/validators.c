@@ -40,7 +40,7 @@ void is_argc_valid(int argc) {
 
 void is_rows_cols_valid() {
     //min row and cols 5
-    if (ROWS < 5 || COLS < 5) {
+    if (ROWS < 1 || COLS < 1) {
         printf("Error, please enter more than 5 rows and columns!");
         exit(1);
     }

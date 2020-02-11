@@ -32,3 +32,15 @@ doxy doc view ctrl+Q
 
 
 #### thinking process
+when all cells without mines are opened
+count opened cells
+if opened cells == all cells - cells with mines
+=> win
+
+all mines are marked
+count flagged mines
+if flagged mines = num of total mines
+=> win
+
+#### bugs
+do not allow to open a second time

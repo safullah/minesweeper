@@ -11,38 +11,32 @@
 
 void restart_game(cell game_brd[ROWS][COLS],
                   cell hidden_brd[ROWS][COLS],
-                  int mines[][2],
-                  int *remaining_moves);
+                  int mines[][2]);
 void play_game(bool restart);
 
 bool open_cell(cell game_brd[ROWS][COLS],
                cell hidden_brd[ROWS][COLS],
                int mines[][2],
-               move mov,
-               int *remaining_moves);
+               move mov);
 
 void open_ngh(cell game_brd[ROWS][COLS],
               cell hidden_brd[ROWS][COLS],
-              move mov,
-              int *remaining_moves);
+              move mov);
 
 void do_recursion(
         cell game_brd[ROWS][COLS],
         cell hidden_brd[ROWS][COLS],
-        move mov,
-        int *remaining_moves);
+        move mov);
 
 void do_flagging(cell game_brd[ROWS][COLS],
                  cell hidden_brd[ROWS][COLS],
                  int mines[][2],
-                 move mov,
-                 int *remaining_moves);
+                 move mov);
 
 bool execute_move(
         cell game_brd[ROWS][COLS],
         cell hidden_brd[ROWS][COLS],
         int mines[][2],
-        move mov,
-        int *remaining_moves);
+        move mov);
 
 #endif //MINESPR_PLAY_GAME_H

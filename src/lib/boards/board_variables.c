@@ -11,6 +11,14 @@
 #include <errno.h>
 #include <stdio.h>
 
+int ROWS = 0;
+int COLS = 0;
+int MINES = 0;
+int OPENED_CELLS = 0;
+int FLAGGED_CORRECT = 0;
+int FLAGGED_WRONG = 0;
+int FLAGGED_TOTAL = 0;
+
 int *convert_str_to_int(char *str[], int count) {
     static int integers[2] = {0};
     char *rest_of_char;
