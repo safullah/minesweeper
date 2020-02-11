@@ -19,12 +19,16 @@ type in terminal "doxywizard"
 renaming in clion and doxy shift+F6
 doxy doc view ctrl+Q
 
-##### tasksks
+#### keep in mind
 - error handling
-- write doc
-- just one place that throws the error!
+
+##### tasks
 - implement restart
+- just one place that throws the error!
+- write doc
 - valgrind
+- free all mallocs
+- exit not working after restart (exitart)
 
 
 #### thinking process

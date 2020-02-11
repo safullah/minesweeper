@@ -9,7 +9,11 @@
 #include <stdbool.h>
 #include "../boards/board.h"
 
-void play_game();
+void restart_game(cell game_brd[ROWS][COLS],
+                  cell hidden_brd[ROWS][COLS],
+                  int mines[][2],
+                  int *remaining_moves);
+void play_game(bool restart);
 
 bool open_cell(cell game_brd[ROWS][COLS],
                cell hidden_brd[ROWS][COLS],

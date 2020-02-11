@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     MINES = *(cli_args + 2);
     is_rows_cols_valid();
     is_mines_valid();
-    play_game();
-
+    bool restart = false;
+    play_game(restart);
     return EXIT_SUCCESS;
 }

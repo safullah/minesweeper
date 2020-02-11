@@ -16,7 +16,6 @@ void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
     bool mark[ROWS * COLS];
     memset(mark, false, sizeof(mark));
     // Continue until all random mines have been created.
-    srand(time(NULL));
     for (int i = 0; i < MINES;) {
         int random = rand() % (ROWS * COLS) + 1;
         int x = random / ROWS;

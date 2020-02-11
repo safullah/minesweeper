@@ -13,8 +13,10 @@
 #include "../validators/validators.h"
 #include "neighbor_cells.h"
 #include <stdlib.h>
+#include <time.h>
 
-void play_game() {
+void play_game(bool restart) {
+    srand(time(NULL));
     bool game_over = false;
     //two boards
     cell hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
@@ -28,6 +30,11 @@ void play_game() {
     while (game_over == false) {
         print_brd(game_brd);
         print_hbrd(hidden_brd);
+        if (restart) {
+            restart_game(game_brd, hidden_brd, mines, &remaining_moves);
+            print_brd(game_brd);
+            print_hbrd(hidden_brd);
+        }
         move mov = get_move();
         executed_moves++;
         game_over = execute_move(game_brd, hidden_brd, mines, mov, &remaining_moves);
@@ -37,6 +44,26 @@ void play_game() {
             game_over = true;
         }
     }
+}
+
+void restart_game(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], int mines[][2], int *remaining_moves) {
+    //open a random cell
+    int random = rand() % (ROWS * COLS) + 1;
+    int x = random / ROWS;
+    int y = random % COLS;
+    move *mov = malloc(sizeof(move));
+    if (!mov) {
+        printf("ERROR: Out of memory\n");
+        exit(EXIT_FAILURE);
+    }
+    mov->row = x;
+    mov->col = y;
+    if (game_brd[x][y].ch != '*' && hidden_brd[x][y].ngh_mines != 0) {
+        open_cell(game_brd, hidden_brd, mines, *mov, remaining_moves);
+    } else {
+        restart_game(game_brd, hidden_brd, mines, remaining_moves);
+    }
+    free(mov);
 }
 
 bool execute_move(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS],
@@ -118,7 +145,7 @@ void open_ngh(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], move mov, 
             temp->row = mov.row + neighbors[i][j];
             temp->col = mov.col + neighbors[i][j + 1];
             if (is_cell_valid(temp->row, temp->col)) {
-                if (game_brd[temp->row][temp->col].state == hidden){
+                if (game_brd[temp->row][temp->col].state == hidden) {
                     (*remaining_moves)--;
                     int count = hidden_brd[temp->row][temp->col].ngh_mines;
                     game_brd[temp->row][temp->col].ngh_mines = count;

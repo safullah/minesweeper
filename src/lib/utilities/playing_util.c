@@ -36,7 +36,8 @@ move extract_move(char *str) {
 
 char *get_input() {
     printf("Enter <column> <row> : ");
-    char input[10] = "\0";
+    char input[10];
+    memset(input, '\0', sizeof(char)*10);
     char *result = fgets(input, sizeof(input) / sizeof(char), stdin);
     while (result == NULL) {
         printf("Enter column row in the following format: \n"
@@ -45,6 +46,7 @@ char *get_input() {
     }
     //cut out "\n"
     static char copy[10];
+    memset(copy, '\0', sizeof(char)*10);
     for (int j = 0; input[j] != '\n'; j++) {
         copy[j] = input[j];
     }
@@ -62,7 +64,6 @@ move get_move() {
         if (strcmp(input, "restart") == 0) {
             bool restart = true;
             play_game(restart);
-            //TODO open one cell
         }
         mov = extract_move(input);
         if (mov.col != -1 && mov.row != -1) {
