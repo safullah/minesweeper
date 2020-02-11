@@ -35,7 +35,7 @@ move extract_move(char *str) {
 }
 
 char *get_input() {
-    printf("Enter <column> <row> : ");
+    printf("\nEnter <column> <row> : ");
     char input[10];
     memset(input, '\0', sizeof(char)*10);
     char *result = fgets(input, sizeof(input) / sizeof(char), stdin);
