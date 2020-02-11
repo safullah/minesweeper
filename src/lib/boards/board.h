@@ -24,6 +24,7 @@ typedef struct {
 
 void init_brds(cell hidden_brd[ROWS][COLS], cell gaming_brd[ROWS][COLS]);
 void print_brd(cell game_brd[ROWS][COLS]);
+void print_rmaining_mines();
 void print_hbrd(cell hidden_brd[ROWS][COLS]);
 
 #endif //MINESPR_BOARD_H

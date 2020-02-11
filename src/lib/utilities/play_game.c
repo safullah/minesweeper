@@ -27,10 +27,12 @@ void play_game(bool restart) {
     int empty_cells = ROWS * COLS - MINES;
     while (game_over == false) {
         print_brd(game_brd);
+        print_rmaining_mines();
         print_hbrd(hidden_brd);
         if (restart) {
             restart_game(game_brd, hidden_brd, mines);
             print_brd(game_brd);
+            print_rmaining_mines();
             print_hbrd(hidden_brd);
         }
         move mov = get_move();
@@ -109,8 +111,8 @@ bool open_cell(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS],
 void do_flagging(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS],
                  int mines[][2], move mov) {
     hidden_brd[mov.row][mov.col].state = flagged;
-    FLAGGED_CORRECT++;
     if (hidden_brd[mov.row][mov.col].ch == '*') {
+        FLAGGED_CORRECT++;
         game_brd[mov.row][mov.col].ch = '*';
     } else {
         int count = hidden_brd[mov.row][mov.col].ngh_mines;

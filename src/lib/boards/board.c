@@ -40,7 +40,11 @@ void print_brd(cell game_brd[ROWS][COLS]) {
         printf("\n");
     }
 }
-
+void print_rmaining_mines(){
+    int rmaining_mines = MINES - FLAGGED_CORRECT;
+    printf("\nremaining mines: %d\n", rmaining_mines);
+    printf("flagged wrong: %d\n", FLAGGED_WRONG);
+}
 void print_hbrd(cell hidden_brd[ROWS][COLS]) {
     printf("    ");
     for (int i = 0; i < ROWS; i++) {
