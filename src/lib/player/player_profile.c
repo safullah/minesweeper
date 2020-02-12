@@ -4,25 +4,20 @@
 ///
 
 #include "player_profile.h"
+#include "../validators/validators.h"
+#include "../utilities/string_util.h"
 #include <stdio.h>
 #include <string.h>
 
-
 char *get_name() {
-    printf("Enter your name : ");
-    char input[30];
-    memset(input, '\0', sizeof(char)*30);
-    char *result = fgets(input, sizeof(input) / sizeof(char), stdin);
-    while (result == NULL) {
-        printf("Enter column row in the following format: \n"
-               "  enter column row :A5\n");
-        result = fgets(input, sizeof(input) / sizeof(char), stdin);
-    }
-    //cut out "\n"
-    static char copy[10];
-    memset(copy, '\0', sizeof(char)*10);
-    for (int j = 0; input[j] != '\n'; j++) {
-        copy[j] = input[j];
-    }
+    char *command = "Enter your name: ";
+    char *input = take_input(command);
+    char *copy = cutout_bslashn(input);
     return copy;
+}
+
+player init_player() {
+    player p = {NULL};
+    p.name = get_name();
+    return p;
 }

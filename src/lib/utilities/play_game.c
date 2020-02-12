@@ -11,37 +11,51 @@
 #include "../boards/board.h"
 #include "../boards/board_variables.h"
 #include "../validators/validators.h"
-#include "neighbor_cells.h"
+#include "../player/player_profile.h"
+#include "string_util.h"
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 void play_game(bool restart) {
     srand(time(NULL));
-    bool game_over = false;
-    //two boards
-    cell hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
-    int mines[MINES][2];
-    init_brds(hidden_brd, game_brd);
-    place_mines(mines, hidden_brd);
-    count_mines(hidden_brd);
-    int empty_cells = ROWS * COLS - MINES;
-    while (game_over == false) {
-        print_brd(game_brd);
-        print_rmaining_mines();
-        print_hbrd(hidden_brd);
-        if (restart) {
-            restart_game(game_brd, hidden_brd, mines);
+    player playerx = init_player();
+    char *file = concat_filename(playerx);
+    if ((GAME = fopen(file, "w"))) {
+        //fprintf(GAME, "%s",playerx.name);
+        bool game_over = false;
+        //two boards
+        cell hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
+        int mines[MINES][2];
+        init_brds(hidden_brd, game_brd);
+        place_mines(mines, hidden_brd);
+        count_mines(hidden_brd);
+        int empty_cells = ROWS * COLS - MINES;
+        while (game_over == false) {
             print_brd(game_brd);
             print_rmaining_mines();
             print_hbrd(hidden_brd);
+            if (restart) {
+                restart_game(game_brd, hidden_brd, mines);
+                print_brd(game_brd);
+                print_rmaining_mines();
+                print_hbrd(hidden_brd);
+            }
+            move mov = get_move();
+            game_over = execute_move(game_brd, hidden_brd, mines, mov);
+            if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
+                printf("\nYou won !\n");
+                playerx.wins++;
+                fwrite(&playerx, sizeof(char), 1, GAME);
+
+                //check fwrite by fread()
+                fclose(GAME);
+                game_over = true;
+            }
         }
-        move mov = get_move();
-        game_over = execute_move(game_brd, hidden_brd, mines, mov);
-        if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
-            //TODO it prints you won when aborting the game
-            printf("\nYou won !\n");
-            game_over = true;
-        }
+    } else {
+        //call the function again
+        fprintf(stderr, "Error, while opening file!\n");
     }
 }
 

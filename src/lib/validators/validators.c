@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 #include "../boards/board_variables.h"
 
 // A Utility Function to check whether given cell (row, col)
@@ -88,4 +89,15 @@ bool is_flag(char *str) {
     } else {
         return false;
     }
+}
+
+bool is_overflow(const char *input) {
+    bool overflow = false;
+    if (strchr(input, '\n') == NULL) {
+        int ch;
+        while ((ch = fgetc(stdin)) != '\n' && ch != EOF) {
+            overflow = true;
+        }
+    }
+    return overflow;
 }
