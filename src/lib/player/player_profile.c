@@ -17,7 +17,7 @@ char *get_name() {
 }
 
 player init_player() {
-    player p = {NULL};
+    player p = {NULL, -1, -1, -1};
     p.name = get_name();
     return p;
 }

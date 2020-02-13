@@ -11,7 +11,10 @@
 FILE *GAME;
 typedef struct {
     char *name;
+    int games;
     int wins;
+    int losts;
+    int cells;
 } player;
 
 char *get_name();

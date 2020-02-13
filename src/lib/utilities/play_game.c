@@ -19,6 +19,8 @@
 
 void play_game(bool restart) {
     srand(time(NULL));
+    //expandable array
+    char poolof_players[];
     player playerx = init_player();
     char *file = concat_filename(playerx);
     if ((GAME = fopen(file, "w"))) {
@@ -46,10 +48,22 @@ void play_game(bool restart) {
             if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
                 printf("\nYou won !\n");
                 playerx.wins++;
-                fwrite(&playerx, sizeof(char), 1, GAME);
-
-                //check fwrite by fread()
+                fwrite(&playerx, sizeof(player), 1, GAME);
                 fclose(GAME);
+
+                player hafsa;
+                file = concat_filename(playerx);
+                if ((GAME = fopen(file, "r"))){
+                    if ((fread(&hafsa, sizeof(player), 1, GAME) != 0)){
+                        printf("%s\n", hafsa.name);
+                        printf("%d\n", hafsa.wins);
+                    } else {
+                        fprintf(stderr, "Error, while reading file!\n");
+                    }
+                    fclose(GAME);
+                } else {
+                    fprintf(stderr, "Error, while opening file!\n");
+                }
                 game_over = true;
             }
         }

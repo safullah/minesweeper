@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
 #include "../boards/board.h"
 #include "../boards/board_variables.h"
 #include "neighbor_cells.h"
@@ -17,7 +16,7 @@ void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
     memset(mark, false, sizeof(mark));
     // Continue until all random mines have been created.
     for (int i = 0; i < MINES;) {
-        int random = rand() % (ROWS * COLS) + 1;
+        int random = rand() % (ROWS * COLS);
         int x = random / ROWS;
         int y = random % COLS;
         if (mark[random] == false) {
