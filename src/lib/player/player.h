@@ -3,10 +3,11 @@
 */
 ///
 
-#ifndef MINESPR_PLAYER_PROFILE_H
-#define MINESPR_PLAYER_PROFILE_H
+#ifndef MINESPR_PLAYER_H
+#define MINESPR_PLAYER_H
 
 #include <bits/types/FILE.h>
+#include <stdlib.h>
 
 FILE *GAME;
 typedef struct {
@@ -19,4 +20,6 @@ typedef struct {
 
 char *get_name();
 player init_player();
-#endif //MINESPR_PLAYER_PROFILE_H
+void free_mem(char **arr, int size);
+
+#endif //MINESPR_PLAYER_H

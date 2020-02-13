@@ -11,7 +11,7 @@
 #include "../boards/board.h"
 #include "../boards/board_variables.h"
 #include "../validators/validators.h"
-#include "../player/player_profile.h"
+#include "../player/player.h"
 #include "string_util.h"
 #include <stdlib.h>
 #include <time.h>
@@ -19,9 +19,39 @@
 
 void play_game(bool restart) {
     srand(time(NULL));
-    //expandable array
-    char poolof_players[];
     player playerx = init_player();
+    //expandable array
+
+    //player exits ? yes don't make arry bigger : no make space for new player
+    //a funtion to make my array bigger
+    int numof_gamers = 1;
+    int lenof_name = 30;
+    char **gamers = calloc(numof_gamers, sizeof(char *));
+    if (gamers) {
+        for (int i = 0; i < numof_gamers; ++i) {
+            gamers[i] = (char *) calloc(lenof_name, sizeof(char));
+        }
+        numof_gamers++;
+    } else {
+        printf("Error, please try starting the game again!");
+        exit(EXIT_FAILURE);
+    }
+
+    if (!realloc(gamers, sizeof(gamers) * 2)) {
+        printf("Error, please try starting the game again!");
+        exit(EXIT_FAILURE);
+    }
+
+    //search gamer
+    size_t str_len = sizeof(gamers) / sizeof(char *);
+    qsort((void *) gamers, str_len, sizeof(char *), str_cmp);
+    char *target = (char *) bsearch(&playerx.name, gamers, sizeof(gamers), sizeof(char *), str_cmp);
+    if (target != NULL) {
+        printf("gamer found %s", target);
+    } else {
+        printf("gamer not found.\n");
+    }
+
     char *file = concat_filename(playerx);
     if ((GAME = fopen(file, "w"))) {
         //fprintf(GAME, "%s",playerx.name);
@@ -53,8 +83,8 @@ void play_game(bool restart) {
 
                 player hafsa;
                 file = concat_filename(playerx);
-                if ((GAME = fopen(file, "r"))){
-                    if ((fread(&hafsa, sizeof(player), 1, GAME) != 0)){
+                if ((GAME = fopen(file, "r"))) {
+                    if ((fread(&hafsa, sizeof(player), 1, GAME) != 0)) {
                         printf("%s\n", hafsa.name);
                         printf("%d\n", hafsa.wins);
                     } else {

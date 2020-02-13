@@ -3,7 +3,7 @@
 */
 ///
 
-#include "player_profile.h"
+#include "player.h"
 #include "../validators/validators.h"
 #include "../utilities/string_util.h"
 #include <stdio.h>
@@ -20,4 +20,11 @@ player init_player() {
     player p = {NULL, -1, -1, -1};
     p.name = get_name();
     return p;
+}
+
+void free_mem(char **arr, int size) {
+    for (int i = 0; i < size; i++) {
+        free(arr[i]);
+    }
+    free(arr);
 }

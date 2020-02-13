@@ -43,3 +43,10 @@ char *concat_filename(player p) {
     strcat(file, file_extension);
     return file;
 }
+
+/* qsort comparison function */
+int str_cmp(const void *a, const void *b) {
+    const char **q = (const char **) a;
+    const char **p = (const char **) b;
+    return strcmp(*q, *p);
+}

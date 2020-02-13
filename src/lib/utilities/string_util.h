@@ -6,10 +6,14 @@
 #ifndef MINESPR_STRING_UTIL_H
 #define MINESPR_STRING_UTIL_H
 
-#include "../player/player_profile.h"
+#include "../player/player.h"
 
 char *take_input(char *str);
+
 char *cutout_bslashn(char *str);
+
 char *concat_filename(player p);
+
+int str_cmp(const void *a, const void *b);
 
 #endif //MINESPR_STRING_UTIL_H
