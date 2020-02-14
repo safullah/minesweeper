@@ -14,6 +14,8 @@ char *cutout_bslashn(char *str);
 
 char *concat_filename(player p);
 
-int str_cmp(const void *a, const void *b);
+int player_cmp(const void *a, const void *b);
+
+int search_cmp(const void *a, const void *b);
 
 #endif //MINESPR_STRING_UTIL_H

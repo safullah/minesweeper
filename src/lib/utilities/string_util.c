@@ -45,8 +45,13 @@ char *concat_filename(player p) {
 }
 
 /* qsort comparison function */
-int str_cmp(const void *a, const void *b) {
-    const char **q = (const char **) a;
-    const char **p = (const char **) b;
-    return strcmp(*q, *p);
+int player_cmp(const void *a, const void *b) {
+    const player *q = a;
+    const player *p = b;
+    return strcmp(q->name, p->name);
+}
+
+int search_cmp(const void *a, const void *b) {
+    const player *target = *(const player **)a;
+    return strcmp(target, ((const player *)b)->name);
 }

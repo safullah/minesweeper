@@ -19,37 +19,46 @@
 
 void play_game(bool restart) {
     srand(time(NULL));
-    player playerx = init_player();
-    //expandable array
-
-    //player exits ? yes don't make arry bigger : no make space for new player
-    //a funtion to make my array bigger
-    int numof_gamers = 1;
-    int lenof_name = 30;
-    char **gamers = calloc(numof_gamers, sizeof(char *));
-    if (gamers) {
-        for (int i = 0; i < numof_gamers; ++i) {
-            gamers[i] = (char *) calloc(lenof_name, sizeof(char));
+    FILE *databank;;
+    if ((databank = fopen("/home/saif/dev/minespr/databank/gamers.txt", "w+"))) {
+    } else {
+        fprintf(stderr, "Error, while opening file!\n");
+    }
+    unsigned long db_len = 0;
+    if (fseek(databank, SEEK_END, SEEK_SET) != -1) {
+        if (ftell(databank) != -1L) {
+            db_len = ftell(databank);
         }
-        numof_gamers++;
-    } else {
+    }
+    player playerx = init_player();
+    unsigned long numof_gamers = db_len == 0 ? 1 : db_len;
+    player *gamers = calloc(numof_gamers, sizeof(player));
+    if (!gamers) {
         printf("Error, please try starting the game again!");
         exit(EXIT_FAILURE);
     }
 
-    if (!realloc(gamers, sizeof(gamers) * 2)) {
-        printf("Error, please try starting the game again!");
-        exit(EXIT_FAILURE);
+    if (db_len != 0) {
+        unsigned long read_elements = fread(&gamers, sizeof(player), db_len, databank);
+        if (db_len != read_elements) {
+            fprintf(stderr, "Error, while reading databank!\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
+    fclose(GAME);
     //search gamer
-    size_t str_len = sizeof(gamers) / sizeof(char *);
-    qsort((void *) gamers, str_len, sizeof(char *), str_cmp);
-    char *target = (char *) bsearch(&playerx.name, gamers, sizeof(gamers), sizeof(char *), str_cmp);
-    if (target != NULL) {
-        printf("gamer found %s", target);
+    qsort((void *) gamers, numof_gamers, sizeof(player), player_cmp);
+    player *target = (player *) bsearch(&playerx, gamers, sizeof(*gamers), sizeof(player), player_cmp);
+    //player not in db -> a new player
+    if (!target) {
+        gamers = realloc(gamers, (++numof_gamers) * sizeof(*gamers));
+        if (!gamers) {
+            printf("Error, please try starting the game again!");
+            exit(EXIT_FAILURE);
+        }
     } else {
-        printf("gamer not found.\n");
+        playerx = *target;
     }
 
     char *file = concat_filename(playerx);
@@ -80,6 +89,7 @@ void play_game(bool restart) {
                 playerx.wins++;
                 fwrite(&playerx, sizeof(player), 1, GAME);
                 fclose(GAME);
+                fclose(databank);
 
                 player hafsa;
                 file = concat_filename(playerx);
