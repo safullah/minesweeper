@@ -51,7 +51,9 @@ int player_cmp(const void *a, const void *b) {
     return strcmp(q->name, p->name);
 }
 
+/*
 int search_cmp(const void *a, const void *b) {
     const player *target = *(const player **)a;
-    return strcmp(target, ((const player *)b)->name);
+    return strcmp(&target, ((const player *)b)->name);
 }
+*/

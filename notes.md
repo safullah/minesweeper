@@ -44,3 +44,6 @@ if flagged mines = num of total mines
 
 #### bugs
 do not allow to open a second time
+
+#### TODO
+free memory

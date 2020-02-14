@@ -20,39 +20,36 @@
 void play_game(bool restart) {
     srand(time(NULL));
     FILE *databank;;
-    if ((databank = fopen("/home/saif/dev/minespr/databank/gamers.txt", "w+"))) {
-    } else {
-        fprintf(stderr, "Error, while opening file!\n");
+    char *pathof_db = "/home/saif/dev/minespr/databank/databank.txt";
+    if (!(databank = fopen(pathof_db, "w+"))) {
+        fprintf(stderr, "Error, while opening databank!\n");
     }
     unsigned long db_len = 0;
-    if (fseek(databank, SEEK_END, SEEK_SET) != -1) {
+    if (fseek(databank, 0, SEEK_END) != -1) {
         if (ftell(databank) != -1L) {
             db_len = ftell(databank);
         }
     }
     player playerx = init_player();
-    unsigned long numof_gamers = db_len == 0 ? 1 : db_len;
+    unsigned long numof_gamers = db_len;
     player *gamers = calloc(numof_gamers, sizeof(player));
     if (!gamers) {
         printf("Error, please try starting the game again!");
         exit(EXIT_FAILURE);
     }
-
+    player *target = NULL;
     if (db_len != 0) {
-        unsigned long read_elements = fread(&gamers, sizeof(player), db_len, databank);
+        unsigned long read_elements = fread(gamers, sizeof(player), db_len, databank);
         if (db_len != read_elements) {
             fprintf(stderr, "Error, while reading databank!\n");
             exit(EXIT_FAILURE);
         }
+        qsort((void *) gamers, numof_gamers, sizeof(player), player_cmp);
+        target = (player *) bsearch(&playerx, gamers, sizeof(*gamers), sizeof(player), player_cmp);
     }
-
-    fclose(GAME);
-    //search gamer
-    qsort((void *) gamers, numof_gamers, sizeof(player), player_cmp);
-    player *target = (player *) bsearch(&playerx, gamers, sizeof(*gamers), sizeof(player), player_cmp);
     //player not in db -> a new player
     if (!target) {
-        gamers = realloc(gamers, (++numof_gamers) * sizeof(*gamers));
+        gamers = realloc(gamers, (++numof_gamers) * sizeof(player));
         if (!gamers) {
             printf("Error, please try starting the game again!");
             exit(EXIT_FAILURE);
@@ -63,7 +60,6 @@ void play_game(bool restart) {
 
     char *file = concat_filename(playerx);
     if ((GAME = fopen(file, "w"))) {
-        //fprintf(GAME, "%s",playerx.name);
         bool game_over = false;
         //two boards
         cell hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
@@ -89,6 +85,18 @@ void play_game(bool restart) {
                 playerx.wins++;
                 fwrite(&playerx, sizeof(player), 1, GAME);
                 fclose(GAME);
+                gamers[numof_gamers] = playerx;
+                fwrite(gamers, sizeof(player), numof_gamers, databank);
+                fclose(databank);
+
+                player *copyof_gamers;
+                databank = fopen(pathof_db, "r");
+                fread(&copyof_gamers, sizeof(player), numof_gamers, databank);
+                for (unsigned long i = 0; i < numof_gamers; i++) {
+                    printf("%s", copyof_gamers[i].name);
+                    printf("wins: %d", copyof_gamers[i].wins);
+                    printf("losts: %d", copyof_gamers[i].losts);
+                }
                 fclose(databank);
 
                 player hafsa;
