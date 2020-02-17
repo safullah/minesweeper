@@ -11,6 +11,10 @@ gdbserver localhost:9090 ./minespr
 ps -ef |grep gdbserver
 kill -9 <pid>
 
+od -Ax -t x1z filename
+od -c book.dat 
+
+
 #### get absolute path of a file
 readlink -f file.txt
 
@@ -28,8 +32,11 @@ doxy doc view ctrl+Q
 - write doc
 - valgrind
 - free all mallocs
-- exit not working after restart (exitart)
-
+- task 6:
+each player gets two board, mines as well
+when abort save these boards and mines
+when starting a new game ask the player if he wants to load the game
+if yes read the assign the boards and mines to BOARDS and MINES
 
 #### thinking process
 when all cells without mines are opened
@@ -41,6 +48,16 @@ all mines are marked
 count flagged mines
 if flagged mines = num of total mines
 => win
+
+start game
+check db
+player exits
+load him
+else add him to gamers
+
+game finished
+save player in gamers
+create for him a file
 
 #### bugs
 do not allow to open a second time

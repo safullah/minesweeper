@@ -14,6 +14,8 @@ char *cutout_bslashn(char *str);
 
 char *concat_filename(player p);
 
+char *concat_filepath(player p);
+
 int player_cmp(const void *a, const void *b);
 
 int search_cmp(const void *a, const void *b);

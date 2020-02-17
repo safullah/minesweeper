@@ -14,12 +14,14 @@ typedef struct {
     char *name;
     int games;
     int wins;
-    int losts;
+    int losses;
     int cells;
 } player;
 
+player PLAYERX;
 char *get_name();
 player init_player();
+void load_player();
 void free_mem(char **arr, int size);
 
 #endif //MINESPR_PLAYER_H

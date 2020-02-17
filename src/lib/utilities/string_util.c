@@ -32,16 +32,24 @@ char *cutout_bslashn(char *str) {
     }
     return copy;
 }
-
 char *concat_filename(player p) {
-    static char file[30];
-    memset(file, '\0', sizeof(file));
-    char *path = "/home/saif/dev/minespr/databank/";
-    strcpy(file, path);
-    strcat(file, p.name);
+    static char file_name[30];
+    memset(file_name, '\0', sizeof(file_name));
+    strcpy(file_name, p.name);
     char *file_extension = ".txt";
-    strcat(file, file_extension);
-    return file;
+    strcat(file_name, file_extension);
+    return file_name;
+}
+
+char *concat_filepath(player p) {
+    static char filepath[60];
+    memset(filepath, '\0', sizeof(filepath));
+    char *path = "/home/saif/dev/minespr/databank/";
+    strcpy(filepath, path);
+    strcat(filepath, p.name);
+    char *file_extension = ".txt";
+    strcat(filepath, file_extension);
+    return filepath;
 }
 
 /* qsort comparison function */
