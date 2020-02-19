@@ -38,6 +38,8 @@ when abort save these boards and mines
 when starting a new game ask the player if he wants to load the game
 if yes read the assign the boards and mines to BOARDS and MINES
 
+-check count mines
+
 #### thinking process
 when all cells without mines are opened
 count opened cells

@@ -28,24 +28,24 @@ void play_game(bool restart) {
     if (GAME) {
         bool game_over = false;
         //two boards
-        cell hidden_brd[ROWS][COLS], game_brd[ROWS][COLS];
+        cell game_brd[ROWS][COLS];
         int mines[MINES][2];
-        init_brds(hidden_brd, game_brd);
-        place_mines(mines, hidden_brd);
-        count_mines(hidden_brd);
+        init_brd(game_brd);
+        place_mines(mines, game_brd);
+        count_mines(game_brd);
         int empty_cells = ROWS * COLS - MINES;
         while (game_over == false) {
             print_brd(game_brd);
             print_rmaining_mines();
-            print_hbrd(hidden_brd);
+            print_mbrd(game_brd);
             if (restart) {
-                restart_game(game_brd, hidden_brd, mines);
+                restart_game(game_brd, mines);
                 print_brd(game_brd);
                 print_rmaining_mines();
-                print_hbrd(hidden_brd);
+                print_mbrd(game_brd);
             }
             move mov = get_move();
-            game_over = execute_move(game_brd, hidden_brd, mines, mov);
+            game_over = execute_move(game_brd, mines, mov);
             if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
                 printf("\nYou won !\n");
                 PLAYERX.wins++;
@@ -63,7 +63,7 @@ void play_game(bool restart) {
     }
 }
 
-void restart_game(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], int mines[][2]) {
+void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
     //open a random cell
     int random = rand() % (ROWS * COLS) + 1;
     int x = random / ROWS;
@@ -75,16 +75,16 @@ void restart_game(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], int mi
     }
     mov->row = x;
     mov->col = y;
-    if (game_brd[x][y].ch != '*' && hidden_brd[x][y].ngh_mines != 0) {
-        open_cell(game_brd, hidden_brd, mines, *mov);
+    if (game_brd[x][y].ch != '*' && game_brd[x][y].ngh_mines != 0) {
+        open_cell(game_brd, mines, *mov);
         PLAYERX.cells++;
     } else {
-        restart_game(game_brd, hidden_brd, mines);
+        restart_game(game_brd, mines);
     }
     free(mov);
 }
 
-bool execute_move(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], int mines[][2], move mov) {
+bool execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
     /*
     if (game_brd[mov.row][mov.col].s == opened) {
         printf("Already opened, try another cell\n");
@@ -96,18 +96,17 @@ bool execute_move(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], int mi
     }
     */
     if (mov.flag) {
-        do_flagging(game_brd, hidden_brd, mines, mov);
+        flag_cell(game_brd, mov);
     } else {
-        bool game_over = open_cell(game_brd, hidden_brd, mines, mov);
+        bool game_over = open_cell(game_brd, mines, mov);
         return game_over;
     }
     return false;
 }
 
-bool open_cell(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS],
-               int mines[][2], move mov) {
+bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
     bool game_over = false;
-    if (hidden_brd[mov.row][mov.col].ch == '*' && hidden_brd[mov.row][mov.col].state != flagged) {
+    if (game_brd[mov.row][mov.col].ch == '*' && game_brd[mov.row][mov.col].state != flagged) {
         PLAYERX.losses++;
         PLAYERX.games++;
         game_brd[mov.row][mov.col].ch = '*';
@@ -118,35 +117,33 @@ bool open_cell(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS],
         printf("\nYou lost!\n");
         game_over = true;
     } else {
-        int count = hidden_brd[mov.row][mov.col].ngh_mines;
+        int count = game_brd[mov.row][mov.col].ngh_mines;
         game_brd[mov.row][mov.col].ngh_mines = count;
         game_brd[mov.row][mov.col].state = opened;
         OPENED_CELLS++;
         if (!count) {
-            open_ngh(game_brd, hidden_brd, mov);
+            open_ngh(game_brd, mov);
         }
     }
     return game_over;
 }
 
-void do_flagging(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS],
-                 int mines[][2], move mov) {
-    hidden_brd[mov.row][mov.col].state = flagged;
-    if (hidden_brd[mov.row][mov.col].ch == '*') {
+void flag_cell(cell game_brd[ROWS][COLS], move mov) {
+    game_brd[mov.row][mov.col].state = flagged;
+    if (game_brd[mov.row][mov.col].ch == '*') {
         FLAGGED_CORRECT++;
         game_brd[mov.row][mov.col].ch = '*';
     } else {
-        int count = hidden_brd[mov.row][mov.col].ngh_mines;
-        game_brd[mov.row][mov.col].ngh_mines = count;
+        int count = game_brd[mov.row][mov.col].ngh_mines;
         game_brd[mov.row][mov.col].state = flagged;
         FLAGGED_WRONG++;
         if (!count) {
-            open_ngh(game_brd, hidden_brd, mov);
+            open_ngh(game_brd, mov);
         }
     }
 }
 
-void open_ngh(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], move mov) {
+void open_ngh(cell game_brd[ROWS][COLS], move mov) {
     int neighbors[8][2] = {{-1, -1},
                            {-1, 0},
                            {-1, 1},
@@ -166,12 +163,11 @@ void open_ngh(cell game_brd[ROWS][COLS], cell hidden_brd[ROWS][COLS], move mov) 
             temp->col = mov.col + neighbors[i][j + 1];
             if (is_cell_valid(temp->row, temp->col)) {
                 if (game_brd[temp->row][temp->col].state == hidden) {
-                    int count = hidden_brd[temp->row][temp->col].ngh_mines;
-                    game_brd[temp->row][temp->col].ngh_mines = count;
+                    int count = game_brd[temp->row][temp->col].ngh_mines;
                     game_brd[temp->row][temp->col].state = opened;
                     OPENED_CELLS++;
                     if (!count) {
-                        open_ngh(game_brd, hidden_brd, *temp);
+                        open_ngh(game_brd, *temp);
                     }
                 }
             }

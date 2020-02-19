@@ -8,9 +8,12 @@
 
 #include <stdbool.h>
 #include "board_variables.h"
-typedef enum {hidden, opened, flagged} state;
 
-typedef struct{
+typedef enum {
+    hidden, opened, flagged
+} state;
+
+typedef struct {
     char ch;
     state state;
     int ngh_mines;
@@ -22,9 +25,12 @@ typedef struct {
     int row;
 } move;
 
-void init_brds(cell hidden_brd[ROWS][COLS], cell gaming_brd[ROWS][COLS]);
+void init_brd(cell gaming_brd[ROWS][COLS]);
+
 void print_brd(cell game_brd[ROWS][COLS]);
+
 void print_rmaining_mines();
-void print_hbrd(cell hidden_brd[ROWS][COLS]);
+
+void print_mbrd(cell hidden_brd[ROWS][COLS]);
 
 #endif //MINESPR_BOARD_H
