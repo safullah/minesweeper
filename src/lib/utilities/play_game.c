@@ -22,7 +22,6 @@ void play_game(bool restart) {
     srand(time(NULL));
     PLAYERX = init_player();
     load_player();
-    //change this if to check playerx
     char *file_path = concat_filepath(PLAYERX);
     GAME = fopen(file_path, "w");
     if (GAME) {
@@ -47,12 +46,14 @@ void play_game(bool restart) {
             move mov = get_move();
             game_over = execute_move(game_brd, mines, mov);
             if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
-                printf("\nYou won !\n");
+                printf("You won!\n");
                 PLAYERX.wins++;
                 FLAGGED_TOTAL = FLAGGED_CORRECT + FLAGGED_WRONG;
                 PLAYERX.cells += (OPENED_CELLS + FLAGGED_TOTAL);
                 PLAYERX.games++;
+                PLAYERX.info.aborted = true;
                 fwrite(&PLAYERX, sizeof(player), 1, GAME);
+                fwrite(game_brd, sizeof(game_brd), 1, GAME);
                 fclose(GAME);
                 game_over = true;
             }
@@ -114,7 +115,7 @@ bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
             game_brd[mines[i][0]][mines[i][1]].ch = '*';
         }
         print_brd(game_brd);
-        printf("\nYou lost!\n");
+        printf("You lost!\n");
         game_over = true;
     } else {
         int count = game_brd[mov.row][mov.col].ngh_mines;

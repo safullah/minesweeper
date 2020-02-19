@@ -8,14 +8,23 @@
 
 #include <bits/types/FILE.h>
 #include <stdlib.h>
+#include "../boards/board.h"
 
 FILE *GAME;
+typedef struct {
+    int rows;
+    int cols;
+    int mines;
+    bool aborted;
+} game;
+
 typedef struct {
     char *name;
     int games;
     int wins;
     int losses;
     int cells;
+    game info;
 } player;
 
 player PLAYERX;

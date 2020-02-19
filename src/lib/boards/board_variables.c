@@ -14,6 +14,7 @@
 int ROWS = 0;
 int COLS = 0;
 int MINES = 0;
+int MAXCOLS = 20;
 int OPENED_CELLS = 0;
 int FLAGGED_CORRECT = 0;
 int FLAGGED_WRONG = 0;

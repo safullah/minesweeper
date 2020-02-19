@@ -34,12 +34,13 @@ move extract_move(char *str) {
     return mov;
 }
 
-char *get_input() {
-    printf("\nEnter <column> <row> : ");
+char *get_input(char *str) {
+    printf("\n%s :", str);
     char input[10];
     memset(input, '\0', sizeof(char)*10);
     char *result = fgets(input, sizeof(input) / sizeof(char), stdin);
     while (result == NULL) {
+        //TODO pass str for this prinff as well
         printf("Enter column row in the following format: \n"
                "  enter column row :A5\n");
         result = fgets(input, sizeof(input) / sizeof(char), stdin);
@@ -56,8 +57,9 @@ char *get_input() {
 move get_move() {
     bool valid = false;
     move mov = {NULL, -1, -1};
+    char *str =  "Enter <column> <row>";
     while (valid != true) {
-        char *input = get_input();
+        char *input = get_input(str);
         if (strcmp(input, "exit") == 0) {
             exit(1);
         }
