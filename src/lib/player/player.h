@@ -30,7 +30,8 @@ typedef struct {
 player PLAYERX;
 char *get_name();
 player init_player();
-void load_player();
+bool load_player(cell game_brd[ROWS][COLS]);
+void load_abortedgame();
 void free_mem(char **arr, int size);
 
 #endif //MINESPR_PLAYER_H

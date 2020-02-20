@@ -41,28 +41,17 @@ if yes read the assign the boards and mines to BOARDS and MINES
 -check count mines
 
 #### thinking process
-when all cells without mines are opened
-count opened cells
-if opened cells == all cells - cells with mines
-=> win
-
-all mines are marked
-count flagged mines
-if flagged mines = num of total mines
-=> win
-
-start game
-check db
-player exits
-load him
-else add him to gamers
-
-game finished
-save player in gamers
-create for him a file
 
 #### bugs
-do not allow to open a second time
+- do not allow to open a second time
+- show mine if flagged
+
+- when a file is opened it has to be closed
+take car of exit, abort or any other error where the game is killed
 
 #### TODO
 free memory
+
+#### next
+refactor load_player
+do testing!!!

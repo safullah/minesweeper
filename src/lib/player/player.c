@@ -29,7 +29,8 @@ player init_player() {
     return p;
 }
 
-void load_player() {
+bool load_player(cell game_brd[ROWS][COLS]) {
+    bool loaded = false;
     char *file_name = concat_filename(PLAYERX);
     DIR *d;
     struct dirent *dir;
@@ -44,17 +45,33 @@ void load_player() {
                 char *file_path = concat_filepath(PLAYERX);
                 GAME = fopen(file_path, "r");
                 if ((fread(&PLAYERX, sizeof(player), 1, GAME) != 0)) {
-
                     printf("\nName: %s\n", PLAYERX.name);
                     printf("Games: %d\n", PLAYERX.games);
                     printf("Wins: %d\n", PLAYERX.wins);
                     printf("Losses: %d\n", PLAYERX.losses);
                     printf("Opened cells: %d\n", PLAYERX.cells);
-                    if (PLAYERX.info.aborted){
-                        char *str = "Do you want to load the aborted game? y/n";
-                        char *answer = get_input(str);
-                        if (strcmp(answer, "y") == 0) {
-                            load_abortedgame();
+                    if (PLAYERX.info.aborted) {
+                        ROWS = PLAYERX.info.rows;
+                        COLS = PLAYERX.info.cols;
+                        MINES = PLAYERX.info.mines;
+                        char *question = "Do you want to load the aborted game? y/n";
+                        char *hint = " ";
+                        //TODO get_answer();
+                        char *answer = get_input(question, hint);
+                        bool result = is_answer(answer);
+                        if (result && (strcmp(answer, "y") == 0 || strcmp(answer, "yes") == 0)) {
+                            for (int i = 0; i < ROWS; ++i) {
+                                for (int j = 0; j < COLS; ++j) {
+                                    cell c;
+                                    if (fread(&c, sizeof(cell), 1, GAME) != 0){
+                                        game_brd[i][j] = c;
+                                    } else {
+                                        printf("Error, loading game board\n");
+                                        exit(EXIT_FAILURE);
+                                    }
+                                }
+                            }
+                            loaded = true;
                         }
                     }
                 } else {
@@ -67,6 +84,7 @@ void load_player() {
         }
         closedir(d);
     }
+    return loaded;
 }
 
 void free_mem(char **arr, int size) {

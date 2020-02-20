@@ -31,8 +31,12 @@ void print_brd(cell game_brd[ROWS][COLS]) {
             printf("%d ", i);
         }
         for (int j = 0; j < COLS; j++) {
-            if (game_brd[i][j].state == opened || game_brd[i][j].state == flagged) {
-                printf(" %d ", game_brd[i][j].ngh_mines);
+            if (game_brd[i][j].state != hidden) {
+                if (game_brd[i][j].ch == '*'){
+                    printf(" %c ", game_brd[i][j].ch);
+                } else {
+                    printf(" %d ", game_brd[i][j].ngh_mines);
+                }
             } else {
                 if (game_brd[i][j].ch == '*' && game_brd[i][j].state == hidden) {
                     printf(" - ");

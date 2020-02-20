@@ -20,19 +20,22 @@
 
 void play_game(bool restart) {
     srand(time(NULL));
+    cell game_brd[ROWS][COLS];
     PLAYERX = init_player();
-    load_player();
+    bool loaded = load_player(game_brd);
     char *file_path = concat_filepath(PLAYERX);
     GAME = fopen(file_path, "w");
     if (GAME) {
-        bool game_over = false;
-        //two boards
-        cell game_brd[ROWS][COLS];
+
         int mines[MINES][2];
-        init_brd(game_brd);
-        place_mines(mines, game_brd);
-        count_mines(game_brd);
+        if (!loaded) {
+            init_brd(game_brd);
+            place_mines(mines, game_brd);
+            count_mines(game_brd);
+        }
+
         int empty_cells = ROWS * COLS - MINES;
+        bool game_over = false;
         while (game_over == false) {
             print_brd(game_brd);
             print_rmaining_mines();
@@ -44,23 +47,19 @@ void play_game(bool restart) {
                 print_mbrd(game_brd);
             }
             move mov = get_move();
+            if (mov.abort){
+                save_game(game_brd, mov.abort);
+            }
             game_over = execute_move(game_brd, mines, mov);
             if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
                 printf("You won!\n");
-                PLAYERX.wins++;
-                FLAGGED_TOTAL = FLAGGED_CORRECT + FLAGGED_WRONG;
-                PLAYERX.cells += (OPENED_CELLS + FLAGGED_TOTAL);
-                PLAYERX.games++;
-                PLAYERX.info.aborted = true;
-                fwrite(&PLAYERX, sizeof(player), 1, GAME);
-                fwrite(game_brd, sizeof(game_brd), 1, GAME);
-                fclose(GAME);
+                save_game(game_brd, mov.abort);
                 game_over = true;
             }
         }
     } else {
-        //call the function again
         fprintf(stderr, "Error, while opening file!\n");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -83,6 +82,19 @@ void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
         restart_game(game_brd, mines);
     }
     free(mov);
+}
+
+void save_game(cell game_brd[ROWS][COLS], bool abort) {
+    PLAYERX.wins++;
+    FLAGGED_TOTAL = FLAGGED_CORRECT + FLAGGED_WRONG;
+    PLAYERX.cells += (OPENED_CELLS + FLAGGED_TOTAL);
+    PLAYERX.games++;
+    PLAYERX.info.aborted = abort;
+    fwrite(&PLAYERX, sizeof(player), 1, GAME);
+    if (abort) {
+        fwrite(game_brd, sizeof(game_brd[ROWS][COLS]), 1, GAME);
+    }
+    fclose(GAME);
 }
 
 bool execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {

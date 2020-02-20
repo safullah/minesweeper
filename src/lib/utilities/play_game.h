@@ -13,6 +13,8 @@ void restart_game(cell game_brd[ROWS][COLS], int mines[][2]);
 
 void play_game(bool restart);
 
+void save_game(cell game_brd[ROWS][COLS], bool abort);
+
 bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov);
 
 void open_ngh(cell game_brd[ROWS][COLS], move mov);
