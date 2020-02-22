@@ -24,8 +24,8 @@ player init_player() {
     info.cols = COLS;
     info.mines = MINES;
     info.aborted = false;
-    player p = {NULL, 0, 0, 0, 0, info};
-    p.name = get_name();
+    player p = {"\0", 0, 0, 0, 0, info};
+    strcpy(p.name, get_name());
     return p;
 }
 
@@ -49,10 +49,10 @@ bool load_player(cell game_brd[ROWS][COLS]) {
                 for (int i = 0; i < ROWS; ++i) {
                     for (int j = 0; j < COLS; ++j) {
                         cell c;
-                        if (fread(&c, sizeof(cell), 1, GAME) != 0) {
+                        if (fread(&c, sizeof(cell), 1, GAME) == 1) {
                             game_brd[i][j] = c;
                         } else {
-                            printf("Error, loading game board\n");
+                            printf("Error, loading the game\n");
                             fclose(GAME);
                             exit(EXIT_FAILURE);
                         }
@@ -70,7 +70,7 @@ bool load_player(cell game_brd[ROWS][COLS]) {
     return loaded;
 }
 
-bool player_exits() {
+bool is_existent() {
     bool exists = false;
     char *players_file = concat_filename(PLAYERX);
     DIR *databank;

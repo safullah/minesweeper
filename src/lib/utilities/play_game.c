@@ -22,21 +22,19 @@ void play_game(bool restart) {
     srand(time(NULL));
     cell game_brd[ROWS][COLS];
     PLAYERX = init_player();
+    char *file_path = concat_filepath(PLAYERX);
     bool loaded = false;
-    if (player_exits()) {
+    if (is_existent()) {
         loaded = load_player(game_brd);
     }
-    char *file_path = concat_filepath(PLAYERX);
     GAME = fopen(file_path, "w");
     if (GAME) {
-
         int mines[MINES][2];
         if (!loaded) {
             init_brd(game_brd);
             place_mines(mines, game_brd);
             count_mines(game_brd);
         }
-
         int empty_cells = ROWS * COLS - MINES;
         bool game_over = false;
         move mov;
@@ -96,9 +94,19 @@ void save_game(cell game_brd[ROWS][COLS], bool abort) {
     FLAGGED_TOTAL = FLAGGED_CORRECT + FLAGGED_WRONG;
     PLAYERX.cells += (OPENED_CELLS + FLAGGED_TOTAL);
     PLAYERX.info.aborted = abort;
-    fwrite(&PLAYERX, sizeof(player), 1, GAME);
+    if (fwrite(&PLAYERX, sizeof(player), 1, GAME) != 1) {
+        printf("Error, while saving the player!");
+        exit(EXIT_FAILURE);
+    }
     if (abort) {
-        fwrite(game_brd, sizeof(game_brd[ROWS][COLS]), 1, GAME);
+        for (int i = 0; i < ROWS; ++i) {
+            for (int j = 0; j < COLS; ++j) {
+                if (fwrite(&game_brd[i][j], sizeof(cell), 1, GAME) == 0) {
+                    printf("Error, while saving the game!");
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
     }
     fclose(GAME);
     exit(EXIT_SUCCESS);
