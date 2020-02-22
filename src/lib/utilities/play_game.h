@@ -7,7 +7,7 @@
 #define MINESPR_PLAY_GAME_H
 
 #include <stdbool.h>
-#include "../boards/board.h"
+#include "../board/board.h"
 
 void restart_game(cell game_brd[ROWS][COLS], int mines[][2]);
 

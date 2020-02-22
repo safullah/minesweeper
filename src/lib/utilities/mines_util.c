@@ -7,8 +7,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../boards/board.h"
-#include "../boards/board_variables.h"
+#include "../board/board.h"
+#include "../board/board_variables.h"
 #include "neighbor_cells.h"
 
 void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {

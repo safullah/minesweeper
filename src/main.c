@@ -1,5 +1,5 @@
 #include "lib/utilities/play_game.h"
-#include "lib/boards/board_variables.h"
+#include "lib/board/board_variables.h"
 #include "lib/validators/validators.h"
 
 #include <stdlib.h>

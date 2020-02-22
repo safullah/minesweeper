@@ -8,7 +8,7 @@
 
 #include <bits/types/FILE.h>
 #include <stdlib.h>
-#include "../boards/board.h"
+#include "../board/board.h"
 
 FILE *GAME;
 

@@ -7,7 +7,7 @@
 #define MINESPR_VALIDATORS_H
 
 #include <stdbool.h>
-#include "../boards/board.h"
+#include "../board/board.h"
 
 bool is_cell_valid(int row, int col);
 

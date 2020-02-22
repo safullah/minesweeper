@@ -8,8 +8,8 @@
 #include "mines_util.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include "../boards/board.h"
-#include "../boards/board_variables.h"
+#include "../board/board.h"
+#include "../board/board_variables.h"
 #include "../validators/validators.h"
 #include "../player/player.h"
 #include "string_util.h"

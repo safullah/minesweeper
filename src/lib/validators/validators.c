@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include "../boards/board_variables.h"
+#include "../board/board_variables.h"
 
 // A Utility Function to check whether given cell (row, col) is a valid cell or not
 bool is_cell_valid(int row, int col) {

@@ -12,7 +12,6 @@ kill -9 <pid>
 od -Ax -t x1z filename
 od -c book.dat 
 
-
 #### get absolute path of a file
 readlink -f file.txt
 
@@ -24,22 +23,21 @@ doxy doc view ctrl+Q
 #### keep in mind
 - error handling
 
-##### tasks
-- implement restart
-- write doc
-- valgrind
-- free all mallocs
-
-#### thinking process
 
 #### bugs
 - do not allow to open a second time
 - when a file is opened it has to be closed
-take care of exit, abort or any other error where the game is killed
+  take care of exit, abort or any other error where the game is killed
 
-#### TODO
-free memory
+##### tasks
+- valgrind
+- write doc
+- free all mallocs
+- free memory
 - implement -help or -h
 
 #### next
-do testing!!!
+- write doc
+- do testing!!!
+
+#### thinking process

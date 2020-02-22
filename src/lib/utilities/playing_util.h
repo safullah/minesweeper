@@ -7,7 +7,7 @@
 #define MINESPR_PLAYING_UTIL_H
 
 #include <stdbool.h>
-#include "../boards/board.h"
+#include "../board/board.h"
 move extract_move(char *str);
 char *get_input(char * str, char *hint);
 move get_move();
