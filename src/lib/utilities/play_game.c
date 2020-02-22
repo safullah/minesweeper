@@ -22,7 +22,10 @@ void play_game(bool restart) {
     srand(time(NULL));
     cell game_brd[ROWS][COLS];
     PLAYERX = init_player();
-    bool loaded = load_player(game_brd);
+    bool loaded = false;
+    if (player_exits()) {
+        loaded = load_player(game_brd);
+    }
     char *file_path = concat_filepath(PLAYERX);
     GAME = fopen(file_path, "w");
     if (GAME) {
@@ -36,6 +39,7 @@ void play_game(bool restart) {
 
         int empty_cells = ROWS * COLS - MINES;
         bool game_over = false;
+        move mov;
         while (game_over == false) {
             print_brd(game_brd);
             print_rmaining_mines();
@@ -46,17 +50,21 @@ void play_game(bool restart) {
                 print_rmaining_mines();
                 print_mbrd(game_brd);
             }
-            move mov = get_move();
-            if (mov.abort){
+            mov = get_move();
+            if (mov.abort) {
                 save_game(game_brd, mov.abort);
             }
             game_over = execute_move(game_brd, mines, mov);
+            //in case of winning the game
             if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
                 printf("You won!\n");
+                PLAYERX.wins++;
+                PLAYERX.games++;
                 save_game(game_brd, mov.abort);
-                game_over = true;
             }
         }
+        //in case of losing the game
+        save_game(game_brd, mov.abort);
     } else {
         fprintf(stderr, "Error, while opening file!\n");
         exit(EXIT_FAILURE);
@@ -85,36 +93,29 @@ void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
 }
 
 void save_game(cell game_brd[ROWS][COLS], bool abort) {
-    PLAYERX.wins++;
     FLAGGED_TOTAL = FLAGGED_CORRECT + FLAGGED_WRONG;
     PLAYERX.cells += (OPENED_CELLS + FLAGGED_TOTAL);
-    PLAYERX.games++;
     PLAYERX.info.aborted = abort;
     fwrite(&PLAYERX, sizeof(player), 1, GAME);
     if (abort) {
         fwrite(game_brd, sizeof(game_brd[ROWS][COLS]), 1, GAME);
     }
     fclose(GAME);
+    exit(EXIT_SUCCESS);
 }
 
 bool execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
-    /*
-    if (game_brd[mov.row][mov.col].s == opened) {
+    bool game_over = false;
+    if (game_brd[mov.row][mov.col].state == opened || game_brd[mov.row][mov.col].state == flagged) {
         printf("Already opened, try another cell\n");
-        return false;
-    }
-    if (game_brd[mov.row][mov.col].s == flagged) {
-        printf("Already opened, try another cell\n");
-        return false;
-    }
-    */
-    if (mov.flag) {
-        flag_cell(game_brd, mov);
     } else {
-        bool game_over = open_cell(game_brd, mines, mov);
-        return game_over;
+        if (mov.flag) {
+            flag_cell(game_brd, mov);
+        } else {
+            game_over = open_cell(game_brd, mines, mov);
+        }
     }
-    return false;
+    return game_over;
 }
 
 bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {

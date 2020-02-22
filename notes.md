@@ -7,7 +7,7 @@ all:
 
 #### gdbserver
 /home/saif/dev/minespr/cmake-build-debug/minespr
-gdbserver localhost:9090 ./minespr
+gdbserver localhost:9090 ./minespr 2x2 1
 ps -ef |grep gdbserver
 kill -9 <pid>
 

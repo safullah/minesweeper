@@ -6,34 +6,36 @@
 #include "string_util.h"
 #include <string.h>
 #include <stdio.h>
-#include "../validators/validators.h"
 
-char *take_input(char *str) {
-    printf("%s\n", str);
-    static char input[30];
-    memset(input, '\0', sizeof(char) * 30);
-    char *result = fgets(input, sizeof(input) / sizeof(char), stdin);
-    while (result == NULL) {
-        printf("%s\n", str);
+char *get_input(char *str, char *hint) {
+    printf("%s ", str);
+    char input[50];
+    memset(input, '\0', sizeof(char) * 50);
+    char *result = NULL;
+    while (result == NULL || strcmp(result, "\n") == 0) {
         result = fgets(input, sizeof(input) / sizeof(char), stdin);
+        if (strchr(input, '\n') == NULL) {
+            printf("input too long: %s\n", result);
+            printf("\n%s ", hint);
+            clear_overflow();
+            result = NULL;
+        }
     }
-    if (is_overflow(input)) {
-        printf("Input too long!\n");
-        take_input(str);
-    }
-    return input;
+    char *copy = cutout_backslashn(input);
+    return copy;
 }
 
-char *cutout_bslashn(char *str) {
-    static char copy[30];
-    memset(copy, '\0', sizeof(char) * 30);
+char *cutout_backslashn(const char *str) {
+    static char copy[50];
+    memset(copy, '\0', sizeof(char) * 50);
     for (int j = 0; *(str + j) != '\n'; j++) {
         copy[j] = *(str + j);
     }
     return copy;
 }
+
 char *concat_filename(player p) {
-    static char file_name[30];
+    static char file_name[50];
     memset(file_name, '\0', sizeof(file_name));
     strcpy(file_name, p.name);
     char *file_extension = ".txt";
@@ -42,7 +44,7 @@ char *concat_filename(player p) {
 }
 
 char *concat_filepath(player p) {
-    static char filepath[60];
+    static char filepath[100];
     memset(filepath, '\0', sizeof(filepath));
     char *path = "/home/saif/dev/minespr/databank/";
     strcpy(filepath, path);
@@ -52,16 +54,9 @@ char *concat_filepath(player p) {
     return filepath;
 }
 
-/* qsort comparison function */
-int player_cmp(const void *a, const void *b) {
-    const player *q = a;
-    const player *p = b;
-    return strcmp(q->name, p->name);
+void clear_overflow() {
+    int ch;
+    while ((ch = fgetc(stdin)) != '\n' && ch != EOF) {
+        //do nothing until buffer is cleared
+    }
 }
-
-/*
-int search_cmp(const void *a, const void *b) {
-    const player *target = *(const player **)a;
-    return strcmp(&target, ((const player *)b)->name);
-}
-*/

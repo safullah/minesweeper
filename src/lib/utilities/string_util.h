@@ -8,16 +8,14 @@
 
 #include "../player/player.h"
 
-char *take_input(char *str);
+char *get_input(char *str, char *hint);
 
-char *cutout_bslashn(char *str);
+char *cutout_backslashn(const char *str);
 
 char *concat_filename(player p);
 
 char *concat_filepath(player p);
 
-int player_cmp(const void *a, const void *b);
-
-int search_cmp(const void *a, const void *b);
+void clear_overflow();
 
 #endif //MINESPR_STRING_UTIL_H

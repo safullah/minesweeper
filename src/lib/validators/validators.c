@@ -91,28 +91,19 @@ bool is_flag(char *str) {
     }
 }
 
-bool is_overflow(const char *input) {
-    bool overflow = false;
-    if (strchr(input, '\n') == NULL) {
-        int ch;
-        while ((ch = fgetc(stdin)) != '\n' && ch != EOF) {
-            overflow = true;
-        }
-    }
-    return overflow;
-}
 
 bool is_answer(char *answer) {
     int cnt = 0;
-    char options[4][3] = {"y", "yes", "n", "no"};
+    char options[4][4] = {"y", "yes", "n", "no"};
     while (*(answer+cnt) != '\0') {
         *(answer+cnt) = (char) tolower(*(answer+cnt));
         cnt++;
     }
+    bool result = false;
     for (int i = 0; i < 4; i++) {
         if (strcmp(answer, options[i]) == 0)  {
-            return true;
+            result =  true;
         }
     }
-    return false;
+    return result;
 }

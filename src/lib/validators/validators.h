@@ -23,8 +23,6 @@ bool is_crd_valid(int x_crd, int y_crd);
 
 bool is_flag(char str[]);
 
-bool is_overflow();
-
 bool is_answer(char *answer);
 
 #endif //MINESPR_VALIDATORS_H
