@@ -59,15 +59,14 @@ bool is_mines_valid() {
     return true;
 }
 
-bool is_crd_valid(int row, int col) {
+bool is_crd_valid(int col, int row) {
     bool valid = true;
-    if (row > ROWS) {
-        printf("Please, enter a valid x coordinate.\n");
+    if (row > ROWS || row < 0) {
+        printf("Please, enter a valid row.\n");
         valid = false;
     }
-
-    if (col > COLS) {
-        printf("Please, enter a valid y coordinate.\n");
+    if (col > COLS || row < 0) {
+        printf("Please, enter a valid column.\n");
         valid = false;
     }
     return valid;

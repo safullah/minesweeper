@@ -17,7 +17,7 @@ bool is_rows_cols_valid();
 
 bool is_mines_valid();
 
-bool is_crd_valid(int row, int col);
+bool is_crd_valid(int col, int row);
 
 bool is_flag(const char *str);
 

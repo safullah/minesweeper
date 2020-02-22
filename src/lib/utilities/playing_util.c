@@ -58,7 +58,7 @@ move get_move() {
         }
         mov = extract_move(input);
         if (mov.col != -1 && mov.row != -1) {
-            if (is_crd_valid(mov.col, mov.row) == true) {
+            if (is_crd_valid(mov.col, mov.row)) {
                 valid = true;
             } else {
                 printf("%s\n", input);
