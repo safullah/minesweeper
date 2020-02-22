@@ -11,17 +11,15 @@
 
 bool is_cell_valid(int row, int col);
 
-bool is_mine(int row, int col, cell board[ROWS][COLS]);
+bool is_mine(int row, int col, cell game_brd[ROWS][COLS]);
 
-void is_argc_valid(int argc);
+bool is_rows_cols_valid();
 
-void is_rows_cols_valid();
+bool is_mines_valid();
 
-void is_mines_valid();
+bool is_crd_valid(int row, int col);
 
-bool is_crd_valid(int x_crd, int y_crd);
-
-bool is_flag(char str[]);
+bool is_flag(const char *str);
 
 bool is_answer(char *answer);
 

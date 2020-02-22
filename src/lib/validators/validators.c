@@ -5,104 +5,89 @@
 
 #include "validators.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include "../boards/board_variables.h"
 
-// A Utility Function to check whether given cell (row, col)
-// is a valid cell or not
+// A Utility Function to check whether given cell (row, col) is a valid cell or not
 bool is_cell_valid(int row, int col) {
-    bool valid = false;
     if ((row >= 0) && (row < ROWS) &&
         (col >= 0) && (col < COLS)) {
-        valid = true;
+        return  true;
     }
-    return valid;
+    return false;
+}
+bool is_mine(int row, int col, cell game_brd[ROWS][COLS]) {
+    return game_brd[row][col].ch == '*' ? true : false;
 }
 
-// A Utility Function to check whether given cell (row, col)
-// has a mine or not.
-bool is_mine(int row, int col, cell board[ROWS][COLS]) {
-    if (board[row][col].ch == '*') {
-        return (true);
-    } else {
-        return (false);
+bool is_rows_cols_valid() {
+    if (ROWS < 0 || COLS < 0) {
+        printf("Enter positive values\n");
+        return false;
     }
-}
-
-void is_argc_valid(int argc) {
-    if (argc != 3) {
-        printf("Error, type the size of board and number of mines in the following format:\n"
-               "  rowsxcols mines: 10x10 20");
-        exit(1);
-    }
-}
-
-void is_rows_cols_valid() {
     //min row and cols 5
     if (ROWS < 1 || COLS < 1) {
         printf("Error, please enter more than 5 rows and columns!");
-        exit(1);
+        return false;
     }
     //highest row and col is 20
     if (ROWS > 20 || COLS > 20) {
         printf("Error, please enter less than 20 rows and columns!");
-        exit(1);
+        return false;
     }
+    return true;
 }
 
-void is_mines_valid() {
+bool is_mines_valid() {
+    if (MINES < 0) {
+        printf("Enter positive values\n");
+        return false;
+    }
     if (MINES > (ROWS * COLS)) {
-        printf("Error, please enter less mines than the number of fields!");
-        exit(1);
+        printf("Error, please enter less mines than the number of fields!\n");
+        return false;
     }
-    //min mines 10
-    if (MINES < 1) {
-        printf("Error, please enter more than 9 mines!");
-        exit(1);
+    if (MINES < 1) { //min mines 10
+        printf("Error, please enter more than 9 mines!\n");
+        return false;
     }
-    // highest num of mines is 300
-    if (MINES > 300) {
-        printf("Error, please enter  less than 300 mines!");
-        exit(1);
+    if (MINES > 300) { // highest num of mines is 300
+        printf("Error, please enter  less than 300 mines!\n");
+        return false;
     }
+    return true;
 }
 
-bool is_crd_valid(int x_crd, int y_crd) {
+bool is_crd_valid(int row, int col) {
     bool valid = true;
-    if (x_crd > ROWS) {
+    if (row > ROWS) {
         printf("Please, enter a valid x coordinate.\n");
         valid = false;
     }
 
-    if (y_crd > COLS) {
+    if (col > COLS) {
         printf("Please, enter a valid y coordinate.\n");
         valid = false;
     }
     return valid;
 }
 
-bool is_flag(char *str) {
-    if (*str == '?') {
-        return true;
-    } else {
-        return false;
-    }
+bool is_flag(const char *str) {
+    return *str == '?' ? true : false;
 }
-
 
 bool is_answer(char *answer) {
     int cnt = 0;
     char options[4][4] = {"y", "yes", "n", "no"};
-    while (*(answer+cnt) != '\0') {
-        *(answer+cnt) = (char) tolower(*(answer+cnt));
+    while (*(answer + cnt) != '\0') {
+        *(answer + cnt) = (char) tolower(*(answer + cnt));
         cnt++;
     }
     bool result = false;
     for (int i = 0; i < 4; i++) {
-        if (strcmp(answer, options[i]) == 0)  {
-            result =  true;
+        if (strcmp(answer, options[i]) == 0) {
+            result = true;
         }
     }
     return result;

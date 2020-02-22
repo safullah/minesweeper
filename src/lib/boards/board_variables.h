@@ -14,4 +14,7 @@ extern int FLAGGED_WRONG;
 extern int FLAGGED_TOTAL;
 int *convert_str_to_int(char *str[], int count);
 int *get_cli_args(int argc, char *argv[]);
+char **extract_params(int argc, char *argv[]);
+void show_params(int argc, char *argv[]);
+void show_hint();
 #endif //MINESPR_BOARD_VARIABLES_H

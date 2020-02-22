@@ -4,10 +4,9 @@
 ///
 
 #include "neighbor_cells.h"
-#include <stdbool.h>
 #include "../validators/validators.h"
 
-int do_counting(int x_crd, int y_crd, cell hidden_brd[ROWS][COLS]) {
+int do_counting(int row, int col, cell game_brd[ROWS][COLS]) {
     int cnt_ngh_mines = 0;
     int neighbors[8][2] = {{-1, -1},
                            {-1, 0},
@@ -19,8 +18,10 @@ int do_counting(int x_crd, int y_crd, cell hidden_brd[ROWS][COLS]) {
                            {1,  0}};
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 1; ++j) {
-            if (is_cell_valid(x_crd + neighbors[i][j], y_crd + neighbors[i][j + 1]) == true) {
-                if (is_mine(x_crd + neighbors[i][j], y_crd + neighbors[i][j + 1], hidden_brd) == true) {
+            int r = row + neighbors[i][j];
+            int c = col + neighbors[i][j + 1];
+            if (is_cell_valid(r, c)) {
+                if (is_mine(r, c, game_brd)) {
                     cnt_ngh_mines++;
                 }
             }

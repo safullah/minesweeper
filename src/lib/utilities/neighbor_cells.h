@@ -6,6 +6,7 @@
 #ifndef MINESPR_NEIGHBOR_CELLS_H
 #define MINESPR_NEIGHBOR_CELLS_H
 #include "../boards/board.h"
-int do_counting(int x_crd, int y_crd, cell hidden_brd[ROWS][COLS]);
+
+int do_counting(int row, int col, cell game_brd[ROWS][COLS]);
 
 #endif //MINESPR_NEIGHBOR_CELLS_H

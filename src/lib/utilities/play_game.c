@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <dirent.h>
 
 void play_game(bool restart) {
     srand(time(NULL));
@@ -55,6 +54,8 @@ void play_game(bool restart) {
             game_over = execute_move(game_brd, mines, mov);
             //in case of winning the game
             if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
+                print_brd(game_brd);
+                print_rmaining_mines();
                 printf("You won!\n");
                 PLAYERX.wins++;
                 PLAYERX.games++;
@@ -76,7 +77,7 @@ void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
     int y = random % COLS;
     move *mov = malloc(sizeof(move));
     if (!mov) {
-        printf("ERROR: Out of memory\n");
+        printf("Error, out of memory\n");
         exit(EXIT_FAILURE);
     }
     mov->row = x;
