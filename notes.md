@@ -35,9 +35,18 @@ doxy doc view ctrl+Q
 - free all mallocs
 - free memory
 - implement -help or -h
+- Explain how your application is supposed to be started.
+  This should be roughly resembling the common usage message printed by command line programs.
+  If your application prints such a message when -h is supplied as parameter you can leave this out.
+
+Give a quick overview about the user inputs your application awaits at runtime.
+If your application is completely self-explanatory (i.e., if it clearly prints when the user is supposed to enter something and the required format) you can leave this out.
 
 #### next
 - write doc
 - do testing!!!
 
 #### thinking process
+findout how to use doxygen 
+comment one file
+check result

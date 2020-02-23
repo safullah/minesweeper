@@ -75,20 +75,34 @@ bool is_existent() {
     char *players_file = concat_filename(PLAYERX);
     DIR *databank;
     struct dirent *dir;
-    databank = opendir("/home/saif/dev/minespr/databank/");
-    if (databank) {
-        while ((dir = readdir(databank)) != NULL) {
-            size_t name_len = strcspn(dir->d_name, "\0");
-            char file_name[50];
-            memset(file_name, '\0', sizeof(file_name));
-            strncpy(file_name, dir->d_name, name_len);
-            if (strcmp(file_name, players_file) == 0) {
-                exists = true;
+    static char dbpath[PATH_MAX] = {'\0'};
+    char *path = find_dir("/", "minespr_databank");
+    if (path) {
+        strcpy(dbpath, path);
+        strcat(dbpath, "/");
+        if ((databank = opendir(dbpath)) == NULL) {
+            printf("Error, cannot open directory: %s\n", dbpath);
+            exit(EXIT_FAILURE);
+        }
+        if (databank) {
+            while ((dir = readdir(databank)) != NULL) {
+                size_t name_len = strcspn(dir->d_name, "\0");
+                char file_name[50];
+                memset(file_name, '\0', sizeof(file_name));
+                strncpy(file_name, dir->d_name, name_len);
+                if (strcmp(file_name, players_file) == 0) {
+                    exists = true;
+                    break;
+                }
             }
         }
+        closedir(databank);
+        return exists;
+    } else {
+        printf("Error, while opening databank");
+        exit(EXIT_FAILURE);
     }
-    closedir(databank);
-    return exists;
+
 }
 
 char *get_answer(char *str) {

@@ -3,8 +3,8 @@
 */
 ///
 
-#ifndef MINESPR_PLAY_GAME_H
-#define MINESPR_PLAY_GAME_H
+#ifndef MINESPR_GAME_UTIL_H
+#define MINESPR_GAME_UTIL_H
 
 #include <stdbool.h>
 #include "../board/board.h"
@@ -23,4 +23,4 @@ void flag_cell(cell game_brd[ROWS][COLS], move mov);
 
 bool execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov);
 
-#endif //MINESPR_PLAY_GAME_H
+#endif //MINESPR_GAME_UTIL_H

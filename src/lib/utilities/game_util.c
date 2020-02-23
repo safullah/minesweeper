@@ -3,7 +3,7 @@
 */
 ///
 
-#include "play_game.h"
+#include "game_util.h"
 #include "playing_util.h"
 #include "mines_util.h"
 #include <stdbool.h>

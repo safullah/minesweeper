@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "../board/board.h"
 #include "../board/board_variables.h"
-#include "neighbor_cells.h"
+#include "neighbor_util.h"
 
 void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
     bool mark[ROWS * COLS];

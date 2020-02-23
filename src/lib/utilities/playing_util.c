@@ -7,7 +7,7 @@
 #include "../validators/validators.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include "play_game.h"
+#include "game_util.h"
 #include "../converter/strtoint.h"
 #include "../player/player.h"
 #include "string_util.h"

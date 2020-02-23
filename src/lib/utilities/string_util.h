@@ -16,6 +16,8 @@ char *concat_filename(player p);
 
 char *concat_filepath(player p);
 
+char *find_dir(char *searchin, char *searchfor);
+
 void clear_overflow();
 
 #endif //MINESPR_STRING_UTIL_H

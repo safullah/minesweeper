@@ -3,7 +3,7 @@
 */
 ///
 
-#include "neighbor_cells.h"
+#include "neighbor_util.h"
 #include "../validators/validators.h"
 
 int do_counting(int row, int col, cell game_brd[ROWS][COLS]) {
