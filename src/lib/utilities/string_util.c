@@ -68,7 +68,6 @@ char *find_dir(char *searchin, char *searchfor) {
     DIR *directory;
     struct dirent *entry;
     struct stat statbuf;
-
     if ((directory = opendir(searchin)) != NULL) {
         int cwd = open(".", O_RDONLY);
         chdir(searchin);
@@ -87,14 +86,14 @@ char *find_dir(char *searchin, char *searchfor) {
                         exit(EXIT_FAILURE);
                     }
                 }
-                // Recurse at a new indent level
+                // Recurse this directory
                 find_dir(entry->d_name, searchfor);
             }
         }
         fchdir(cwd);
         close(cwd);
-        closedir(directory);
     }
+    closedir(directory);
     return path;
 }
 
