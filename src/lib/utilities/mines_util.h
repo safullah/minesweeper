@@ -7,7 +7,7 @@
 #define MINESPR_MINES_UTIL_H
 #include "../board/board.h"
 
-void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]);
+void place_mines(cell hidden_brd[ROWS][COLS], int mines[][2]);
 void count_mines(cell game_brd[ROWS][COLS]);
 
 #endif //MINESPR_MINES_UTIL_H

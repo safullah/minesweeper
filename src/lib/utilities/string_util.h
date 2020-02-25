@@ -14,7 +14,7 @@ char *cutout_backslashn(const char *str);
 
 char *concat_filename(player p);
 
-char *concat_filepath(player p);
+char *concat_filepath(player p, char *db_path);
 
 char *find_dir(char *searchin, char *searchfor);
 

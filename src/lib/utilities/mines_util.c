@@ -11,7 +11,7 @@
 #include "../board/board_variables.h"
 #include "neighbor_util.h"
 
-void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
+void place_mines(cell game_brd[ROWS][COLS], int mines[][2]) {
     bool mark[ROWS * COLS];
     memset(mark, false, sizeof(mark));
     // Continue until all random mines have been created.
@@ -22,7 +22,7 @@ void place_mines(int mines[][2], cell hidden_brd[ROWS][COLS]) {
         if (mark[random] == false) {
             mines[i][0] = x;
             mines[i][1] = y;
-            hidden_brd[mines[i][0]][mines[i][1]].ch = '*';
+            game_brd[mines[i][0]][mines[i][1]].ch = '*';
             mark[random] = true;
             i++;
         }

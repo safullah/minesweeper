@@ -17,21 +17,33 @@
 #include <time.h>
 #include <string.h>
 
-void play_game(bool restart) {
+void play_game() {
     srand(time(NULL));
     cell game_brd[ROWS][COLS];
     PLAYERX = init_player();
-    char *file_path = concat_filepath(PLAYERX);
+    char *db_path = find_dir("/", "minespr_databank");
+    if (strcmp(db_path, "") == 0) {
+        printf("Error, cannot find databank of players");
+        exit(EXIT_FAILURE);
+    }
+    char *file_path = concat_filepath(PLAYERX, db_path);
+    if (strcmp(file_path, "") == 0) {
+        printf("Error, while file for player");
+        exit(EXIT_FAILURE);
+    }
     bool loaded = false;
-    if (is_existent()) {
-        loaded = load_player(game_brd);
+    bool existent = is_existent(db_path);
+    if (existent) {
+        loaded = load_player(game_brd, db_path);
     }
     GAME = fopen(file_path, "w");
     if (GAME) {
         int mines[MINES][2];
+        /*if a game was not loaded then game_brd is empty. it need to be filled
+         * in case of restart loaded has to be false. because the board need to be prepared fo a new game*/
         if (!loaded) {
             init_brd(game_brd);
-            place_mines(mines, game_brd);
+            place_mines(game_brd, mines);
             count_mines(game_brd);
         }
         int empty_cells = ROWS * COLS - MINES;
@@ -41,13 +53,11 @@ void play_game(bool restart) {
             print_brd(game_brd);
             print_rmaining_mines();
             print_mbrd(game_brd);
-            if (restart) {
-                restart_game(game_brd, mines);
-                print_brd(game_brd);
-                print_rmaining_mines();
-                print_mbrd(game_brd);
-            }
             mov = get_move();
+            if(mov.restart) {
+                restart_game(game_brd, mines);
+                continue;
+            }
             if (mov.abort) {
                 save_game(game_brd, mov.abort);
             }
@@ -65,30 +75,9 @@ void play_game(bool restart) {
         //in case of losing the game
         save_game(game_brd, mov.abort);
     } else {
-        fprintf(stderr, "Error, while opening file!\n");
+        printf("Error, while opening file!\n");
         exit(EXIT_FAILURE);
     }
-}
-
-void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
-    //open a random cell
-    int random = rand() % (ROWS * COLS) + 1;
-    int x = random / ROWS;
-    int y = random % COLS;
-    move *mov = malloc(sizeof(move));
-    if (!mov) {
-        printf("Error, out of memory\n");
-        exit(EXIT_FAILURE);
-    }
-    mov->row = x;
-    mov->col = y;
-    if (game_brd[x][y].ch != '*' && game_brd[x][y].ngh_mines != 0) {
-        open_cell(game_brd, mines, *mov);
-        PLAYERX.cells++;
-    } else {
-        restart_game(game_brd, mines);
-    }
-    free(mov);
 }
 
 void save_game(cell game_brd[ROWS][COLS], bool abort) {
@@ -197,6 +186,35 @@ void open_ngh(cell game_brd[ROWS][COLS], move mov) {
         }
     }
     free(temp);
+}
+
+void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
+    printf("starting a new game\n");
+    init_brd(game_brd);
+    place_mines(game_brd, mines);
+    count_mines(game_brd);
+    open_randomcell(game_brd, mines);
+}
+
+void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]){
+    srand(time(NULL));
+    int random = rand() % (ROWS * COLS) + 1;
+    int x = random / ROWS;
+    int y = random % COLS;
+    move *mov = malloc(sizeof(move));
+    if (!mov) {
+        printf("Error, out of memory\n");
+        exit(EXIT_FAILURE);
+    }
+    mov->row = x;
+    mov->col = y;
+    if (game_brd[x][y].ch != '*' && game_brd[x][y].ngh_mines != 0) {
+        open_cell(game_brd, mines, *mov);
+        PLAYERX.cells++;
+    } else {
+        open_randomcell(game_brd, mines);
+    }
+    free(mov);
 }
 
 

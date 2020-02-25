@@ -47,20 +47,13 @@ char *concat_filename(player p) {
     return file_name;
 }
 
-char *concat_filepath(player p) {
+char *concat_filepath(player p, char *db_path) {
     static char filepath[PATH_MAX] = {'\0'};
-    char *path = find_dir("/", "minespr_databank");
-    if (path) {
-        strcpy(filepath, path);
-        strcat(filepath, "/");
-        strcat(filepath, p.name);
-        strcat(filepath, ".txt");
-        return filepath;
-    } else {
-        printf("Error, while opening databank");
-        exit(EXIT_FAILURE);
-    }
-
+    strcpy(filepath, db_path);
+    strcat(filepath, "/");
+    strcat(filepath, p.name);
+    strcat(filepath, ".txt");
+    return filepath;
 }
 
 char *find_dir(char *searchin, char *searchfor) {
@@ -92,8 +85,11 @@ char *find_dir(char *searchin, char *searchfor) {
         }
         fchdir(cwd);
         close(cwd);
+        if (closedir(directory) == -1) {
+            perror("closedir() error");
+            exit(EXIT_FAILURE);
+        }
     }
-    closedir(directory);
     return path;
 }
 

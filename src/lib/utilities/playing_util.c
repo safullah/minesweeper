@@ -16,7 +16,7 @@
 #include <ctype.h>
 
 move extract_move(char *str) {
-    move mov = {false, -1, -1, false};
+    move mov = {false, -1, -1, false, false};
     if (is_flag(&str[0])) {
         mov.flag = true;
     }
@@ -38,19 +38,21 @@ move extract_move(char *str) {
 
 move get_move() {
     bool valid = false;
-    move mov = {NULL, -1, -1, false};
+    move mov = {NULL, -1, -1, false, false};
     char *command = "Enter <column> <row>";
     char *hint = "Enter <column> <row> [example A5]";
     while (valid != true) {
         char *input = get_input(command, hint);
         if (strcmp(input, "exit") == 0) {
+            if (fwrite(&PLAYERX, sizeof(player), 1, GAME) != 1) {
+                printf("Error, while saving data!");
+            }
             fclose(GAME);
             exit(EXIT_SUCCESS);
         }
         if (strcmp(input, "restart") == 0) {
-            fclose(GAME);
-            bool restart = true;
-            play_game(restart);
+            mov.restart = true;
+            break;
         }
         if (strcmp(input, "abort") == 0) {
             mov.abort = true;

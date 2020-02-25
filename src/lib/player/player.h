@@ -34,9 +34,9 @@ char *get_name();
 
 player init_player();
 
-bool load_player(cell game_brd[ROWS][COLS]);
+bool load_player(cell game_brd[ROWS][COLS], char *db_path);
 
-bool is_existent();
+bool is_existent(char *db_path);
 
 char *get_answer(char *str);
 

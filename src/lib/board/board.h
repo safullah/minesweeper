@@ -24,6 +24,7 @@ typedef struct {
     int col;
     int row;
     bool abort;
+    bool restart;
 } move;
 
 void init_brd(cell gaming_brd[ROWS][COLS]);
