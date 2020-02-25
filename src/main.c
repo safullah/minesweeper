@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
         show_params(argc, argv);
         exit(EXIT_FAILURE);
     }
-    bool restart = false;
-    play_game(restart);
+    play_game();
     return EXIT_SUCCESS;
 }

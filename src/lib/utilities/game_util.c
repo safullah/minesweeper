@@ -16,19 +16,27 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
+#include <limits.h>
 
-void play_game() {
+void play_game(void) {
     srand(time(NULL));
     cell game_brd[ROWS][COLS];
     PLAYERX = init_player();
-    char *db_path = find_dir("/", "minespr_databank");
+    char *databank = "minespr_databank";
+    char db_path[PATH_MAX + 1] = {'\0'};
+    //is databank in the cwd ? no need for find_dir : search databank starting from root
+    char *path = realpath(databank, db_path);
+    if (path == NULL) {
+        printf("starting minesweeper...\n");
+        char *check = strcpy(db_path, find_dir("/", databank));
+        if (check == NULL) {
+            printf("Error while copying path to databank");
+            exit(EXIT_FAILURE);
+        }
+    }
     if (strcmp(db_path, "") == 0) {
         printf("Error, cannot find databank of players");
-        exit(EXIT_FAILURE);
-    }
-    char *file_path = concat_filepath(PLAYERX, db_path);
-    if (strcmp(file_path, "") == 0) {
-        printf("Error, while file for player");
         exit(EXIT_FAILURE);
     }
     bool loaded = false;
@@ -36,6 +44,7 @@ void play_game() {
     if (existent) {
         loaded = load_player(game_brd, db_path);
     }
+    char *file_path = concat_filepath(PLAYERX, db_path);
     GAME = fopen(file_path, "w");
     if (GAME) {
         int mines[MINES][2];
@@ -54,7 +63,7 @@ void play_game() {
             print_rmaining_mines();
             print_mbrd(game_brd);
             mov = get_move();
-            if(mov.restart) {
+            if (mov.restart) {
                 restart_game(game_brd, mines);
                 continue;
             }
@@ -196,7 +205,7 @@ void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
     open_randomcell(game_brd, mines);
 }
 
-void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]){
+void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]) {
     srand(time(NULL));
     int random = rand() % (ROWS * COLS) + 1;
     int x = random / ROWS;

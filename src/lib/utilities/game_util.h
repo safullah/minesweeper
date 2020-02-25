@@ -11,7 +11,7 @@
 
 void restart_game(cell game_brd[ROWS][COLS], int mines[][2]);
 
-void play_game();
+void play_game(void);
 
 void save_game(cell game_brd[ROWS][COLS], bool abort);
 

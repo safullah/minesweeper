@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
 
 char *get_input(char *str, char *hint) {
     printf("%s ", str);
@@ -48,7 +49,7 @@ char *concat_filename(player p) {
 }
 
 char *concat_filepath(player p, char *db_path) {
-    static char filepath[PATH_MAX] = {'\0'};
+    static char filepath[PATH_MAX+1] = {'\0'};
     strcpy(filepath, db_path);
     strcat(filepath, "/");
     strcat(filepath, p.name);
@@ -57,30 +58,37 @@ char *concat_filepath(player p, char *db_path) {
 }
 
 char *find_dir(char *searchin, char *searchfor) {
-    static char path[PATH_MAX] = {'\0'};
+    //TODO check if searchfor is in the current or down
+    // ./searchfor existent in the current or in any folder down
+    // if not look above ../searchfor existent
+    // else search from root
+
+    static char path[PATH_MAX+1] = {'\0'};
     DIR *directory;
     struct dirent *entry;
     struct stat statbuf;
     if ((directory = opendir(searchin)) != NULL) {
         int cwd = open(".", O_RDONLY);
         chdir(searchin);
-        while ((entry = readdir(directory)) != NULL) {
-            lstat(entry->d_name, &statbuf);
-            if (S_ISDIR(statbuf.st_mode)) {
-                // Found a directory, but ignore . and ..
-                if (strcmp(".", entry->d_name) == 0 || strcmp("..", entry->d_name) == 0) {
-                    continue;
-                }
-                if (strcmp(entry->d_name, searchfor) == 0) {
-                    if (realpath("./minespr_databank", path) != NULL) {
-                        return path;
-                    } else {
-                        perror("realpath() error");
-                        exit(EXIT_FAILURE);
+        while ((entry = readdir(directory)) != NULL && (strcmp(path, "") == 0)) {
+            errno = 0;
+            if (lstat(entry->d_name, &statbuf) == 0) {
+                if (S_ISDIR(statbuf.st_mode)) {
+                    // Found a directory, but ignore . and ..
+                    if (strcmp(".", entry->d_name) == 0 || strcmp("..", entry->d_name) == 0) {
+                        continue;
                     }
+                    if (strcmp(entry->d_name, searchfor) == 0) {
+                        if (realpath(searchfor, path) != NULL) {
+                            break;
+                        } else {
+                            perror("realpath() error");
+                            exit(EXIT_FAILURE);
+                        }
+                    }
+                    // Recurse this directory
+                    find_dir(entry->d_name, searchfor);
                 }
-                // Recurse this directory
-                find_dir(entry->d_name, searchfor);
             }
         }
         fchdir(cwd);
