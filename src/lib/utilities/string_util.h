@@ -14,10 +14,10 @@ char *cutout_backslashn(const char *str);
 
 char *concat_filename(player p);
 
-char *concat_filepath(player p, char *db_path);
+char *concat_filepath(char *db_path, char *file_name);
 
 char *find_dir(char *searchin, char *searchfor);
 
-void clear_overflow();
+void clear_overflow(void);
 
 #endif //MINESPR_STRING_UTIL_H

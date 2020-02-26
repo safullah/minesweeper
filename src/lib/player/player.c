@@ -1,24 +1,40 @@
-/**
+/** \file
+ *  \brief player.c
 * Created by saif on 2/11/20.
 */
 ///
 
 #include "player.h"
 #include "../validators/validators.h"
-#include "../utilities/string_util.h"
 #include "../utilities/playing_util.h"
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
 
-char *get_name() {
+/**
+ * \brief gets the name of the player when starting the game
+ *
+ * with the function \c get_input() the name is retrieved
+ * max length of name is set to 50 chars
+ *
+ * @return char * name
+ */
+char *get_name(void) {
     char *command = "Enter your <name>";
     char *hint = command;
     char *input = get_input(command, hint);
     return input;
 }
 
-player init_player() {
+/**
+ * \brief initializes a player when starting the game
+ *
+ * Information of game \c info are set such as rows and cols of game board, the amount of mines and if the game is aborted
+ * player \c p is initialized  via \c get_name() the name is set
+ *
+ * @return player
+ */
+player init_player(void) {
     game info;
     info.rows = ROWS;
     info.cols = COLS;
@@ -29,10 +45,22 @@ player init_player() {
     return p;
 }
 
-bool load_player(cell game_brd[ROWS][COLS], char *db_path) {
+/**
+ * \brief loads an existent player
+ *
+ * load_player loads the data of a player
+ * his name, played games, wins, losses and opened cells in total are displayed
+ * if the player had an aborted game he is asked if he wants to continue the aborted game
+ * if yes the aborted game is loaded
+ *
+ * @param game_brd              the game board is set the value of the aborted game, f player wishes to continue the aborted game
+ * @param player_file_path      path to the file of player
+ *
+ * @return boolean      existent player loaded or not
+ */
+bool load_player(cell game_brd[ROWS][COLS], char *player_file_path) {
     bool loaded = false;
-    char *file_path = concat_filepath(PLAYERX, db_path);
-    GAME = fopen(file_path, "r");
+    GAME = fopen(player_file_path, "r");
     if ((fread(&PLAYERX, sizeof(player), 1, GAME) != 0)) {
         printf("Name: %s\n", PLAYERX.name);
         printf("Games: %d\n", PLAYERX.games);
@@ -52,7 +80,7 @@ bool load_player(cell game_brd[ROWS][COLS], char *db_path) {
                         if (fread(&c, sizeof(cell), 1, GAME) == 1) {
                             game_brd[i][j] = c;
                         } else {
-                            printf("Error, loading the game\n");
+                            printf("Error, while loading the game\n");
                             fclose(GAME);
                             exit(EXIT_FAILURE);
                         }
@@ -69,10 +97,17 @@ bool load_player(cell game_brd[ROWS][COLS], char *db_path) {
     fclose(GAME);
     return loaded;
 }
-
-bool is_existent(char *db_path) {
+/**
+ * \brief is player in databank
+ *
+ * \c searches the databank for \c player_file
+ *
+ * @param db_path       path to databank
+ * @param player_file   name of the players file
+ * @return boolean      does the player exist in databank or nor
+ */
+bool is_existent(char *db_path, char *player_file) {
     bool exists = false;
-    char *players_file = concat_filename(PLAYERX);
     DIR *databank;
     struct dirent *dir;
     if ((databank = opendir(db_path)) == NULL) {
@@ -85,7 +120,7 @@ bool is_existent(char *db_path) {
             char file_name[50];
             memset(file_name, '\0', sizeof(file_name));
             strncpy(file_name, dir->d_name, name_len);
-            if (strcmp(file_name, players_file) == 0) {
+            if (strcmp(file_name, player_file) == 0) {
                 exists = true;
                 break;
             }
@@ -96,6 +131,15 @@ bool is_existent(char *db_path) {
 
 }
 
+/**
+ * \brief gets the answer to the question Load the aborted game? y/n
+ *
+ * The player can type yes, no or y,n
+ * capital letter and small letter are both accepted
+ *
+ * @param str       this the question the player is being asked for
+ * @return char *answer     y or n
+ */
 char *get_answer(char *str) {
     bool is_correct = false;
     char *answer = "\0";
@@ -106,6 +150,7 @@ char *get_answer(char *str) {
     return answer;
 }
 
+//TODO delete in case I don't need it
 void free_mem(char **arr, int size) {
     for (int i = 0; i < size; i++) {
         free(arr[i]);

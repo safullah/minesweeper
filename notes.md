@@ -20,6 +20,16 @@ type in terminal "doxywizard"
 renaming in clion and doxy shift+F6
 doxy doc view ctrl+Q
 
+/** \file
+ * \brief This is just an example file. */
+
+/**
+ * ... text ...
+ */
+ 
+ doc for member
+int var; /**< Detailed description after the member */
+
 #### keep in mind
 - error handling
 

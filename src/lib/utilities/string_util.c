@@ -48,21 +48,14 @@ char *concat_filename(player p) {
     return file_name;
 }
 
-char *concat_filepath(player p, char *db_path) {
+char *concat_filepath(char *db_path, char *file_name) {
     static char filepath[PATH_MAX+1] = {'\0'};
     strcpy(filepath, db_path);
-    strcat(filepath, "/");
-    strcat(filepath, p.name);
-    strcat(filepath, ".txt");
+    strcat(filepath, file_name);
     return filepath;
 }
 
 char *find_dir(char *searchin, char *searchfor) {
-    //TODO check if searchfor is in the current or down
-    // ./searchfor existent in the current or in any folder down
-    // if not look above ../searchfor existent
-    // else search from root
-
     static char path[PATH_MAX+1] = {'\0'};
     DIR *directory;
     struct dirent *entry;
@@ -101,7 +94,7 @@ char *find_dir(char *searchin, char *searchfor) {
     return path;
 }
 
-void clear_overflow() {
+void clear_overflow(void) {
     int ch;
     while ((ch = fgetc(stdin)) != '\n' && ch != EOF) {
         //do nothing until buffer is cleared

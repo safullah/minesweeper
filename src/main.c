@@ -1,10 +1,9 @@
+/** \file
+ * \brief main function. */
 #include "lib/utilities/game_util.h"
 #include "lib/board/board_variables.h"
 #include "lib/validators/validators.h"
-#include "lib/utilities/string_util.h"
-
 #include <stdlib.h>
-#include <stdio.h>
 
 int main(int argc, char *argv[]) {
     //amount of argc is 3

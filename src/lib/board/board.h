@@ -1,4 +1,6 @@
-/**
+/** \file board.h
+ * \brief
+ *
 * Created by saif on 1/10/20.
 */
 ///
@@ -9,6 +11,20 @@
 #include <stdbool.h>
 #include "board_variables.h"
 
+/**
+ * \state
+ * \brief an enum for three states of a cell
+ */
+
+/**
+ * \cell
+ * \brief cell is a struct with a character, \c state and the amount of mines in neighbor cells
+ */
+
+/**
+ * \move
+ * \brief move is a struct. There the move of the player is captured
+ */
 typedef enum {
     hidden, opened, flagged
 } state;
@@ -31,8 +47,9 @@ void init_brd(cell gaming_brd[ROWS][COLS]);
 
 void print_brd(cell game_brd[ROWS][COLS]);
 
-void print_rmaining_mines();
+void print_rmaining_mines(void);
 
+//TODO delete this function
 void print_mbrd(cell hidden_brd[ROWS][COLS]);
 
 #endif //MINESPR_BOARD_H

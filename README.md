@@ -28,13 +28,6 @@ exit        quit the game without saving any data
 abort       quit the game with saving the current game. You may continue this game later
 restart     restart the game
 
-####Read this hint
-Under the folder minespr I have a folder called databank, where I save data of players.
-To retrieve the absolute path of this folder I use realpath().
-In my case the executable minespr is under cmake-build-debug, therefore when I search for databank with realpath()
-my parameter looks the following: realpath("./../databank", buf)
-I don't know how you will execute this game. You may adjust the parameter for realpath() in order to run the game successfully.
-
 ##Completed Tasks
 all tasks are implemented
 

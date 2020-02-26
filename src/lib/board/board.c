@@ -1,4 +1,6 @@
-/**
+/** \file board.c
+ * \brief functions for the game board
+ *
 * Created by saif on 1/10/20.
 */
 ///
@@ -7,8 +9,13 @@
 #include "board_variables.h"
 #include <stdio.h>
 
-char alp_arr[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-
+/**
+ * \brief initializes the game board
+ *
+ * According to amount of row and cols an array of cell if initialized
+ *
+ * @param gaming_brd    the board is initialized with default cells \c c
+ */
 void init_brd(cell gaming_brd[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
@@ -17,7 +24,19 @@ void init_brd(cell gaming_brd[ROWS][COLS]) {
         }
     }
 }
+/**
+ * \alp_arr
+ * \brief an array of char. listing the alphabet in capital letters
+ */
+char alp_arr[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
+/**
+ * \brief prints a board
+ *
+ * print_brd iterated over \c game_brd and depending
+ * on the state of the cell it prints "-", "*" or the amount of neighbor mines
+ * @param game_brd      the board which is supposed to be printed
+ */
 void print_brd(cell game_brd[ROWS][COLS]) {
     printf("    ");
     for (int i = 0; i < ROWS; i++) {
@@ -48,12 +67,20 @@ void print_brd(cell game_brd[ROWS][COLS]) {
         printf("\n");
     }
 }
-void print_rmaining_mines(){
+
+/**
+ * \brief prints the remaining mines in the game
+ *
+ * calculates the remaining mines and prints them
+ * prints also the number of wrong flagged mines
+ */
+void print_rmaining_mines(void){
     int rmaining_mines = MINES - FLAGGED_CORRECT;
     printf("\nremaining mines: %d\n", rmaining_mines);
     printf("flagged wrong: %d\n", FLAGGED_WRONG);
 }
 
+//TODO delete this func
 void print_mbrd(cell game_brd[ROWS][COLS]) {
     printf("    ");
     for (int i = 0; i < ROWS; i++) {

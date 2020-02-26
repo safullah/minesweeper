@@ -16,16 +16,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <unistd.h>
 #include <limits.h>
 
 void play_game(void) {
     srand(time(NULL));
     cell game_brd[ROWS][COLS];
     PLAYERX = init_player();
+    char *player_file = concat_filename(PLAYERX);
     char *databank = "minespr_databank";
     char db_path[PATH_MAX + 1] = {'\0'};
-    //is databank in the cwd ? no need for find_dir : search databank starting from root
+    //is databank in the cwd ? do nothing : find_dir
     char *path = realpath(databank, db_path);
     if (path == NULL) {
         printf("starting minesweeper...\n");
@@ -33,19 +33,23 @@ void play_game(void) {
         if (check == NULL) {
             printf("Error while copying path to databank");
             exit(EXIT_FAILURE);
+        } else {
+            strcat(db_path, "/");
         }
+    } else {
+        strcat(db_path, "/");
     }
     if (strcmp(db_path, "") == 0) {
         printf("Error, cannot find databank of players");
         exit(EXIT_FAILURE);
     }
+    char *player_file_path = concat_filepath(db_path, player_file);
     bool loaded = false;
-    bool existent = is_existent(db_path);
+    bool existent = is_existent(db_path, player_file);
     if (existent) {
-        loaded = load_player(game_brd, db_path);
+        loaded = load_player(game_brd, player_file_path);
     }
-    char *file_path = concat_filepath(PLAYERX, db_path);
-    GAME = fopen(file_path, "w");
+    GAME = fopen(player_file_path, "w");
     if (GAME) {
         int mines[MINES][2];
         /*if a game was not loaded then game_brd is empty. it need to be filled
