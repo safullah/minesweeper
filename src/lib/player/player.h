@@ -51,9 +51,7 @@ player PLAYERX;
 
 char *get_name(void);
 
-player init_player(void);
-
-bool load_player(cell game_brd[ROWS][COLS], char *player_file_path);
+player init_player(char *player_name);
 
 bool is_existent(char *db_path, char *player_file);
 

@@ -12,56 +12,35 @@
 #include "../board/board_variables.h"
 #include "../validators/validators.h"
 #include "../player/player.h"
-#include "string_util.h"
+#include "../service/set/setservice.h"
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <limits.h>
 
-void play_game(void) {
-    srand(time(NULL));
+void play_game(char *answer, char *player_file_path) {
+    bool aborted_game_loaded = false;
     cell game_brd[ROWS][COLS];
-    PLAYERX = init_player();
-    char *player_file = concat_filename(PLAYERX);
-    char *databank = "minespr_databank";
-    char db_path[PATH_MAX + 1] = {'\0'};
-    //is databank in the cwd ? do nothing : find_dir
-    char *path = realpath(databank, db_path);
-    if (path == NULL) {
-        printf("starting minesweeper...\n");
-        char *check = strcpy(db_path, find_dir("/", databank));
-        if (check == NULL) {
-            printf("Error while copying path to databank");
-            exit(EXIT_FAILURE);
-        } else {
-            strcat(db_path, "/");
+    if(strcmp(answer, "y") == 0 || strcmp(answer, "yes") == 0){
+        aborted_game_loaded = set_board(game_brd, player_file_path);
+        if (!aborted_game_loaded) {
+            printf("aborted game could not be loaded\n"
+                   "but a new game was created for you\n");
+
         }
-    } else {
-        strcat(db_path, "/");
-    }
-    if (strcmp(db_path, "") == 0) {
-        printf("Error, cannot find databank of players");
-        exit(EXIT_FAILURE);
-    }
-    char *player_file_path = concat_filepath(db_path, player_file);
-    bool loaded = false;
-    bool existent = is_existent(db_path, player_file);
-    if (existent) {
-        loaded = load_player(game_brd, player_file_path);
     }
     GAME = fopen(player_file_path, "w");
     if (GAME) {
         int mines[MINES][2];
         /*if a game was not loaded then game_brd is empty. it need to be filled
          * in case of restart loaded has to be false. because the board need to be prepared fo a new game*/
-        if (!loaded) {
+        if (!aborted_game_loaded) {
             init_brd(game_brd);
             place_mines(game_brd, mines);
             count_mines(game_brd);
         }
         int empty_cells = ROWS * COLS - MINES;
         bool game_over = false;
-        move mov;
+        move mov = {false, -1,-1, false, false};
         while (game_over == false) {
             print_brd(game_brd);
             print_rmaining_mines();
@@ -88,7 +67,8 @@ void play_game(void) {
         //in case of losing the game
         save_game(game_brd, mov.abort);
     } else {
-        printf("Error, while opening file!\n");
+        printf("Error, while opening %s's file!\n"
+               "exiting game\n", PLAYERX.name);
         exit(EXIT_FAILURE);
     }
 }
@@ -97,6 +77,11 @@ void save_game(cell game_brd[ROWS][COLS], bool abort) {
     FLAGGED_TOTAL = FLAGGED_CORRECT + FLAGGED_WRONG;
     PLAYERX.cells += (OPENED_CELLS + FLAGGED_TOTAL);
     PLAYERX.info.aborted = abort;
+    if (abort) {
+        PLAYERX.info.rows = ROWS;
+        PLAYERX.info.cols = COLS;
+        PLAYERX.info.mines = MINES;
+    }
     if (fwrite(&PLAYERX, sizeof(player), 1, GAME) != 1) {
         printf("Error, while saving the player!");
         exit(EXIT_FAILURE);
@@ -230,4 +215,18 @@ void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]) {
     free(mov);
 }
 
-
+void help(bool explain_params) {
+    if (explain_params) {
+        printf("meaning of parameters\n");
+        printf("-n    name of the player\n");
+        printf("-r    number of rows\n");
+        printf("-c    number of columns\n");
+        printf("-m    number of mines\n");
+    } else {
+        printf("\nto open a cell, enter coordinates:\n example A5");
+        printf("\nto mark a mine, type ? followed by the coordinates of the cell:\n example ?A5 / ? A5");
+        printf("abort    exit and save the game to continue later");
+        printf("exit     exit the game");
+        printf("restart   restart the current game");
+    }
+}

@@ -13,9 +13,11 @@ bool is_cell_valid(int row, int col);
 
 bool is_mine(int row, int col, cell game_brd[ROWS][COLS]);
 
-bool is_rows_cols_valid();
+bool is_row_valid(int row, char *error);
 
-bool is_mines_valid();
+bool is_col_valid(int col, char *error);
+
+bool is_mine_valid(int mine, char *error);
 
 bool is_crd_valid(int col, int row);
 

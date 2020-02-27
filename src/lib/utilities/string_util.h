@@ -12,7 +12,7 @@ char *get_input(char *str, char *hint);
 
 char *cutout_backslashn(const char *str);
 
-char *concat_filename(player p);
+char *concat_filename(char *player_name);
 
 char *concat_filepath(char *db_path, char *file_name);
 

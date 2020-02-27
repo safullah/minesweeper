@@ -9,7 +9,6 @@
 #include <string.h>
 #include "../board/board_variables.h"
 
-// A Utility Function to check whether given cell (row, col) is a valid cell or not
 bool is_cell_valid(int row, int col) {
     if ((row >= 0) && (row < ROWS) &&
         (col >= 0) && (col < COLS)) {
@@ -21,39 +20,53 @@ bool is_mine(int row, int col, cell game_brd[ROWS][COLS]) {
     return game_brd[row][col].ch == '*' ? true : false;
 }
 
-bool is_rows_cols_valid() {
-    if (ROWS < 0 || COLS < 0) {
-        printf("Enter positive values\n");
+bool is_row_valid(int row, char *error) {
+    if (row < 0) {
+        printf("Enter a positive value!\n");
+        printf("your input: %s\n", error);
         return false;
-    }
-    //min row and cols 5
-    if (ROWS < 1 || COLS < 1) {
-        printf("Error, please enter more than 5 rows and columns!");
+    } else if (row < 2 ) {
+        printf("Enter more than 1 row!\n");
+        printf("your input: %s\n", error);
         return false;
-    }
-    //highest row and col is 20
-    if (ROWS > 20 || COLS > 20) {
-        printf("Error, please enter less than 20 rows and columns!");
+    } else if (row > 20) {
+        printf("Enter less than 20 rows!\n");
+        printf("your input: %s\n", error);
         return false;
+    } else {
+        return  true;
     }
-    return true;
 }
 
-bool is_mines_valid() {
-    if (MINES < 0) {
-        printf("Enter positive values\n");
+bool is_col_valid(int col, char *error) {
+    if (col < 0) {
+        printf("Enter a positive value\n");
+        printf("your input: %s\n", error);
+        return false;
+    } else if (col < 2 ) {
+        printf("Enter more than 1 column!\n");
+        printf("your input: %s\n", error);
+        return false;
+    } else if (col > 20) {
+        printf("Enter less than 20 columns!\n");
+        printf("your input: %s\n", error);
+        return false;
+    } else {
+        return  true;
+    }
+}
+
+bool is_mine_valid(int mine, char *error) {
+    if (mine < 0) {
+        printf("Enter a positive value\n");
         return false;
     }
-    if (MINES > (ROWS * COLS)) {
-        printf("Error, please enter less mines than the number of fields!\n");
+    if (mine == 0) {
+        printf("Enter at least one mine!\n");
         return false;
     }
-    if (MINES < 1) { //min mines 10
-        printf("Error, please enter more than 9 mines!\n");
-        return false;
-    }
-    if (MINES > 300) { // highest num of mines is 300
-        printf("Error, please enter  less than 300 mines!\n");
+    if (mine >= (ROWS * COLS)) {
+        printf("Enter less mines than the number of rows * columns!\n");
         return false;
     }
     return true;

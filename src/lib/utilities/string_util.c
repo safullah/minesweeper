@@ -40,10 +40,10 @@ char *cutout_backslashn(const char *str) {
     return copy;
 }
 
-char *concat_filename(player p) {
+char *concat_filename(char *player_name) {
     static char file_name[50];
     memset(file_name, '\0', sizeof(file_name));
-    strcpy(file_name, p.name);
+    strcpy(file_name, player_name);
     strcat(file_name, ".txt");
     return file_name;
 }

@@ -25,7 +25,11 @@ move extract_move(char *str) {
         if (isalpha(str[si])) {
             //TODO define highest char
             char ch = toupper(str[si++]);
-            mov.col = (int) ch - 'A';
+            if (ch > 'Z') {
+                printf("error, entered column greater than allowed\n");
+            } else {
+                mov.col = (int) ch - 'A';
+            }
         }
         if (isdigit(str[si])) {
             mov.row = str_to_int(&str[si]);
@@ -36,7 +40,7 @@ move extract_move(char *str) {
     return mov;
 }
 
-move get_move() {
+move get_move(void) {
     bool valid = false;
     move mov = {NULL, -1, -1, false, false};
     char *command = "Enter <column> <row>";
@@ -63,11 +67,11 @@ move get_move() {
             if (is_crd_valid(mov.col, mov.row)) {
                 valid = true;
             } else {
-                printf("%s\n", input);
+                printf("error, invalid input: %s\n", input);
                 printf("Please, enter valid coordinates!\n");
             }
         } else {
-            printf("invalid input: %s\n", input);
+            printf("error, invalid input: %s\n", input);
         }
     }
     return mov;
