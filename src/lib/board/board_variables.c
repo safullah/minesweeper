@@ -24,11 +24,12 @@ int FLAGGED_TOTAL = 0;
 /**
  * \brief converts string into int
  *
- * elements of string array are converted to int
- * if the passed
- * @param str
- * @param count
- * @return
+ * Parameters of argv, which need to be converted are copied to \c params then they are converted to int.
+ * In case of success \interger_arr is returned else exit()
+ *
+ * @param argc
+ * @param argv
+ * @return  static int integer_array[3]     returns rows, cols and mines
  */
 int *convert_str_to_int(int argc, char *argv[]) {
     static int integer_arr[3] = {-1};
@@ -56,10 +57,22 @@ int *convert_str_to_int(int argc, char *argv[]) {
     return integer_arr;
 }
 
+/**
+ * \brief gets cli arguments
+ *
+ * Letters are made to lower case.
+ * Parameter are converted and saved an int array
+ *
+ * @param argc
+ * @param argv
+ * @return int array[3]         returns rows, cols and mines
+ */
 int *get_cli_args(int argc, char *argv[]) {
-    //<rows>X<cols> makes X to lower
+    //makes X to lower <rows>X<cols>
     for (int i = 0; argv[1][i] != '\0'; i++) {
-        argv[1][i] = (char) tolower(argv[1][i]);
+        if (isalpha(argv[1][i])) {
+            argv[1][i] = (char) tolower(argv[1][i]);
+        }
     }
     //cli_args = [row, cols, mines]
     static int cli_args[3] = {0};
@@ -70,6 +83,17 @@ int *get_cli_args(int argc, char *argv[]) {
     return cli_args;
 }
 
+/**
+ * \brief extracts rows and cols
+ *
+ * The mandatory format typing rows and cols is: <row>x<cols>
+ * Only in this format the parameters are accepted. \c extract_params cuts the string in two
+ * in order to make the conversion of string to int possible
+ *
+ * @param argc
+ * @param argv
+ * @return char *array[2]       return rows and cols as strings
+ */
 char **extract_params(int argc, char *argv[]) {
     static char *param_arr[2] = {NULL};
     int cnt = 0;
@@ -94,6 +118,16 @@ char **extract_params(int argc, char *argv[]) {
     return param_arr;
 }
 
+/**
+ * \brief shows the parameter with which the game was started
+ *
+ * \c show_params iterates over argv and prints all parameters
+ * This function is called in cases of wrong input.
+ * The user sees his input and should help to recognize his mistake
+ *
+ * @param argc
+ * @param argv
+ */
 void show_params(int argc, char *argv[]) {
     printf("your parameters: ");
     for (int i = 0; i < argc; i++) {
@@ -101,6 +135,9 @@ void show_params(int argc, char *argv[]) {
     }
 }
 
+/**
+ * \brief prints a hint to the user how to start the game correctly
+ */
 void show_hint() {
     printf("\ncorrect format: <rows>x<cols> <mines> \nexample: ./minespr 10x10 20\n");
 }
