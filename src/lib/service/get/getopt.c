@@ -15,26 +15,25 @@
 #include "../../utilities/game_util.h"
 #include "../../player/player.h"
 
-void *get_opt(int argc, char *argv[]) {
+void get__opt(int argc, char *argv[]) {
     int option = 0;
-    bool explain_params;
-    while ((option = getopt(argc, argv, ":r:c:m:n:hx")) != -1){
+    while ((option = getopt(argc, argv, ":r:c:m:n:hx")) != -1) {
         switch (option) {
             case 'r':
                 ROWS = str_to_int(optarg);
-                if (!is_row_valid(ROWS, optarg)){
+                if (!is_row_valid(ROWS, optarg)) {
                     set_row();
                 }
                 break;
             case 'c':
                 COLS = str_to_int(optarg);
-                if (!is_col_valid(COLS, optarg)){
+                if (!is_col_valid(COLS, optarg)) {
                     set_col();
                 }
                 break;
             case 'm':
                 MINES = str_to_int(optarg);
-                if (!is_mine_valid(MINES, optarg)){
+                if (!is_mine_valid(MINES, optarg)) {
                     set_mine();
                 }
                 break;
@@ -45,8 +44,7 @@ void *get_opt(int argc, char *argv[]) {
                 }
                 break;
             case 'h':
-                explain_params = true;
-                help(explain_params);
+                help();
                 break;
             case ':':
                 switch (optopt) {
@@ -66,14 +64,17 @@ void *get_opt(int argc, char *argv[]) {
                         break;
                 }
             case '?':
-                printf("unknown option: %c\n", optopt);
+                if (optopt != (int) 'r' && optopt != (int) 'c' && optopt != (int) 'm' && optopt != (int) 'n') {
+                    printf("unknown option: %c\n", optopt);
+                }
                 break;
             default:
                 break;
         }
     }
-    for(; optind < argc; optind++){
+    for (; optind < argc; optind++) {
         printf("extra arguments: %s\n", argv[optind]);
     }
 }
+
 

@@ -25,6 +25,6 @@ bool execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov);
 
 void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]);
 
-void help(bool explain_params);
+void help();
 
 #endif //MINESPR_GAME_UTIL_H

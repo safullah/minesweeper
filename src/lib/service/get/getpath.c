@@ -12,21 +12,20 @@
 #include "../../utilities/string_util.h"
 
 char *get_path(char *target) {
-
-    if (result == NULL) {
-        printf("searching for %s...\n", target);
-        char *check = strcpy(path, find_dir("/", target));
-        if (check == NULL) {
-            printf("Error while copying path to databank");
-            exit(EXIT_FAILURE);
-        } else {
-            strcat(path, "/");
-        }
+    static char path[PATH_MAX + 1] = {'\0'};
+    printf("searching for %s...\n", target);
+    char *check = strcpy(path, find_dir("/", target));
+    if (check == NULL) {
+        printf("error, while searhing path of databank\n exiting game ...\n");
+        exit(EXIT_FAILURE);
     } else {
         strcat(path, "/");
     }
+
     if (strcmp(path, "") == 0) {
-        printf("did not find %s\n", target);
+        printf("did not find %s\n exiting game ...", target);
         exit(EXIT_FAILURE);
+    } else {
+        return path;
     }
 }

@@ -6,8 +6,6 @@
 
 #include "player.h"
 #include "../validators/validators.h"
-#include "../utilities/playing_util.h"
-#include "../service/set/setparam.h"
 #include "../utilities/string_util.h"
 #include <stdio.h>
 #include <string.h>
@@ -22,7 +20,7 @@
  * @return char * name
  */
 char *get_name(void) {
-    char *command = "Enter your <name>";
+    char *command = "Enter your name";
     char *hint = command;
     char *input = get_input(command, hint);
     return input;
@@ -40,7 +38,7 @@ char *get_name(void) {
 player init_player(char *player_name) {
     game info = {0, 0, 0, false};
     player p = {"\0", 0, 0, 0, 0, info};
-    if (player_name == NULL){
+    if (strcmp(player_name, "") == 0  ){
         strcpy(p.name, get_name());
     }
     return p;
@@ -51,25 +49,25 @@ player init_player(char *player_name) {
  *
  * \c searches the databank for \c player_file
  *
- * @param db_path       path to databank
- * @param player_file   name of the players file
+ * @param path       path to databank
+ * @param file   name of the players file
  * @return boolean      does the player exist in databank or nor
  */
-bool is_existent(char *db_path, char *player_file) {
+bool is_existent(char *path, char *file) {
     bool exists = false;
     DIR *databank;
     struct dirent *dir;
-    if ((databank = opendir(db_path)) == NULL) {
-        printf("Error, cannot open directory: %s\n", db_path);
+    if ((databank = opendir(path)) == NULL) {
+        printf("Error, cannot open directory: %s\n", path);
         exit(EXIT_FAILURE);
     }
     if (databank) {
         while ((dir = readdir(databank)) != NULL) {
             size_t name_len = strcspn(dir->d_name, "\0");
             char file_name[50];
-            memset(file_name, '\0', sizeof(file_name)/sizeof(file_name[0]));
+            memset(file_name, '\0', sizeof(file_name));
             strncpy(file_name, dir->d_name, name_len);
-            if (strcmp(file_name, player_file) == 0) {
+            if (strcmp(file_name, file) == 0) {
                 exists = true;
                 break;
             }
@@ -99,10 +97,3 @@ char *get_answer(char *str) {
     return answer;
 }
 
-//TODO delete in case I don't need it
-void free_mem(char **arr, int size) {
-    for (int i = 0; i < size; i++) {
-        free(arr[i]);
-    }
-    free(arr);
-}

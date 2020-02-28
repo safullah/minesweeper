@@ -14,15 +14,15 @@
 #include <errno.h>
 
 char *get_input(char *str, char *hint) {
-    printf("%s ", str);
     char input[50];
-    memset(input, '\0', sizeof(char) * 50);
+    memset(input, '\0', sizeof(input));
     char *result = NULL;
     while (result == NULL || strcmp(result, "\n") == 0) {
+        printf("%s: ", str);
         result = fgets(input, sizeof(input) / sizeof(char), stdin);
         if (strchr(input, '\n') == NULL) {
             printf("input too long: %s\n", result);
-            printf("\n%s ", hint);
+            printf("%s\n", hint);
             clear_overflow();
             result = NULL;
         }
@@ -33,7 +33,7 @@ char *get_input(char *str, char *hint) {
 
 char *cutout_backslashn(const char *str) {
     static char copy[50];
-    memset(copy, '\0', sizeof(char) * 50);
+    memset(copy, '\0', sizeof(copy));
     for (int j = 0; *(str + j) != '\n'; j++) {
         copy[j] = *(str + j);
     }

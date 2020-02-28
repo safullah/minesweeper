@@ -23,15 +23,15 @@ bool is_mine(int row, int col, cell game_brd[ROWS][COLS]) {
 bool is_row_valid(int row, char *error) {
     if (row < 0) {
         printf("Enter a positive value!\n");
-        printf("your input: %s\n", error);
+        printf("your input: \"%s\"\n", error);
         return false;
     } else if (row < 2 ) {
         printf("Enter more than 1 row!\n");
-        printf("your input: %s\n", error);
+        printf("your input: \"%s\"\n", error);
         return false;
     } else if (row > 20) {
         printf("Enter less than 20 rows!\n");
-        printf("your input: %s\n", error);
+        printf("your input: \"%s\"\n", error);
         return false;
     } else {
         return  true;
@@ -41,15 +41,15 @@ bool is_row_valid(int row, char *error) {
 bool is_col_valid(int col, char *error) {
     if (col < 0) {
         printf("Enter a positive value\n");
-        printf("your input: %s\n", error);
+        printf("your input: \"%s\"\n", error);
         return false;
     } else if (col < 2 ) {
         printf("Enter more than 1 column!\n");
-        printf("your input: %s\n", error);
+        printf("your input: \"%s\"\n", error);
         return false;
     } else if (col > 20) {
         printf("Enter less than 20 columns!\n");
-        printf("your input: %s\n", error);
+        printf("your input: \"%s\"\n", error);
         return false;
     } else {
         return  true;
@@ -59,14 +59,17 @@ bool is_col_valid(int col, char *error) {
 bool is_mine_valid(int mine, char *error) {
     if (mine < 0) {
         printf("Enter a positive value\n");
+        printf("your input: \"%s\"\n", error);
         return false;
     }
     if (mine == 0) {
         printf("Enter at least one mine!\n");
+        printf("your input: \"%s\"\n", error);
         return false;
     }
     if (mine >= (ROWS * COLS)) {
         printf("Enter less mines than the number of rows * columns!\n");
+        printf("your input: \"%s\"\n", error);
         return false;
     }
     return true;
@@ -76,10 +79,12 @@ bool is_crd_valid(int col, int row) {
     bool valid = true;
     if (row > ROWS || row < 0) {
         printf("Please, enter a valid row.\n");
+        printf("your input: \"%d\"\n", row);
         valid = false;
     }
     if (col > COLS || row < 0) {
         printf("Please, enter a valid column.\n");
+        printf("your input: \"%c\"\n", (char)col);
         valid = false;
     }
     return valid;

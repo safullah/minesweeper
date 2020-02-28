@@ -53,10 +53,9 @@ char *get_name(void);
 
 player init_player(char *player_name);
 
-bool is_existent(char *db_path, char *player_file);
+bool is_existent(char *path, char *file);
 
 char *get_answer(char *str);
 
-void free_mem(char **arr, int size);
 
 #endif //MINESPR_PLAYER_H

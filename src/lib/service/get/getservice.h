@@ -8,10 +8,9 @@
 
 #include "../../board/board.h"
 
-void *get_opt(int argc, char *argv[]);
+void get__opt(int argc, char *argv[]);
 char *get_path(char *target);
 bool load_player(char *player_file_path);
 void load_game_info();
-
 
 #endif //MINESPR_GETSERVICE_H

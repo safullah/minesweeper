@@ -13,19 +13,24 @@
 #include "../validators/validators.h"
 #include "../player/player.h"
 #include "../service/set/setservice.h"
+#include "../service/get/getservice.h"
+#include "string_util.h"
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <limits.h>
 
 void play_game(char *answer, char *player_file_path) {
     bool aborted_game_loaded = false;
     cell game_brd[ROWS][COLS];
-    if (strcmp(answer, "y") == 0 || strcmp(answer, "yes") == 0) {
-        aborted_game_loaded = set_board(game_brd, player_file_path);
-        if (!aborted_game_loaded) {
-            printf("aborted game could not be loaded\n"
-                   "but a new game was created for you\n");
+    if (answer) {
+        if (strcmp(answer, "y") == 0 || strcmp(answer, "yes") == 0) {
+            aborted_game_loaded = set_board(game_brd, player_file_path);
+            if (!aborted_game_loaded) {
+                printf("aborted game could not be loaded\n"
+                       "but a new game was created for you\n");
 
+            }
         }
     }
     GAME = fopen(player_file_path, "w");
@@ -214,30 +219,37 @@ void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]) {
     }
     free(mov);
 }
-//TODO implement help during the game
-void help(bool explain_params) {
-    if (explain_params) {
-        //call from cli
-        printf("\nquick start\n");
-        printf("./minespr -n ninja -r10 -c10 -m30\n");
 
-        printf("\nyou can also start without any parameters as well\n");
-        printf("during the game you will be prompted to enter the data\n");
-
-        printf("\nto start an aborted game quickly provide -n\n");
-        printf("quick start aborted game\n");
-        printf("./minespr -n ninja\n\n");
-
-        printf("-n    name of the player\n");
-        printf("-r    number of rows\n");
-        printf("-c    number of columns\n");
-        printf("-m    number of mines\n");
+void help() {
+    char minespr_path[PATH_MAX + 1] = {'\0'};
+    char *target = "minespr";
+    char *result = realpath(target, minespr_path);
+    if (!result) {
+        strcpy(minespr_path, get_path(target));
     } else {
-        //call during the game
-        printf("\nto open a cell, enter coordinates:\n example A5 / a5\n");
-        printf("to mark a mine, type ? followed by the coordinates:\n example ?A5 / ? A5 / ? a5");
-        printf("abort    exit and save the game to continue later\n");
-        printf("exit     exit the game\n");
-        printf("restart   restart the current game\n");
+        strcat(minespr_path, "/");
     }
+    char *file_name = "help.txt";
+    bool existent = is_existent(minespr_path, file_name);
+    if (existent) {
+        char *file_path = concat_filepath(minespr_path, file_name);
+        int len_file_path = strlen(file_path);
+
+        char *chmod = "chmod 444 ";
+        char chmod_buf[len_file_path + strlen(chmod)];
+        strcpy(chmod_buf, chmod);
+        strcat(chmod_buf, file_path);
+        system(chmod_buf);
+
+        char *vim = "vim ";
+        char vim_buf[len_file_path + strlen(vim)];
+        strcpy(vim_buf, vim);
+        strcat(vim_buf, file_path);
+        system(vim_buf);
+
+        system("clear");
+    } else {
+        printf("Error, help instructions not found!");
+    }
+
 }

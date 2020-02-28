@@ -1,0 +1,23 @@
+    game commands:
+    help            opens help instructions
+    <col><row>      opens the according cell
+    ?<col><row>     marks a mine/cell
+    abort           saves and exits the game
+    exit            exits the game
+    restart         starts a new game
+
+    cli arguments:
+    -h              opens help instructions
+    -n              name of the player
+    -r              number of rows
+    -c              number of columns
+    -m              number of mines
+
+    start with parameters
+    ./minespr -n<name> -r<row> -c<column> -m<mine>
+
+    start with no parameters
+    ./minespr
+
+    quick start for aborted game
+    ./minespr -n<name>

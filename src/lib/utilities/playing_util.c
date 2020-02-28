@@ -62,6 +62,10 @@ move get_move(void) {
             mov.abort = true;
             break;
         }
+        if(strcmp(input, "help") == 0) {
+            help();
+            continue;
+        }
         mov = extract_move(input);
         if (mov.col != -1 && mov.row != -1) {
             if (is_crd_valid(mov.col, mov.row)) {

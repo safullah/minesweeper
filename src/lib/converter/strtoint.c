@@ -10,7 +10,6 @@
 int str_to_int(char *str) {
     char *rest = "\0";
     errno = 0; // always reset errno
-    //what happend if str is null
     double integer = strtod(str, &rest);
     if (rest == str || *rest != '\0' || errno) {
         return -1;

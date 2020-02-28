@@ -5,8 +5,7 @@ all:
 #### gdbserver
 /home/saif/dev/minespr/cmake-build-debug/minespr
 gdbserver localhost:9090 ./minespr 2x2 1
-ps -ef |grep gdbserver
-kill -9 <pid>
+ps -ef | pgrep gdbserver | xargs kill
 
 #### reading binary
 od -Ax -t x1z filename
@@ -56,7 +55,21 @@ int var; /**< Detailed description after the member */
 - do testing!!!
 
 #### thinking process
-findout how to use doxygen 
+find out how to use doxygen 
 comment one file
 check result
+
+test cases
+
+good cases
+provide only -r -c -m
+it shall ask me for my name
+row col and mine are set correctly
+
+bad cases
+provide nothing
+expected behavior is that the user is prompted to input the missing information
+do I get run time exceptions?
+
+provide -r -c -m without any values
 

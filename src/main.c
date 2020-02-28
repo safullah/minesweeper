@@ -9,16 +9,20 @@
 #include <time.h>
 #include <limits.h>
 #include <string.h>
+#include <stdio.h>
 
 int main(int argc, char *argv[]) {
+    printf("\nstarting minesweeper ...\n");
     srand(time(NULL));
-    get_opt(argc, argv);
+    get__opt(argc, argv);
     PLAYERX = init_player(PLAYERX.name);
     char db_path[PATH_MAX + 1] = {'\0'};
     char *target = "minespr_databank";
     char *result = realpath(target, db_path);
     if (!result) {
         strcpy(db_path, get_path(target));
+    } else {
+        strcat(db_path, "/");
     }
     char *player_file = concat_filename(PLAYERX.name);
     char *player_file_path = concat_filepath(db_path, player_file);
@@ -36,7 +40,7 @@ int main(int argc, char *argv[]) {
                  * then I have to make sure rows, cols and mines do not remain 0
                  */
                 if ((strcmp(answer, "n") == 0 || strcmp(answer, "no") == 0)) {
-                    if (ROWS == 0){
+                    if (ROWS == 0) {
                         set_row();
                     }
                     if (COLS == 0) {
@@ -48,6 +52,15 @@ int main(int argc, char *argv[]) {
                 } else {
                     load_game_info();
                 }
+            }
+            if (ROWS == 0) {
+                set_row();
+            }
+            if (COLS == 0) {
+                set_col();
+            }
+            if (MINES == 0) {
+                set_mine();
             }
         }
     }
