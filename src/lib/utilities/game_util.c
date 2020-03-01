@@ -66,7 +66,7 @@ game_result play_game(char *answer, char *player_file_path) {
             system("clear");
             print_brd(game_brd);
             print_rmaining_mines();
-            show_brd(game_brd);
+            //show_brd(game_brd);
             mov = get_move();
 
             /*start a new game*/
@@ -258,7 +258,6 @@ bool flag_cell(cell game_brd[ROWS][COLS], move mov) {
 
 /**
  * \brief opens neighbor cell
- *
  * opens neighbors cells if count of neighboring mines is zero
  *
  * @param game_brd
@@ -310,9 +309,7 @@ bool open_ngh(cell game_brd[ROWS][COLS], move mov) {
 
 /**
  * \brief starts a new game
- *
  * starts a new game and opens a random cell which is not a mines or the count of neighboring mines is not zero
- *
  * @param game_brd  rows and cols stay of the game from where the game  is restarted
  */
 void restart_game(cell game_brd[ROWS][COLS]) {
@@ -325,9 +322,7 @@ void restart_game(cell game_brd[ROWS][COLS]) {
 
 /**
  * \brief opens a random cell
- *
  * opens a random cell which is not a mines or  or the count of neighboring mines is not zero
- *
  * @param game_brd
  */
 void open_randomcell(cell game_brd[ROWS][COLS]) {
@@ -349,7 +344,6 @@ void open_randomcell(cell game_brd[ROWS][COLS]) {
 
 /**
  * \brief opens help instructions
- *
  * opens help.txt in vim in read only mode.
  */
 void help() {
