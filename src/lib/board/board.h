@@ -49,6 +49,6 @@ void print_brd(cell game_brd[ROWS][COLS]);
 
 void print_rmaining_mines(void);
 
-void cheat(cell game_brd[ROWS][COLS]);
+void show_brd(cell game_brd[ROWS][COLS]);
 
 #endif //MINESPR_BOARD_H

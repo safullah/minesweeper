@@ -10,7 +10,7 @@
 #include <stdbool.h>
 #include "../board/board.h"
 
-typedef union {
+typedef struct {
     bool win;
     bool loss;
     bool abort;

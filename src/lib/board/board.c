@@ -37,7 +37,7 @@ char alp_arr[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
  * @param game_brd      the board which is supposed to be printed
  */
 void print_brd(cell game_brd[ROWS][COLS]) {
-    printf("    ");
+    printf("\n    ");
     for (int i = 0; i < COLS; i++) {
         printf("%c  ", alp_arr[i]);
     }
@@ -82,12 +82,11 @@ void print_rmaining_mines(void){
 
 /**
  * \brief prints the board with mines
- * This function is implemented for debugging purposes
  * @param game_brd
  */
-void cheat(cell game_brd[ROWS][COLS]) {
-    printf("    ");
-    for (int i = 0; i < ROWS; i++) {
+void show_brd(cell game_brd[ROWS][COLS]) {
+    printf("\n    ");
+    for (int i = 0; i < COLS; i++) {
         printf("%c  ", alp_arr[i]);
     }
     printf("\n");

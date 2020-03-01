@@ -62,16 +62,20 @@ int main(int argc, char *argv[]) {
     }
 
     game_result gresult = play_game(answer, player_file_path);
+
+    if (gresult.win) {
+        printf("===== You win =====\n");
+    }
+    if (gresult.loss) {
+        printf("===== You lost =====\n");
+    }
+    if (gresult.abort){
+        printf("===== Game aborted =====\n");
+    }
+
     if (gresult.error) {
         exit(EXIT_FAILURE);
     } else {
-        if (gresult.win) {
-            printf("===== You win =====\n");
-        } else if (gresult.loss) {
-            printf("===== You lost =====\n");
-        } else {
-            printf("===== Game aborted =====\n");
-        }
+        exit(EXIT_SUCCESS);
     }
-    exit(EXIT_SUCCESS);
 }

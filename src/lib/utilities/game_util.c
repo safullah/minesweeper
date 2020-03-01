@@ -37,7 +37,7 @@ char *this_file = "game_util.c";
  * @return game_result      result can be win, loss, aborted or an error occurred
  */
 game_result play_game(char *answer, char *player_file_path) {
-    game_result gresult = {false};
+    game_result gresult = {false, false, false, false};
     bool aborted_game_loaded = false;
     cell game_brd[ROWS][COLS];
     if (answer) {
@@ -63,10 +63,11 @@ game_result play_game(char *answer, char *player_file_path) {
         int empty_cells = ROWS * COLS - MINES;
         check p_check = {false, false};
         move mov;
-        while (gresult.abort != true || gresult.error != true || p_check.error != false) {
+        while (p_check.game_over != true) {
+            system("clear");
             print_brd(game_brd);
             print_rmaining_mines();
-            cheat(game_brd);
+            show_brd(game_brd);
             mov = get_move();
 
             /*start a new game*/
@@ -77,29 +78,28 @@ game_result play_game(char *answer, char *player_file_path) {
 
             /*abort the game*/
             if (mov.abort) {
+                gresult.abort = true;
                 if (!save_game(game_brd, mov.abort)) {
                     printf("Error:  %s "
                            "save_game(game_brd, mov.abort)\n", this_file);
                     gresult.error = true;
-                    continue;
-                } else {
-                    gresult.abort = true;
-                    continue;
                 }
+                goto end;
             }
             /*win or loss*/
             p_check = execute_move(game_brd, mines, mov);
             gresult.error = p_check.error;
             if (p_check.game_over) {
+                gresult.loss = true;
                 if (!save_game(game_brd, mov.abort)) {
                     printf("Error:  %s "
                            "save_game(game_brd, mov.abort)\n", this_file);
                     gresult.error = true;
-                } else {
-                    gresult.loss = true;
                 }
             } else {
                 if (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES) {
+                    gresult.win = true;
+                    p_check.game_over = true;
                     print_brd(game_brd);
                     print_rmaining_mines();
                     PLAYERX.wins++;
@@ -107,8 +107,7 @@ game_result play_game(char *answer, char *player_file_path) {
                     if (!save_game(game_brd, mov.abort)) {
                         printf("Error:  %s "
                                "save_game(game_brd, mov.abort)\n", this_file);
-                    } else {
-                        gresult.win = true;
+                        gresult.error = true;
                     }
                 }
             }
@@ -118,6 +117,7 @@ game_result play_game(char *answer, char *player_file_path) {
                "GAME = fopen(player_file_path, \"w\")", this_file);
         gresult.error = true;
     }
+    end :
     return gresult;
 }
 
@@ -211,10 +211,7 @@ check open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
         PLAYERX.losses++;
         PLAYERX.games++;
         game_brd[mov.row][mov.col].ch = '*';
-        for (int i = 0; i < MINES; i++) {
-            game_brd[mines[i][0]][mines[i][1]].ch = '*';
-        }
-        print_brd(game_brd);
+        show_brd(game_brd);
         o_check.game_over = true;
     } else {
         int count = game_brd[mov.row][mov.col].ngh_mines;
