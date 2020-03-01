@@ -60,10 +60,18 @@ int main(int argc, char *argv[]) {
     if (MINES == 0) {
         set_mine();
     }
-    play_game(answer, player_file_path);
 
-    printf("Error, while opening %s's file!\n"
-           "exiting game\n", PLAYERX.name);
-    exit(EXIT_FAILURE);
-    return EXIT_SUCCESS;
+    game_result gresult = play_game(answer, player_file_path);
+    if (gresult.error) {
+        exit(EXIT_FAILURE);
+    } else {
+        if (gresult.win) {
+            printf("===== You win =====\n");
+        } else if (gresult.loss) {
+            printf("===== You lost =====\n");
+        } else {
+            printf("===== Game aborted =====\n");
+        }
+    }
+    exit(EXIT_SUCCESS);
 }

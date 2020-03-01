@@ -21,6 +21,8 @@
 #include "string_util.h"
 #include "../service/setget/setget.h"
 
+char *this_file = "game_util.c";
+
 /**
  * \brief the logic of the game is this function
  *
@@ -32,6 +34,7 @@
  *
  * @param answer    answer to the question if player wants to load an aborted game
  * @param player_file_path path to the file of the player, where his statistic and game are saved
+ * @return game_result      result can be win, loss, aborted or an error occurred
  */
 game_result play_game(char *answer, char *player_file_path) {
     game_result gresult = {false};
@@ -58,30 +61,40 @@ game_result play_game(char *answer, char *player_file_path) {
             count_mines(game_brd);
         }
         int empty_cells = ROWS * COLS - MINES;
-        bool stop = false;
+        check p_check = {false, false};
         move mov;
-        while (stop != true) {
+        while (gresult.abort != true || gresult.error != true || p_check.error != false) {
             print_brd(game_brd);
             print_rmaining_mines();
             cheat(game_brd);
             mov = get_move();
+
+            /*start a new game*/
             if (mov.restart) {
                 restart_game(game_brd, mines);
                 continue;
             }
+
+            /*abort the game*/
             if (mov.abort) {
                 if (!save_game(game_brd, mov.abort)) {
-                    printf("Error, while aborting the game\n");
+                    printf("Error:  %s "
+                           "save_game(game_brd, mov.abort)\n", this_file);
+                    gresult.error = true;
+                    continue;
                 } else {
                     gresult.abort = true;
-                   goto aborted;
+                    continue;
                 }
-
             }
-            stop = execute_move(game_brd, mines, mov);
-            if (stop) {
+            /*win or loss*/
+            p_check = execute_move(game_brd, mines, mov);
+            gresult.error = p_check.error;
+            if (p_check.game_over) {
                 if (!save_game(game_brd, mov.abort)) {
-                    printf("Error, while exiting the game\n");
+                    printf("Error:  %s "
+                           "save_game(game_brd, mov.abort)\n", this_file);
+                    gresult.error = true;
                 } else {
                     gresult.loss = true;
                 }
@@ -91,8 +104,9 @@ game_result play_game(char *answer, char *player_file_path) {
                     print_rmaining_mines();
                     PLAYERX.wins++;
                     PLAYERX.games++;
-                    if (!save_game(game_brd, mov.abort)){
-                        printf("Error, while saving the game\n");
+                    if (!save_game(game_brd, mov.abort)) {
+                        printf("Error:  %s "
+                               "save_game(game_brd, mov.abort)\n", this_file);
                     } else {
                         gresult.win = true;
                     }
@@ -100,9 +114,10 @@ game_result play_game(char *answer, char *player_file_path) {
             }
         }
     } else {
+        printf("Error:  %s "
+               "GAME = fopen(player_file_path, \"w\")", this_file);
         gresult.error = true;
     }
-    :aborted
     return gresult;
 }
 
@@ -114,6 +129,7 @@ game_result play_game(char *answer, char *player_file_path) {
  *
  * @param game_brd
  * @param abort     was the game aborted or not
+ * @return bool     saving game successful or not
  */
 bool save_game(cell game_brd[ROWS][COLS], bool abort) {
     bool saved = true;
@@ -126,14 +142,16 @@ bool save_game(cell game_brd[ROWS][COLS], bool abort) {
         PLAYERX.info.mines = MINES;
     }
     if (fwrite(&PLAYERX, sizeof(player), 1, GAME) != 1) {
-        printf("Error, while saving the player!");
+        printf("Error: %s "
+               "fwrite(&PLAYERX, sizeof(player), 1, GAME)", this_file);
         saved = false;
     }
     if (abort) {
         for (int i = 0; i < ROWS; ++i) {
             for (int j = 0; j < COLS; ++j) {
                 if (fwrite(&game_brd[i][j], sizeof(cell), 1, GAME) == 0) {
-                    printf("Error, while saving the game!");
+                    printf("Error: %s "
+                           "fwrite(&game_brd[i][j], sizeof(cell), 1, GAME)", this_file);
                     saved = false;
                 }
             }
@@ -152,20 +170,28 @@ bool save_game(cell game_brd[ROWS][COLS], bool abort) {
  * @param game_brd
  * @param mines  number of mines
  * @param mov   the move which is to be executed
- * @return bool     is game over ? . The game is over if player steps on a mine
+ * @return check     is game over and did any error occur
  */
-bool execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
-    bool game_over = false;
+check execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
+    check e_check = {false, false};
     if (game_brd[mov.row][mov.col].state == opened || game_brd[mov.row][mov.col].state == flagged) {
-        printf("Already opened, try another cell\n");
+        printf("Cell open, try another one.\n");
     } else {
         if (mov.flag) {
-            flag_cell(game_brd, mov);
+            e_check.error = flag_cell(game_brd, mov);
+            if (e_check.error) {
+                printf("Error: %s "
+                       "flag_cell(game_brd, mov)", this_file);
+            }
         } else {
-            game_over = open_cell(game_brd, mines, mov);
+            e_check = open_cell(game_brd, mines, mov);
+            if (e_check.error) {
+                printf("Error: %s "
+                       "open_cell(game_brd, mines, mov)", this_file);
+            }
         }
     }
-    return game_over;
+    return e_check;
 }
 
 /**
@@ -177,10 +203,10 @@ bool execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
  * @param game_brd
  * @param mines  number of mines
  * @param mov    contains the cell which is to be opened
- * @return bool  game over or not
+ * @return check  game over or not and did any error occur
  */
-bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
-    bool game_over = false;
+check open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
+    check o_check = {false, false};
     if (game_brd[mov.row][mov.col].ch == '*' && game_brd[mov.row][mov.col].state != flagged) {
         PLAYERX.losses++;
         PLAYERX.games++;
@@ -189,18 +215,21 @@ bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
             game_brd[mines[i][0]][mines[i][1]].ch = '*';
         }
         print_brd(game_brd);
-        printf("You lost!\n");
-        game_over = true;
+        o_check.game_over = true;
     } else {
         int count = game_brd[mov.row][mov.col].ngh_mines;
         game_brd[mov.row][mov.col].ngh_mines = count;
         game_brd[mov.row][mov.col].state = opened;
         OPENED_CELLS++;
         if (!count) {
-            open_ngh(game_brd, mov);
+            o_check.error = open_ngh(game_brd, mov);
+            if (o_check.error){
+                printf("Error: %s "
+                       "open_ngh(game_brd, mov)", this_file);
+            }
         }
     }
-    return game_over;
+    return o_check;
 }
 
 /**
@@ -211,8 +240,10 @@ bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
  *
  * @param game_brd
  * @param mov   contains the cell to be flagged
+ * @return bool     did any error occur
  */
-void flag_cell(cell game_brd[ROWS][COLS], move mov) {
+bool flag_cell(cell game_brd[ROWS][COLS], move mov) {
+    bool error = false;
     game_brd[mov.row][mov.col].state = flagged;
     if (game_brd[mov.row][mov.col].ch == '*') {
         FLAGGED_CORRECT++;
@@ -222,9 +253,14 @@ void flag_cell(cell game_brd[ROWS][COLS], move mov) {
         game_brd[mov.row][mov.col].state = flagged;
         FLAGGED_WRONG++;
         if (!count) {
-            open_ngh(game_brd, mov);
+            error = open_ngh(game_brd, mov);
+            if (error) {
+                printf("Error: %s "
+                       "open_ngh(game_brd, mov)", this_file);
+            }
         }
     }
+    return error;
 }
 
 /**
@@ -234,8 +270,10 @@ void flag_cell(cell game_brd[ROWS][COLS], move mov) {
  *
  * @param game_brd
  * @param mov
+ * @return bool     did any error occur
  */
-void open_ngh(cell game_brd[ROWS][COLS], move mov) {
+bool open_ngh(cell game_brd[ROWS][COLS], move mov) {
+    bool error = false;
     int neighbors[8][2] = {{-1, -1},
                            {-1, 0},
                            {-1, 1},
@@ -246,26 +284,35 @@ void open_ngh(cell game_brd[ROWS][COLS], move mov) {
                            {1,  0}};
     move *temp = malloc(sizeof(move));
     if (!temp) {
-        printf("ERROR: Out of memory\n");
-        exit(EXIT_FAILURE);
-    }
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 1; ++j) {
-            temp->row = mov.row + neighbors[i][j];
-            temp->col = mov.col + neighbors[i][j + 1];
-            if (is_cell_valid(temp->row, temp->col)) {
-                if (game_brd[temp->row][temp->col].state == hidden) {
-                    int count = game_brd[temp->row][temp->col].ngh_mines;
-                    game_brd[temp->row][temp->col].state = opened;
-                    OPENED_CELLS++;
-                    if (!count) {
-                        open_ngh(game_brd, *temp);
+        printf("Error: %s"
+               "move *temp = malloc(sizeof(move))\n", this_file);
+        error = true;
+    } else {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 1; ++j) {
+                temp->row = mov.row + neighbors[i][j];
+                temp->col = mov.col + neighbors[i][j + 1];
+                if (is_cell_valid(temp->row, temp->col)) {
+                    if (game_brd[temp->row][temp->col].state == hidden) {
+                        int count = game_brd[temp->row][temp->col].ngh_mines;
+                        game_brd[temp->row][temp->col].state = opened;
+                        OPENED_CELLS++;
+                        if (!count) {
+                            error = open_ngh(game_brd, *temp);
+                            if (error) {
+                                printf("Error: %s"
+                                       "open_ngh(game_brd, *temp)\n", this_file);
+                                goto end;
+                            }
+                        }
                     }
                 }
             }
         }
+        end :
+        free(temp);
     }
-    free(temp);
+    return error;
 }
 
 /**
@@ -299,7 +346,8 @@ void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]) {
     int y = random % COLS;
     move *mov = malloc(sizeof(move));
     if (!mov) {
-        printf("Error, out of memory\n");
+        printf("Error: %s "
+               "move *mov = malloc(sizeof(move))\n", this_file);
         exit(EXIT_FAILURE);
     }
     mov->row = x;
@@ -348,7 +396,8 @@ void help() {
 
         system("clear");
     } else {
-        printf("Error, help instructions not found!");
+        printf("Error: %s "
+               "bool existent = is_existent(minespr_path, file_name)", this_file);
     }
 
 }
