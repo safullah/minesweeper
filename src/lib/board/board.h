@@ -15,26 +15,23 @@
  * \state
  * \brief an enum of three states for a cell
  */
-
+typedef enum {
+    hidden, opened, flagged
+} state;
 /**
  * \cell
  * \brief cell is a struct with a character \c ch, state \c state and the amount of mines in neighbor cells \c ngh_mines
  */
-
-/**
- * \move
- * \brief move is a struct. There the move of the player is captured
- */
-typedef enum {
-    hidden, opened, flagged
-} state;
 
 typedef struct {
     char ch;
     state state;
     int ngh_mines;
 } cell;
-
+/**
+ * \move
+ * \brief move is a struct. There the move of the player is captured
+ */
 typedef struct {
     bool flag;
     int col;

@@ -15,23 +15,11 @@
  * \brief a gloabal variable of type FILE.
  * In \c GAME statistics and game of the player is stored.
  */
-
+FILE *GAME;
 /**
  * \game
  * \brief a struct containing int row, int cols, int mines, bool aborted
  */
-
-/**
- * \player
- * \brief a struct containing char name[50], int games, int wins, int losses, int cells, game info
- */
-
-/**
- * \PLAYERX
- * \brief a global variable of player.
- * Global, because otherwise I have to pass it to many functions as a parameter, which I want to avoid
- */
-FILE *GAME;
 
 typedef struct {
     int rows;
@@ -39,7 +27,10 @@ typedef struct {
     int mines;
     bool aborted;
 } game;
-
+/**
+ * \player
+ * \brief a struct containing char name[50], int games, int wins, int losses, int cells, game info
+ */
 typedef struct {
     char name[50];
     int games;
@@ -48,7 +39,11 @@ typedef struct {
     int cells;
     game info;
 } player;
-
+/**
+ * \PLAYERX
+ * \brief a global variable of player.
+ * Global, because otherwise I have to pass it to many functions as a parameter, which I want to avoid
+ */
 player PLAYERX;
 
 char *get_name(void);

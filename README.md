@@ -1,10 +1,10 @@
-##Mine sweeper by Saifur Rahman
-In this project I implement mine sweeper in C.
+##Minesweeper by Saifur Rahman
+In this project I implement minesweeper in C.
 
 ##Compilation
 You can use my executable if you don't want to write a make file. <br>
 My executable is minespr/cmake-build-debug/minespr <br>
-If you want have a makefile I have a CMakeLists.txt
+If you want to make a makefile maybe my CMakeLists.txt could be helpful.
 
 
 ##Execution
@@ -21,7 +21,7 @@ no parameter:<br>
 cmake-build-debug/minespr<br>
 After the game is started, you will be prompted to enter the required parameters<br>
 
-####Starting the application
+##Starting the application
 cmake-build-debug/minespr -n saif -r10 -c10 -m20<br>
 -n name<br>
 -r row<br>
