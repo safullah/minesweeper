@@ -1,4 +1,5 @@
-/**
+/**\file getopt.c
+ * \brief functions to process cli arguments
 * Created by saif on 2/27/20.
 */
 ///
@@ -10,13 +11,21 @@
 #include <string.h>
 #include "../../board/board_variables.h"
 #include "../../validators/validators.h"
-#include "../../converter/strtoint.h"
-#include "../set/setservice.h"
 #include "../../utilities/game_util.h"
 #include "../../player/player.h"
-#include "./getservice.h"
+#include "../converter/strtoint.h"
+#include "setget.h"
 
-void get__opt(int argc, char *argv[]) {
+/**
+ * \brief gets all cli arguments
+ *
+ * get_opt() calls getopt() and process all cli arguments.
+ * -r = number of rows, -c = number of cols, -m = number of mines, -n = name of the player -h = help
+ *
+ * @param argc
+ * @param argv
+ */
+void get_opt(int argc, char **argv) {
     optarg_check check = {false, "\0"};
     int option = 0;
     while ((option = getopt(argc, argv, ":r:c:m:n:hx")) != -1) {
@@ -110,6 +119,15 @@ void get__opt(int argc, char *argv[]) {
     }
 }
 
+/**
+ * \brief is_option check if an option takes the next option as argument
+ *
+ * In case no argument is passed to an option which requires an arguments I have to make that
+ * an option is not taken as an argument
+ *
+ * @param arg optarg of an option
+ * @return struct optarg_check      return if an option is taken as argument and which option it is
+ */
 optarg_check is_option(char *arg) {
     optarg_check check = {false, "\0"};
     char *options[5] = {"-r", "-c", "-m", "-n", "-h"};
@@ -123,6 +141,12 @@ optarg_check is_option(char *arg) {
     return check;
 }
 
+/**\brief call_set
+ *
+ * process the option, which is taken as an argument
+ *
+ * @param ch the option, which is taken as argument
+ */
 void call_set(char *ch) {
     if (strcmp(ch, "-r") == 0) {
         set_row();

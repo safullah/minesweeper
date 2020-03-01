@@ -13,12 +13,12 @@
 
 /**
  * \state
- * \brief an enum for three states of a cell
+ * \brief an enum of three states for a cell
  */
 
 /**
  * \cell
- * \brief cell is a struct with a character, \c state and the amount of mines in neighbor cells
+ * \brief cell is a struct with a character \c ch, state \c state and the amount of mines in neighbor cells \c ngh_mines
  */
 
 /**
@@ -42,7 +42,6 @@ typedef struct {
     bool abort;
     bool restart;
 } move;
-
 
 void init_brd(cell gaming_brd[ROWS][COLS]);
 

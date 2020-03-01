@@ -1,11 +1,9 @@
 /** \file board_variable.c
- * \brief variable which I need for the game board are initialized here
+ * \brief variables, which I need for the game board are initialized here
  *
 * Created by saif on 1/19/20.
 */
 ///
-
-#include "board_variables.h"
 
 int ROWS = 0;
 int COLS = 0;

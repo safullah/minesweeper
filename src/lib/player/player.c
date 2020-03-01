@@ -1,5 +1,5 @@
-/** \file
- *  \brief player.c
+/** \file player.c
+ *  \brief functions specific to player are defined here
 * Created by saif on 2/11/20.
 */
 ///
@@ -29,8 +29,7 @@ char *get_name(void) {
 /**
  * \brief initializes a player when starting the game
  *
- * Information of game \c info are set such as rows and cols of game board, the amount of mines and if the game is aborted
- * player \c p is initialized  via \c get_name() the name is set
+ * Information of an aborted game are saved in game \c info
  *
  * @param player_name
  * @return player
@@ -46,24 +45,24 @@ player init_player(char *player_name) {
 }
 
 /**
- * \brief is player in databank
+ * \brief is file in path/
  *
- * \c searches the databank for \c player_file
+ * \c searches through path/ for \c file
  *
- * @param path       path to databank
- * @param file   name of the players file
- * @return boolean      does the player exist in databank or nor
+ * @param path       path to a directory
+ * @param file      name of the file
+ * @return boolean  does file exist in path/ or not
  */
 bool is_existent(char *path, char *file) {
     bool exists = false;
-    DIR *databank;
+    DIR *directory;
     struct dirent *dir;
-    if ((databank = opendir(path)) == NULL) {
+    if ((directory = opendir(path)) == NULL) {
         printf("Error, cannot open directory: %s\n", path);
         exit(EXIT_FAILURE);
     }
-    if (databank) {
-        while ((dir = readdir(databank)) != NULL) {
+    if (directory) {
+        while ((dir = readdir(directory)) != NULL) {
             size_t name_len = strcspn(dir->d_name, "\0");
             char file_name[50];
             memset(file_name, '\0', sizeof(file_name));
@@ -74,18 +73,18 @@ bool is_existent(char *path, char *file) {
             }
         }
     }
-    closedir(databank);
+    closedir(directory);
     return exists;
 
 }
 
 /**
- * \brief gets the answer to the question Load the aborted game? y/n
+ * \brief gets the answer to the question: Load the aborted game? y/n
  *
  * The player can type yes, no or y,n
- * capital letter and small letter are both accepted
+ * capital letter and small letter are both equal
  *
- * @param str       this the question the player is being asked for
+ * @param str       this the question the player is asked
  * @return char *answer     y or n
  */
 char *get_answer(char *str) {

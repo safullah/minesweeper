@@ -12,9 +12,9 @@
 /**
  * \brief initializes the game board
  *
- * According to amount of row and cols an array of cell if initialized
+ * According to the amount of rows and cols an array of cell is initialized
  *
- * @param gaming_brd    the board is initialized with default cells \c c
+ * @param gaming_brd    the board is initialized with default a cell \c c
  */
 void init_brd(cell gaming_brd[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
@@ -39,7 +39,7 @@ char alp_arr[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
  */
 void print_brd(cell game_brd[ROWS][COLS]) {
     printf("    ");
-    for (int i = 0; i < ROWS; i++) {
+    for (int i = 0; i < COLS; i++) {
         printf("%c  ", alp_arr[i]);
     }
     printf("\n");

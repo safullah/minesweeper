@@ -1,4 +1,5 @@
-/**
+/**\file game_util.h
+ * \file functions to play the game
 * Created by saif on 1/18/20.
 */
 ///

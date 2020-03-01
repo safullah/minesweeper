@@ -1,4 +1,5 @@
-/**
+/**\file loadplayer.c
+ * \brief loads a player and his game
 * Created by saif on 2/27/20.
 */
 ///
@@ -10,13 +11,12 @@
 /**
  * \brief loads an existent player
  *
- * load_player_game loads the data of a player
- * his name, played games, wins, losses and opened cells in total are displayed
- * if the player had an aborted game he is asked if he wants to continue the aborted game
- * if yes the aborted game is loaded
+ * load_player loads the data of a player.
+ * His name, played games, wins, losses and opened cells in total are displayed
+ * If the player had an aborted game he is asked if he wants to continue the aborted game.
+ * If yes the aborted game is loaded
  *
- * @param game_brd              the game board is set the value of the aborted game, f player wishes to continue the aborted game
- * @param player_file_path      path to the file of player
+ * @param player_file_path      path of the player's file
  *
  * @return boolean      existent player loaded or not
  */
@@ -37,6 +37,11 @@ bool load_player(char *player_file_path) {
     return loaded;
 }
 
+/**
+ * \brief loads game information
+ *
+ * assigns values of an aborted game to ROWS, COLS and MINES
+ */
 void load_game_info() {
     ROWS = PLAYERX.info.rows;
     COLS = PLAYERX.info.cols;

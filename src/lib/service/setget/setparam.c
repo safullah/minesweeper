@@ -4,8 +4,8 @@
 ///
 
 #include "../../utilities/string_util.h"
-#include "../../converter/strtoint.h"
 #include "../../validators/validators.h"
+#include "../converter/strtoint.h"
 
 void set_row(void) {
     if (ROWS == 0) {
@@ -51,10 +51,4 @@ void set_mine(void) {
     } else {
         set_mine();
     }
-}
-
-void set_param(void) {
-    set_row();
-    set_col();
-    set_mine();
 }

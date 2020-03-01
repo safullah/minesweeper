@@ -1,4 +1,5 @@
-/**
+/**\file playing_util.c
+ * \brief prepares player's move
 * Created by saif on 1/14/20.
 */
 ///
@@ -8,13 +9,21 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "game_util.h"
-#include "../converter/strtoint.h"
 #include "../player/player.h"
 #include "string_util.h"
+#include "../service/converter/strtoint.h"
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
+/**
+ * \brief extracts components of the move
+ *
+ * From player's input the move is extracted.
+ *
+ * @param str       players's input
+ * @return move     move is a struct containing flag, col, row, abort and restart
+ */
 move extract_move(char *str) {
     move mov = {false, -1, -1, false, false};
     if (is_flag(&str[0])) {
@@ -40,11 +49,21 @@ move extract_move(char *str) {
     return mov;
 }
 
+/**
+ * \brief gets palyer's move
+ *
+ * Prompts the player for his move.
+ * If move is incorrect he is prompted again, until move is valid
+ * With -help the player can open help instructions
+ * He also can abort, exit or restart the game
+ *
+ * @return move     returns the specified move
+ */
 move get_move(void) {
     bool valid = false;
     move mov = {NULL, -1, -1, false, false};
     char *command = "Enter move";
-    char *hint = "help   opens help instructions";
+    char *hint = "-help\n";
     while (valid != true) {
         char *input = get_input(command, hint);
         if (strcmp(input, "exit") == 0) {
@@ -62,7 +81,7 @@ move get_move(void) {
             mov.abort = true;
             break;
         }
-        if(strcmp(input, "help") == 0) {
+        if(strcmp(input, "-help") == 0) {
             help();
             continue;
         }

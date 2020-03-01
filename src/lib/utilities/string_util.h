@@ -1,4 +1,5 @@
 /**
+ * \file string_utl.h
 * Created by saif on 2/12/20.
 */
 ///
@@ -12,11 +13,9 @@ char *get_input(char *str, char *hint);
 
 char *cutout_backslashn(const char *str);
 
-char *concat_filename(char *player_name);
+char *concat_filename(char *name);
 
-char *concat_filepath(char *db_path, char *file_name);
-
-char *find_dir(char *searchin, char *searchfor);
+char *concat_filepath(char *path, char *file_name);
 
 void clear_overflow(void);
 

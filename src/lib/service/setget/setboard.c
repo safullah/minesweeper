@@ -1,4 +1,5 @@
-/**
+/**\file setboard.c
+ * \file loads an aborted game
 * Created by saif on 2/27/20.
 */
 ///
@@ -6,7 +7,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "../../player/player.h"
-
+/**
+ *  \brief loads an aborted game
+ *
+ * @param game_brd
+ * @param player_file_path path to the players file
+ * @return bool is aborted game loaded or not
+ */
 bool set_board(cell game_brd[ROWS][COLS], char *player_file_path) {
     bool is_set = false;
     GAME = fopen(player_file_path, "r");

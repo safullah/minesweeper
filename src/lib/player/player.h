@@ -1,5 +1,5 @@
 /** \file player.h
- *  \brief information of player and functions he need
+ *  \brief information of a player and functions he needs
 * Created by saif on 2/11/20.
 */
 ///
@@ -27,7 +27,7 @@
 
 /**
  * \PLAYERX
- * \brief a global variable of player. Global, because otherwise had to pass it to many func as param
+ * \brief a global variable of player. Global, because otherwise I have to pass it to many functions as a parameter
  */
 FILE *GAME;
 

@@ -1,21 +1,26 @@
-/** \file
+/** \file main.c
  * \brief main function. */
 #include "lib/utilities/game_util.h"
 #include "lib/player/player.h"
-#include "lib/service/get/getservice.h"
 #include "lib/utilities/string_util.h"
-#include "lib/service/set/setservice.h"
 #include "lib/validators/validators.h"
+#include "lib/service/setget/setget.h"
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
 #include <string.h>
 #include <stdio.h>
 
+/**
+ * \brief main function
+ * @param argc
+ * @param argv my options via cli are -h (help), -n (name), -r (rows), -c (cols), -m (mines)
+ * @return int
+ */
 int main(int argc, char *argv[]) {
     printf("\nstarting minesweeper ...\n");
     srand(time(NULL));
-    get__opt(argc, argv);
+    get_opt(argc, argv);
     PLAYERX = init_player(PLAYERX.name);
     char db_path[PATH_MAX + 1] = {'\0'};
     char *target = "minespr_databank";
@@ -42,10 +47,10 @@ int main(int argc, char *argv[]) {
         }
     }
     /*
-  * in case rows, cols and mines were not defined via cli
-  * and player decides not to load aborted game
-  * then I have to make sure rows, cols and mines do not remain 0
-  */
+    * in case rows, cols and mines were not defined via cli
+    * and player decides not to load aborted game
+    * then I have to make sure rows, cols and mines do not remain 0
+    */
     if (ROWS == 0) {
         set_row();
     }
@@ -56,6 +61,5 @@ int main(int argc, char *argv[]) {
         set_mine();
     }
     play_game(answer, player_file_path);
-    //I need to get back here
     return EXIT_SUCCESS;
 }

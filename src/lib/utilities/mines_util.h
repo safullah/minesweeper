@@ -1,4 +1,5 @@
 /**
+ * \file mines_util.h
 * Created by saif on 1/14/20.
 */
 ///
@@ -9,5 +10,6 @@
 
 void place_mines(cell hidden_brd[ROWS][COLS], int mines[][2]);
 void count_mines(cell game_brd[ROWS][COLS]);
+int do_counting(int row, int col, cell game_brd[ROWS][COLS]);
 
 #endif //MINESPR_MINES_UTIL_H
