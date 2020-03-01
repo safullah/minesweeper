@@ -192,7 +192,7 @@ void open_ngh(cell game_brd[ROWS][COLS], move mov) {
 }
 
 void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
-    printf("starting a new game\n");
+    printf("\nnew game\n");
     init_brd(game_brd);
     place_mines(game_brd, mines);
     count_mines(game_brd);
@@ -221,6 +221,7 @@ void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]) {
 }
 
 void help() {
+    printf("opening help instructions\n");
     char minespr_path[PATH_MAX + 1] = {'\0'};
     char *target = "minespr";
     char *result = realpath(target, minespr_path);

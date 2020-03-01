@@ -38,7 +38,8 @@ char *get_name(void) {
 player init_player(char *player_name) {
     game info = {0, 0, 0, false};
     player p = {"\0", 0, 0, 0, 0, info};
-    if (strcmp(player_name, "") == 0  ){
+    strcpy(p.name, player_name);
+    if (strcmp(p.name, "") == 0  ){
         strcpy(p.name, get_name());
     }
     return p;

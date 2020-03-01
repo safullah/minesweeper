@@ -43,8 +43,8 @@ move extract_move(char *str) {
 move get_move(void) {
     bool valid = false;
     move mov = {NULL, -1, -1, false, false};
-    char *command = "Enter <column> <row>";
-    char *hint = "Enter <column> <row> [example A5]";
+    char *command = "Enter move";
+    char *hint = "help   opens help instructions";
     while (valid != true) {
         char *input = get_input(command, hint);
         if (strcmp(input, "exit") == 0) {
@@ -71,11 +71,11 @@ move get_move(void) {
             if (is_crd_valid(mov.col, mov.row)) {
                 valid = true;
             } else {
-                printf("error, invalid input: %s\n", input);
+                printf("Error, invalid input: %s\n", input);
                 printf("Please, enter valid coordinates!\n");
             }
         } else {
-            printf("error, invalid input: %s\n", input);
+            printf("Error, invalid input: %s\n", input);
         }
     }
     return mov;

@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "../board/board_variables.h"
+#include "../service/get/getservice.h"
 
 bool is_cell_valid(int row, int col) {
     if ((row >= 0) && (row < ROWS) &&
@@ -22,7 +23,7 @@ bool is_mine(int row, int col, cell game_brd[ROWS][COLS]) {
 
 bool is_row_valid(int row, char *error) {
     if (row < 0) {
-        printf("Enter a positive value!\n");
+        printf("Error, wrong input!\n");
         printf("your input: \"%s\"\n", error);
         return false;
     } else if (row < 2 ) {
@@ -40,7 +41,7 @@ bool is_row_valid(int row, char *error) {
 
 bool is_col_valid(int col, char *error) {
     if (col < 0) {
-        printf("Enter a positive value\n");
+        printf("Error, wrong input!\n");
         printf("your input: \"%s\"\n", error);
         return false;
     } else if (col < 2 ) {
@@ -58,7 +59,7 @@ bool is_col_valid(int col, char *error) {
 
 bool is_mine_valid(int mine, char *error) {
     if (mine < 0) {
-        printf("Enter a positive value\n");
+        printf("Error, wrong input!\n");
         printf("your input: \"%s\"\n", error);
         return false;
     }

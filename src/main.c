@@ -5,6 +5,7 @@
 #include "lib/service/get/getservice.h"
 #include "lib/utilities/string_util.h"
 #include "lib/service/set/setservice.h"
+#include "lib/validators/validators.h"
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
@@ -34,35 +35,25 @@ int main(int argc, char *argv[]) {
             if (PLAYERX.info.aborted) {
                 char *question = "Load the aborted game? y/n";
                 answer = get_answer(question);
-                /*
-                 * in case rows, cols and mines were not defined via cli
-                 * and player decides not to load aborted game
-                 * then I have to make sure rows, cols and mines do not remain 0
-                 */
-                if ((strcmp(answer, "n") == 0 || strcmp(answer, "no") == 0)) {
-                    if (ROWS == 0) {
-                        set_row();
-                    }
-                    if (COLS == 0) {
-                        set_col();
-                    }
-                    if (MINES == 0) {
-                        set_mine();
-                    }
-                } else {
+                if ((strcmp(answer, "y") == 0 || strcmp(answer, "yes") == 0)) {
                     load_game_info();
                 }
             }
-            if (ROWS == 0) {
-                set_row();
-            }
-            if (COLS == 0) {
-                set_col();
-            }
-            if (MINES == 0) {
-                set_mine();
-            }
         }
+    }
+    /*
+  * in case rows, cols and mines were not defined via cli
+  * and player decides not to load aborted game
+  * then I have to make sure rows, cols and mines do not remain 0
+  */
+    if (ROWS == 0) {
+        set_row();
+    }
+    if (COLS == 0) {
+        set_col();
+    }
+    if (MINES == 0) {
+        set_mine();
     }
     play_game(answer, player_file_path);
     //I need to get back here

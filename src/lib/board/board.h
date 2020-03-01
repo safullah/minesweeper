@@ -43,6 +43,7 @@ typedef struct {
     bool restart;
 } move;
 
+
 void init_brd(cell gaming_brd[ROWS][COLS]);
 
 void print_brd(cell game_brd[ROWS][COLS]);

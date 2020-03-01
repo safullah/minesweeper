@@ -67,9 +67,8 @@ it shall ask me for my name
 row col and mine are set correctly
 
 bad cases
-provide nothing
-expected behavior is that the user is prompted to input the missing information
-do I get run time exceptions?
-
+provide nothing (test ok)
 provide -r -c -m without any values
+
+provide just name for quick start aborted game
 

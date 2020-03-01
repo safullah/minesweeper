@@ -13,11 +13,11 @@
     -c              number of columns
     -m              number of mines
 
-    start with parameters
+    start with parameters:
     ./minespr -n<name> -r<row> -c<column> -m<mine>
 
-    start with no parameters
+    start with no parameters:
     ./minespr
 
-    quick start for aborted game
+    quick start for aborted game:
     ./minespr -n<name>

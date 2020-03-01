@@ -25,4 +25,5 @@ bool is_flag(const char *str);
 
 bool is_answer(char *answer);
 
+
 #endif //MINESPR_VALIDATORS_H

@@ -13,7 +13,7 @@
 
 char *get_path(char *target) {
     static char path[PATH_MAX + 1] = {'\0'};
-    printf("searching for %s...\n", target);
+    printf("searching ...\n");
     char *check = strcpy(path, find_dir("/", target));
     if (check == NULL) {
         printf("error, while searhing path of databank\n exiting game ...\n");

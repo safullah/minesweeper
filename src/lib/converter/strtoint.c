@@ -5,7 +5,6 @@
 
 #include <errno.h>
 #include <stdlib.h>
-#include "strtoint.h"
 
 int str_to_int(char *str) {
     char *rest = "\0";
