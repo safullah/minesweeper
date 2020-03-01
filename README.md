@@ -1,34 +1,50 @@
-#Minesweeper by Saifur Rahman
-In this project I implement minesweeper.
+##Mine sweeper by Saifur Rahman
+In this project I implement mine sweeper in C.
 
 ##Compilation
-ncurses has to be linked in order to run the game.
+You can use my executable if you don't want to write a make file. <br>
+My executable is minespr/cmake-build-debug/minespr <br>
+If you want have a makefile I have a CMakeLists.txt
+
 
 ##Execution
-Here comes the description how the game is played
+Run the game with cmake-build-debug/minespr -h to see help instructions.<br>
+If you are in the minepsr directory, then start the game from there.<br>
+Otherwise please first cd to minespr directory and then start the game.<br>
+This game can be started form anywhere, but if you want to be fast, start as recommended.<br>
+ 
+The game can be started with or without any parameters<br>
+with parameter:<br>
+cmake-build-debug/minespr -n saif -r10 -c10 -m20<br>
+
+no parameter:<br>
+cmake-build-debug/minespr<br>
+After the game is started, you will be prompted to enter the required parameters<br>
 
 ####Starting the application
-To start the game you execute minespr with the following parameter [rows]x[cols] [mines]
-[example: ./minespr 10x10 20] The x between rows and cols is mandatory.
-The parameters define the size of the game board and the amount of mines the game will be played with.
+cmake-build-debug/minespr -n saif -r10 -c10 -m20<br>
+-n name<br>
+-r row<br>
+-c cols<br>
+-m mines<br>
 
-During the game you will be asked to enter your move.
-To open a cell you specify the coordinates.
-Suppose the drawing below is your game board, then the correct format for choosing the cell is: A0 or a0
+You will be prompted to enter your move.<br>
+To open a cell you specify coordinates.<br>
+First comes column and then the row.<br>
+example: A5<br>
 
-  A B C
-0 - - -
-1 - - -
-3 - - -
+To mark a mine first type "?" and then enter the coordinated of the cell.<br>
+example: ?A5
+You cam also type in small letter. Capital and small letters are treated equally.<br>
 
-For marking a cell, you type: ?A0 or ?a0 or ? a0
 
-You can also type in the following commands.
-exit        quit the game without saving any data
-abort       quit the game with saving the current game. You may continue this game later
-restart     restart the game
+You can also type in the following commands.<br>
+exit        quit the game without saving any data<br>
+abort       quit the game with saving the current game. You may continue this game later<br>
+restart     restart the game<br>
+help        opens help instructions<br>
 
 ##Completed Tasks
-all tasks are implemented
+all tasks are implemented except ncurses
 
 
