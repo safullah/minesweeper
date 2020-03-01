@@ -10,10 +10,8 @@
 /**
  * \brief str_to_int converts a string to int
  *
- * If conversion is successful an integer is returned other a default value of -1 is returned
- *
  * @param str   string to convert
- * @return int  in case of success the number corresponding to the string otherwise a -1
+ * @return int  in case of success the number corresponding to the string otherwise -1
  */
 int str_to_int(char *str) {
     char *rest = "\0";

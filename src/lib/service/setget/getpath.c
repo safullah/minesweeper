@@ -18,11 +18,10 @@
 
 /**
  * \brief gets the path of \c target
- *
  * Searches \c target from root
  *
- * @param target the file or directory which to looked for
- * @return char * the absolute path
+ * @param target    the file or directory which is searched for
+ * @return char *   return the absolute path
  */
 char *get_path(char *target) {
     static char path[PATH_MAX + 1] = {'\0'};
@@ -43,6 +42,14 @@ char *get_path(char *target) {
     }
 }
 
+/**
+ * \brief searches target in searchin
+ *
+ * Searches through \c searchin and in all it subdirectories for \c target
+ * @param searchin
+ * @param target
+ * @return char *       return the absolute path of \c target
+ */
 char *find_dir(char *searchin, char *target) {
     static char path[PATH_MAX+1] = {'\0'};
     DIR *directory;

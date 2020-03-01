@@ -1,6 +1,6 @@
 /** \file board_variables.h
- * \brief here I declare global variables needed for the game board, because I don't want to pass too many arguments to my functions
-*
+ * \brief declaration of global variables
+ * These global variable serve the purpose to reduce the number of arguments of functions.
  * Created by saif on 1/19/20.
 */
 ///

@@ -1,5 +1,5 @@
 /** \file player.h
- *  \brief information of a player and functions he needs
+ *  \brief information about player and functions he needs
 * Created by saif on 2/11/20.
 */
 ///
@@ -12,7 +12,8 @@
 #include "../board/board.h"
 /**
  * \GAME
- * \brief a file to save the game
+ * \brief a gloabal variable of type FILE.
+ * In \c GAME statistics and game of the player is stored.
  */
 
 /**
@@ -27,7 +28,8 @@
 
 /**
  * \PLAYERX
- * \brief a global variable of player. Global, because otherwise I have to pass it to many functions as a parameter
+ * \brief a global variable of player.
+ * Global, because otherwise I have to pass it to many functions as a parameter, which I want to avoid
  */
 FILE *GAME;
 
@@ -56,6 +58,5 @@ player init_player(char *player_name);
 bool is_existent(char *path, char *file);
 
 char *get_answer(char *str);
-
 
 #endif //MINESPR_PLAYER_H

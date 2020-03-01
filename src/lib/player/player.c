@@ -1,5 +1,5 @@
 /** \file player.c
- *  \brief functions specific to player are defined here
+ *  \brief functions for player
 * Created by saif on 2/11/20.
 */
 ///
@@ -12,10 +12,10 @@
 #include <dirent.h>
 
 /**
- * \brief gets the name of the player when starting the game
+ * \brief gets the name of the player when starting the game.
  *
- * with the function \c get_input() the name is retrieved
- * max length of name is set to 50 chars
+ * With the function \c get_input() the name is retrieved
+ * Max length of name is set to 50 chars.
  *
  * @return char * name
  */
@@ -28,7 +28,6 @@ char *get_name(void) {
 
 /**
  * \brief initializes a player when starting the game
- *
  * Information of an aborted game are saved in game \c info
  *
  * @param player_name
@@ -45,9 +44,8 @@ player init_player(char *player_name) {
 }
 
 /**
- * \brief is file in path/
- *
- * \c searches through path/ for \c file
+ * \brief finds out whether file is in path/ or not
+ * Searches path/ and all subdirectories for \c file
  *
  * @param path       path to a directory
  * @param file      name of the file
@@ -81,8 +79,8 @@ bool is_existent(char *path, char *file) {
 /**
  * \brief gets the answer to the question: Load the aborted game? y/n
  *
- * The player can type yes, no or y,n
- * capital letter and small letter are both equal
+ * The player can type yes, no or y, n.
+ * Capital letter and small letter are treated equally.
  *
  * @param str       this the question the player is asked
  * @return char *answer     y or n

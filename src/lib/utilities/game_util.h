@@ -10,11 +10,18 @@
 #include <stdbool.h>
 #include "../board/board.h"
 
+typedef union {
+    bool win;
+    bool loss;
+    bool abort;
+    bool error;
+} game_result;
+
 void restart_game(cell game_brd[ROWS][COLS], int mines[][2]);
 
-void play_game(char *answer, char *player_file_path);
+game_result play_game(char *answer, char *player_file_path);
 
-void save_game(cell game_brd[ROWS][COLS], bool abort);
+bool save_game(cell game_brd[ROWS][COLS], bool abort);
 
 bool open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov);
 

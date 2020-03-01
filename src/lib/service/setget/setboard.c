@@ -11,8 +11,8 @@
  *  \brief loads an aborted game
  *
  * @param game_brd
- * @param player_file_path path to the players file
- * @return bool is aborted game loaded or not
+ * @param player_file_path  path to the players file
+ * @return bool             returns whether an aborted game was loaded or not
  */
 bool set_board(cell game_brd[ROWS][COLS], char *player_file_path) {
     bool is_set = false;

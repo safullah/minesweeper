@@ -1,4 +1,6 @@
 /**
+ * \file setparam.c
+ * \brief sets values for ROWS, COLS and MINES
 * Created by saif on 2/27/20.
 */
 ///

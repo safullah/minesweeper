@@ -25,8 +25,8 @@
  * @param argc
  * @param argv
  */
-void get_opt(int argc, char **argv) {
-    optarg_check check = {false, "\0"};
+void get_opt(int argc, char *argv[]) {
+    optarg_check check;
     int option = 0;
     while ((option = getopt(argc, argv, ":r:c:m:n:hx")) != -1) {
         switch (option) {
@@ -58,7 +58,7 @@ void get_opt(int argc, char **argv) {
             case 'm':
                 check = is_option(optarg);
                 if (!check.is_option) {
-                    if (ROWS == 0 ) {
+                    if (ROWS == 0) {
                         set_row();
                     }
                     if (COLS) {
@@ -120,13 +120,14 @@ void get_opt(int argc, char **argv) {
 }
 
 /**
- * \brief is_option check if an option takes the next option as argument
+ * \brief is_option checks if an option takes the next option as argument
  *
- * In case no argument is passed to an option which requires an arguments I have to make that
- * an option is not taken as an argument
+ * In case no argument is passed to an option which requires an arguments
+ * It is necessary to check whether an option is taken as an argument.
+ * In case it is, then the functions reports which option was taken as an argument
  *
- * @param arg optarg of an option
- * @return struct optarg_check      return if an option is taken as argument and which option it is
+ * @param arg       optarg of an option
+ * @return struct optarg_check      returns true if an option is taken as an argument
  */
 optarg_check is_option(char *arg) {
     optarg_check check = {false, "\0"};
@@ -136,14 +137,12 @@ optarg_check is_option(char *arg) {
             check.is_option = true;
             check.option = options[l];
         }
-
     }
     return check;
 }
 
 /**\brief call_set
- *
- * process the option, which is taken as an argument
+ * Handles the option, which is taken as an argument
  *
  * @param ch the option, which is taken as argument
  */

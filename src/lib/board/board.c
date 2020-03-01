@@ -11,9 +11,7 @@
 
 /**
  * \brief initializes the game board
- *
- * According to the amount of rows and cols an array of cell is initialized
- *
+ * According to the amount of ROWS and COLS an array of cells is initialized
  * @param gaming_brd    the board is initialized with default a cell \c c
  */
 void init_brd(cell gaming_brd[ROWS][COLS]) {
@@ -24,6 +22,7 @@ void init_brd(cell gaming_brd[ROWS][COLS]) {
         }
     }
 }
+
 /**
  * \alp_arr
  * \brief an array of char. listing the alphabet in capital letters
@@ -71,7 +70,8 @@ void print_brd(cell game_brd[ROWS][COLS]) {
 /**
  * \brief prints the remaining mines in the game
  *
- * calculates the remaining mines and prints them
+ * Calculates the remaining mines and prints them
+ * Wronged flagged mines are also printed
  * prints also the number of wrong flagged mines
  */
 void print_rmaining_mines(void){
@@ -80,8 +80,12 @@ void print_rmaining_mines(void){
     printf("flagged wrong: %d\n", FLAGGED_WRONG);
 }
 
-//TODO delete this func
-void print_mbrd(cell game_brd[ROWS][COLS]) {
+/**
+ * \brief prints the board with mines
+ * This function is implemented for debugging purposes
+ * @param game_brd
+ */
+void cheat(cell game_brd[ROWS][COLS]) {
     printf("    ");
     for (int i = 0; i < ROWS; i++) {
         printf("%c  ", alp_arr[i]);

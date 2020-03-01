@@ -1,4 +1,5 @@
-/** \file game_util.c
+/**
+ * \file game_util.c
  * \brief functions to play the game
 * Created by saif on 1/18/20.
 */
@@ -23,16 +24,17 @@
 /**
  * \brief the logic of the game is this function
  *
- * An aborted game is loaded if the player wished for it.
+ * If the player has an aborted game and the player wishes to load that game then the aborted game is loaded.
  * Otherwise a new game is created for the player.
  * The game goes on until it is won or lost.
  * The player has the option to abort or exit the game or start a new game.
- * With the help command help help.txt is opened in vim in read only mode
+ * With the -help command help help.txt is opened in vim in read only mode
  *
  * @param answer    answer to the question if player wants to load an aborted game
  * @param player_file_path path to the file of the player, where his statistic and game are saved
  */
-void play_game(char *answer, char *player_file_path) {
+game_result play_game(char *answer, char *player_file_path) {
+    game_result gresult = {false};
     bool aborted_game_loaded = false;
     cell game_brd[ROWS][COLS];
     if (answer) {
@@ -56,38 +58,52 @@ void play_game(char *answer, char *player_file_path) {
             count_mines(game_brd);
         }
         int empty_cells = ROWS * COLS - MINES;
-        bool game_over = false;
-        move mov = {false, -1, -1, false, false};
-        while (game_over == false) {
+        bool stop = false;
+        move mov;
+        while (stop != true) {
             print_brd(game_brd);
             print_rmaining_mines();
-            print_mbrd(game_brd);
+            cheat(game_brd);
             mov = get_move();
             if (mov.restart) {
                 restart_game(game_brd, mines);
                 continue;
             }
             if (mov.abort) {
-                save_game(game_brd, mov.abort);
+                if (!save_game(game_brd, mov.abort)) {
+                    printf("Error, while aborting the game\n");
+                } else {
+                    gresult.abort = true;
+                   goto aborted;
+                }
+
             }
-            game_over = execute_move(game_brd, mines, mov);
-            //in case of winning the game
-            if (game_over == false && (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES)) {
-                print_brd(game_brd);
-                print_rmaining_mines();
-                printf("You won!\n");
-                PLAYERX.wins++;
-                PLAYERX.games++;
-                save_game(game_brd, mov.abort);
+            stop = execute_move(game_brd, mines, mov);
+            if (stop) {
+                if (!save_game(game_brd, mov.abort)) {
+                    printf("Error, while exiting the game\n");
+                } else {
+                    gresult.loss = true;
+                }
+            } else {
+                if (OPENED_CELLS == empty_cells || FLAGGED_CORRECT == MINES) {
+                    print_brd(game_brd);
+                    print_rmaining_mines();
+                    PLAYERX.wins++;
+                    PLAYERX.games++;
+                    if (!save_game(game_brd, mov.abort)){
+                        printf("Error, while saving the game\n");
+                    } else {
+                        gresult.win = true;
+                    }
+                }
             }
         }
-        //in case of losing the game
-        save_game(game_brd, mov.abort);
     } else {
-        printf("Error, while opening %s's file!\n"
-               "exiting game\n", PLAYERX.name);
-        exit(EXIT_FAILURE);
+        gresult.error = true;
     }
+    :aborted
+    return gresult;
 }
 
 /**
@@ -99,7 +115,8 @@ void play_game(char *answer, char *player_file_path) {
  * @param game_brd
  * @param abort     was the game aborted or not
  */
-void save_game(cell game_brd[ROWS][COLS], bool abort) {
+bool save_game(cell game_brd[ROWS][COLS], bool abort) {
+    bool saved = true;
     FLAGGED_TOTAL = FLAGGED_CORRECT + FLAGGED_WRONG;
     PLAYERX.cells += (OPENED_CELLS + FLAGGED_TOTAL);
     PLAYERX.info.aborted = abort;
@@ -110,20 +127,20 @@ void save_game(cell game_brd[ROWS][COLS], bool abort) {
     }
     if (fwrite(&PLAYERX, sizeof(player), 1, GAME) != 1) {
         printf("Error, while saving the player!");
-        exit(EXIT_FAILURE);
+        saved = false;
     }
     if (abort) {
         for (int i = 0; i < ROWS; ++i) {
             for (int j = 0; j < COLS; ++j) {
                 if (fwrite(&game_brd[i][j], sizeof(cell), 1, GAME) == 0) {
                     printf("Error, while saving the game!");
-                    exit(EXIT_FAILURE);
+                    saved = false;
                 }
             }
         }
     }
     fclose(GAME);
-    exit(EXIT_SUCCESS);
+    return saved;
 }
 
 /**

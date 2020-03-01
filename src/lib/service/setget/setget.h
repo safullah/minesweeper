@@ -1,6 +1,5 @@
 /**\file setget.h
  * \brief functions to set values or get values
- *
 * Created by saif on 2/27/20.
 */
 ///
@@ -9,8 +8,10 @@
 #define MINESPR_GETSERVICE_H
 
 #include "../../board/board.h"
-/**\optarg_check
- * \brief is a parameter a cli option and which option it is
+/**
+ * \optarg_check
+ * \brief optarg_check is a struct
+ * This struct the return value of the function is_option
  */
 typedef struct {
     bool is_option;

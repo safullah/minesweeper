@@ -61,5 +61,9 @@ int main(int argc, char *argv[]) {
         set_mine();
     }
     play_game(answer, player_file_path);
+
+    printf("Error, while opening %s's file!\n"
+           "exiting game\n", PLAYERX.name);
+    exit(EXIT_FAILURE);
     return EXIT_SUCCESS;
 }
