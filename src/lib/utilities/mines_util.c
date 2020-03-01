@@ -19,31 +19,24 @@
  * places mines in game board in random manner
  *
  * @param game_brd
- * @param mines
  */
-void place_mines(cell game_brd[ROWS][COLS], int mines[][2]) {
-    bool mark[ROWS * COLS];
-    memset(mark, false, sizeof(mark));
-    // Continue until all random mines have been created.
+void place_mines(cell game_brd[ROWS][COLS]) {
     for (int i = 0; i < MINES;) {
-        int random = rand() % (ROWS * COLS);
-        int x = random / ROWS;
-        int y = random % COLS;
-        if (mark[random] == false) {
-            mines[i][0] = x;
-            mines[i][1] = y;
-            game_brd[mines[i][0]][mines[i][1]].ch = '*';
-            mark[random] = true;
+        int x = rand() % ROWS;
+        int y = rand() % COLS;
+        if (game_brd[x][y].ch != '*') {
+            game_brd[x][y].ch = '*';
             i++;
         }
     }
 }
 
+
 /**
  * \brief counts neigbouring mines and save the count in the cell
  * @param game_brd
  */
-void count_mines(cell game_brd[ROWS][COLS]){
+void count_mines(cell game_brd[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             game_brd[i][j].ngh_mines = do_counting(i, j, game_brd);

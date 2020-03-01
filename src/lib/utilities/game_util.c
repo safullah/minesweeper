@@ -52,12 +52,11 @@ game_result play_game(char *answer, char *player_file_path) {
     }
     GAME = fopen(player_file_path, "w");
     if (GAME) {
-        int mines[MINES][2];
         /*if a game was not loaded then game_brd is empty. it need to be filled
          * in case of restart loaded has to be false. because the board need to be prepared fo a new game*/
         if (!aborted_game_loaded) {
             init_brd(game_brd);
-            place_mines(game_brd, mines);
+            place_mines(game_brd);
             count_mines(game_brd);
         }
         int empty_cells = ROWS * COLS - MINES;
@@ -72,7 +71,7 @@ game_result play_game(char *answer, char *player_file_path) {
 
             /*start a new game*/
             if (mov.restart) {
-                restart_game(game_brd, mines);
+                restart_game(game_brd);
                 continue;
             }
 
@@ -87,7 +86,7 @@ game_result play_game(char *answer, char *player_file_path) {
                 goto end;
             }
             /*win or loss*/
-            p_check = execute_move(game_brd, mines, mov);
+            p_check = execute_move(game_brd, mov);
             gresult.error = p_check.error;
             if (p_check.game_over) {
                 gresult.loss = true;
@@ -168,11 +167,10 @@ bool save_game(cell game_brd[ROWS][COLS], bool abort) {
  * In case the cell is a mine then the game is over
  *
  * @param game_brd
- * @param mines  number of mines
  * @param mov   the move which is to be executed
  * @return check     is game over and did any error occur
  */
-check execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
+check execute_move(cell game_brd[ROWS][COLS], move mov) {
     check e_check = {false, false};
     if (game_brd[mov.row][mov.col].state == opened || game_brd[mov.row][mov.col].state == flagged) {
         printf("Cell open, try another one.\n");
@@ -184,7 +182,7 @@ check execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
                        "flag_cell(game_brd, mov)", this_file);
             }
         } else {
-            e_check = open_cell(game_brd, mines, mov);
+            e_check = open_cell(game_brd, mov);
             if (e_check.error) {
                 printf("Error: %s "
                        "open_cell(game_brd, mines, mov)", this_file);
@@ -201,11 +199,10 @@ check execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
  * If player steps on a mines the game is over
  *
  * @param game_brd
- * @param mines  number of mines
  * @param mov    contains the cell which is to be opened
  * @return check  game over or not and did any error occur
  */
-check open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
+check open_cell(cell game_brd[ROWS][COLS], move mov) {
     check o_check = {false, false};
     if (game_brd[mov.row][mov.col].ch == '*' && game_brd[mov.row][mov.col].state != flagged) {
         PLAYERX.losses++;
@@ -220,7 +217,7 @@ check open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov) {
         OPENED_CELLS++;
         if (!count) {
             o_check.error = open_ngh(game_brd, mov);
-            if (o_check.error){
+            if (o_check.error) {
                 printf("Error: %s "
                        "open_ngh(game_brd, mov)", this_file);
             }
@@ -244,7 +241,6 @@ bool flag_cell(cell game_brd[ROWS][COLS], move mov) {
     game_brd[mov.row][mov.col].state = flagged;
     if (game_brd[mov.row][mov.col].ch == '*') {
         FLAGGED_CORRECT++;
-        game_brd[mov.row][mov.col].ch = '*';
     } else {
         int count = game_brd[mov.row][mov.col].ngh_mines;
         game_brd[mov.row][mov.col].state = flagged;
@@ -318,14 +314,13 @@ bool open_ngh(cell game_brd[ROWS][COLS], move mov) {
  * starts a new game and opens a random cell which is not a mines or the count of neighboring mines is not zero
  *
  * @param game_brd  rows and cols stay of the game from where the game  is restarted
- * @param mines     number of mines stay of the game from where the game restarted
  */
-void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
+void restart_game(cell game_brd[ROWS][COLS]) {
     printf("\nnew game\n");
     init_brd(game_brd);
-    place_mines(game_brd, mines);
+    place_mines(game_brd);
     count_mines(game_brd);
-    open_randomcell(game_brd, mines);
+    open_randomcell(game_brd);
 }
 
 /**
@@ -334,28 +329,22 @@ void restart_game(cell game_brd[ROWS][COLS], int mines[][2]) {
  * opens a random cell which is not a mines or  or the count of neighboring mines is not zero
  *
  * @param game_brd
- * @param mines
  */
-void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]) {
+void open_randomcell(cell game_brd[ROWS][COLS]) {
     srand(time(NULL));
-    int random = rand() % (ROWS * COLS) + 1;
-    int x = random / ROWS;
-    int y = random % COLS;
-    move *mov = malloc(sizeof(move));
-    if (!mov) {
-        printf("Error: %s "
-               "move *mov = malloc(sizeof(move))\n", this_file);
-        exit(EXIT_FAILURE);
+    bool opened = false;
+    while (opened != true) {
+        int x = rand() % ROWS;
+        int y = rand() % COLS;
+        move mov = {false, -1,-1, false, false};
+        mov.row = x;
+        mov.col = y;
+        if (game_brd[x][y].ch != '*' && game_brd[x][y].ngh_mines != 0) {
+            open_cell(game_brd, mov);
+            PLAYERX.cells++;
+            opened = true;
+        }
     }
-    mov->row = x;
-    mov->col = y;
-    if (game_brd[x][y].ch != '*' && game_brd[x][y].ngh_mines != 0) {
-        open_cell(game_brd, mines, *mov);
-        PLAYERX.cells++;
-    } else {
-        open_randomcell(game_brd, mines);
-    }
-    free(mov);
 }
 
 /**

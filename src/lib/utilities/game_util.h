@@ -21,21 +21,22 @@ typedef struct {
     bool game_over;
     bool error;
 } check;
-void restart_game(cell game_brd[ROWS][COLS], int mines[][2]);
+
+void restart_game(cell game_brd[ROWS][COLS]);
 
 game_result play_game(char *answer, char *player_file_path);
 
 bool save_game(cell game_brd[ROWS][COLS], bool abort);
 
-check open_cell(cell game_brd[ROWS][COLS], int mines[][2], move mov);
+check open_cell(cell game_brd[ROWS][COLS], move mov);
 
 bool open_ngh(cell game_brd[ROWS][COLS], move mov);
 
 bool flag_cell(cell game_brd[ROWS][COLS], move mov);
 
-check execute_move(cell game_brd[ROWS][COLS], int mines[][2], move mov);
+check execute_move(cell game_brd[ROWS][COLS], move mov);
 
-void open_randomcell(cell game_brd[ROWS][COLS], int mines[][2]);
+void open_randomcell(cell game_brd[ROWS][COLS]);
 
 void help();
 
